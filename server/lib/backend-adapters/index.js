@@ -12,11 +12,13 @@ import Myft from './myft';
 import TodaysTopics from './todays-topics';
 import Bertha from './bertha';
 
-import Cache from '../cache';
+import MemCache from '../cache';
+import RedisCache from '../redis-cache';
 
-const memCache = new Cache(12 * 60 * 60, 30 * 60);
+const memCache = new MemCache(12 * 60 * 60, 30 * 60);
+const redisCache = new RedisCache();
 
-const capi = new CAPI(memCache);
+const capi = new CAPI(redisCache);
 const mockCapi = new MockCapi(capi);
 const fastFT = new FastFtFeed(sources.fastFt);
 const hui = new Hui(memCache);
