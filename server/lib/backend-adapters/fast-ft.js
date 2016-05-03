@@ -20,13 +20,7 @@ export default class {
 	fetchFastFt () {
 		const { idV1 } = this.source;
 		return ApiClient.search({
-				filter: {
-					bool: {
-						must: [
-							{ term: { 'metadata.idV1': idV1 } }
-						]
-					}
-				},
+				filter: { term: { 'metadata.idV1': idV1 } },
 				// NOTE - hard-coded to a large number, not sure how to get the required amount in graphql-land
 				count: 20
 			})

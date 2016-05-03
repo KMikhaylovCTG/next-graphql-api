@@ -8,16 +8,10 @@ import resolveContentType from '../helpers/resolve-content-type';
 function getSearchOpts (termName, termValue, opts) {
 	const searchOpts = {
 		filter: {
-			and: {
-				filters: [
+			bool: {
+				must: [
 					{
-						bool: {
-							must: {
-								term: {
-									[termName]: termValue
-								}
-							}
-						}
+						term: { [termName]: termValue }
 					}
 				]
 			}
@@ -25,21 +19,19 @@ function getSearchOpts (termName, termValue, opts) {
 	};
 
 	if (opts.since) {
-		searchOpts.filter.and.filters.push({
-			bool: {
-				must: {
-					range: {
-						publishedDate: {
-							gte: opts.since
-						}
-					}
+		searchOpts.filter.bool.must.push({
+			range: {
+				publishedDate: {
+					gte: opts.since
 				}
 			}
 		});
 	}
+
 	if (opts.count) {
 		searchOpts.count = opts.count;
 	}
+
 	return searchOpts;
 }
 
