@@ -1,7 +1,7 @@
 {
   "name": "next-graphql-api",
   "dependencies": {
-    "next-js-setup": "^6.0.0"
+    "next-js-setup": "^8.5.2"
   },
   "resolutions": {
     "o-ft-icons": "next"
