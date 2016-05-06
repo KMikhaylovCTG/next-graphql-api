@@ -5,5 +5,8 @@
   },
   "resolutions": {
     "o-ft-icons": "next"
+  },
+  "devDependencies": {
+    "isomorphic-fetch": "^2.2.1"
   }
 }
