@@ -14,15 +14,6 @@ unit-test-watch:
 
 test: verify unit-test
 
-build:
-	nbt build --dev
-
-build-production:
-	nbt build
-
-watch:
-	nbt build --dev --watch
-
 run:
 	nbt run --local
 
