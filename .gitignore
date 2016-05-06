@@ -14,3 +14,7 @@
 /public/
 
 !/nodemon.json
+.editorconfig
+.eslintrc.js
+.scss-lint.yml
+webpack.config.js
