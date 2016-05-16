@@ -62,31 +62,31 @@ const queryType = new GraphQLObjectType({
 			}
 		},
 		opinion: {
-			type: Page,
+			type: List,
 			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
-				const { uuid, sectionsId } = sources.opinion;
-				return backend(flags).capi.page(uuid, sectionsId);
+				const { uuid, url } = sources.opinion;
+				return backend(flags).capi.list(uuid, url);
 			}
 		},
 		lifestyle: {
 			type: Page,
 			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
-				const { uuid, sectionsId } = sources.lifestyle;
-				return backend(flags).capi.page(uuid, sectionsId);
+				const { uuid, url } = sources.lifestyle;
+				return backend(flags).capi.page(uuid, url);
 			}
 		},
 		markets: {
 			type: Page,
 			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
-				const { uuid, sectionsId } = sources.markets;
-				return backend(flags).capi.page(uuid, sectionsId);
+				const { uuid, url } = sources.markets;
+				return backend(flags).capi.page(uuid, url);
 			}
 		},
 		technology: {
 			type: Page,
 			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
-				const { uuid, sectionsId } = sources.technology;
-				return backend(flags).capi.page(uuid, sectionsId);
+				const { uuid, url } = sources.technology;
+				return backend(flags).capi.page(uuid, url);
 			}
 		},
 		videos: {

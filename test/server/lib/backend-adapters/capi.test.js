@@ -81,7 +81,7 @@ describe('CAPI', () => {
 		before(() => {
 			fetchMock.mock(
 				new RegExp(`https://[^\.]*.ft.com/lists/${listUuid}`),
-				[{ id: 'content-one' }, { id: 'content-two' }]
+				{ items: [{ id: 'content-one' }, { id: 'content-two' }] }
 			);
 		});
 
@@ -96,8 +96,8 @@ describe('CAPI', () => {
 
 			return capi.list(listUuid)
 				.then(list => {
-					list.should.have.length(2);
-					list.should.deep.equal([{ id: 'content-one' }, { id: 'content-two' }]);
+					list.items.should.have.length(2);
+					list.items.should.deep.equal([{ id: 'content-one' }, { id: 'content-two' }]);
 					cached.alwaysCalledWith('capi.lists.73667f46-1a55-11e5-a130-2e7db721f996', 60).should.be.true;
 					// make sure mock was called
 					fetchMock.called().should.be.true;

@@ -41,13 +41,13 @@ export default class {
 		this.cache = cache;
 	}
 
-	page (uuid, sectionsId, ttl = 60) {
+	page (uuid, url, ttl = 60) {
 		return this.cache.cached(`${this.type}.pages.${uuid}`, ttl, () =>
 			ApiClient.pages({ uuid: uuid })
 				.then(it => ({
 					id: uuid,
 					title: it.title,
-					sectionId: sectionsId,
+					url: url,
 					items: it.slice()
 				}))
 		);
@@ -104,7 +104,7 @@ export default class {
 			.then(filterContent(opts, resolveContentType))
 	}
 
-	list (uuid, ttl = 60) {
+	list (uuid, url, ttl = 60) {
 		return this.cache.cached(`${this.type}.lists.${uuid}`, ttl, () => {
 			const headers = { Authorization: process.env.LIST_API_AUTHORIZATION };
 			return fetch(`https://prod-coco-up-read.ft.com/lists/${uuid}`, { headers })
@@ -117,7 +117,16 @@ export default class {
 					}
 					return response;
 				})
-				.then(fetchresJson);
+				.then(fetchresJson)
+				.then(it => {
+					return {
+						id: uuid,
+						title: it.title,
+						url: url,
+						items: it.items,
+						layoutHint: it.layoutHint
+					};
+				});
 		});
 	}
 

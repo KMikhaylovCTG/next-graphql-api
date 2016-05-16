@@ -16,21 +16,22 @@ const sources = {
 		idV1: 'NTlhNzEyMzMtZjBjZi00Y2U1LTg0ODUtZWVjNmEyYmU1NzQ2-QnJhbmRz'
 	},
 	opinion: {
-		sectionsId: 'MTE2-U2VjdGlvbnM=',
-		uuid: 'ec66fcc8-cd25-11de-a748-00144feabdc0'
+		url: '/comment',
+		type: 'list',
+		uuid: 'bc81b5bc-1995-11e5-a130-2e7db721f996'
 	},
 	markets: {
-		sectionsId: 'NzE=-U2VjdGlvbnM=',
+		url: '/markets',
 		genres: ['analysis', 'comment'],
 		uuid: '011debcc-cd26-11de-a748-00144feabdc0'
 	},
 	technology: {
-		sectionsId: 'NTM=-U2VjdGlvbnM=',
+		url: '/companies/technology',
 		genres: ['analysis', 'comment'],
 		uuid: 'e900741c-f7e8-11df-8d91-00144feab49a'
 	},
 	lifestyle: {
-		sectionsId: 'MTQ4-U2VjdGlvbnM=',
+		url: '/life-arts',
 		uuid: 'cec106aa-cd25-11de-a748-00144feabdc0'
 	},
 	management: {

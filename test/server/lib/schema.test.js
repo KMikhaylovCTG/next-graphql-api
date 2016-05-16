@@ -93,7 +93,7 @@ describe('Schema', () => {
 
 		it('should be able to fetch', () => {
 			const pageStub = sinon.stub();
-			pageStub.returns({ title: 'Top Stories', sectionId: '1234' });
+			pageStub.returns({ title: 'Top Stories', url: '1234' });
 			const backend = () => ({
 				capi: {
 					page: pageStub
@@ -111,7 +111,7 @@ describe('Schema', () => {
 			return graphql(schema, query, { backend })
 				.then(({ data }) => {
 					data.top.title.should.equal('Top Stories');
-					data.top.url.should.equal('/stream/sectionsId/1234');
+					data.top.url.should.equal('1234');
 				})
 		});
 

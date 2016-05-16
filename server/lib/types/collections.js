@@ -13,8 +13,7 @@ const Page = new GraphQLObjectType({
 	description: 'Page of content',
 	fields: {
 		url: {
-			type: GraphQLString,
-			resolve: page => page.sectionId ? `/stream/sectionsId/${page.sectionId}` : null
+			type: GraphQLString
 		},
 		title: {
 			type: GraphQLString
@@ -47,6 +46,9 @@ const List = new GraphQLObjectType({
 	name: 'List',
 	description: 'Items contained in a list',
 	fields: {
+		url: {
+			type: GraphQLString
+		},
 		title: {
 			type: GraphQLString
 		},
