@@ -19,9 +19,15 @@ export default class {
 			const be = backend(flags);
 			const args = { from, limit, genres, type };
 			return Promise.all([
-				be.capi.page(sources[`${region}Top`].uuid).then(p => be.capi.content(p.items, args)).then(c => c.map(c => getPrimaryTag(c.metadata))),
-				be.capi.page(sources.opinion.uuid, sources.opinion.sectionsId).then(p => be.capi.content(p.items, args)).then(c => c.map(c => getPrimaryTag(c.metadata))),
-				be.capi.list(sources.editorsPicks.uuid).then(r => be.capi.content(r.items.map(i => i.id.replace(/http:\/\/api\.ft\.com\/things?\//, '')), args)).then(c => c.map(c => getPrimaryTag(c.metadata)))
+				be.capi.page(sources[`${region}Top`].uuid)
+					.then(p => be.capi.content(p.items, args))
+					.then(c => c.map(c => getPrimaryTag(c.metadata))),
+				be.capi.page(sources.opinion.uuid, sources.opinion.sectionsId)
+					.then(p => p ? be.capi.content(p.items, args) : [])
+					.then(c => c.map(c => getPrimaryTag(c.metadata))),
+				be.capi.list(sources.editorsPicks.uuid)
+					.then(r => be.capi.content(r.items.map(i => i.id.replace(/http:\/\/api\.ft\.com\/things?\//, '')), args))
+					.then(c => c.map(c => getPrimaryTag(c.metadata)))
 			]).then((data) => {
 				//Flatten results
 				const tags = data.reduce((res, item) => res.concat(item), []).filter(t => t);
