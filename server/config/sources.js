@@ -48,6 +48,10 @@ const sources = {
 	editorsPicks: {
 		type: 'list',
 		uuid: '73667f46-1a55-11e5-a130-2e7db721f996'
+	},
+	brexit: {
+		type: 'list',
+		uuid: '7a084d44-b95a-11e5-b151-8e15c9a029fb' //TODO: Use correct methode list
 	}
 };
 
