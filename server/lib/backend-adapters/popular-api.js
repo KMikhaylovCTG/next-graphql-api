@@ -17,7 +17,7 @@ export default class {
 	}
 
 	articles ({ from, limit, concept } = {}, ttl = 60 * 10) {
-		const conceptQueryParam = concept ? `concept=${concept}&` : '';
+		const conceptQueryParam = concept ? `conceptid=${concept}&` : '';
 		const url = `${this.baseUrl}/articles?${conceptQueryParam}apiKey=${this.apiKey}`;
 		const cacheProperty = concept || 'all';
 
