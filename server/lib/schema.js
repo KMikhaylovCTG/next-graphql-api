@@ -185,6 +185,9 @@ const queryType = new GraphQLObjectType({
 				},
 				type: {
 					type: ContentType
+				},
+				concept: {
+					type: GraphQLString
 				}
 			},
 			resolve: (root, args, { rootValue: { flags, backend = backendReal }}) => {
