@@ -3,7 +3,7 @@ import sliceList from '../helpers/slice-list';
 export default class {
 	constructor (cache) {
 		this.cache = cache;
-		this.baseUrl = 'https://ft-next-popular-api.herokuapp.com';
+		this.baseUrl = 'https://ft-next-popular-api-eu.herokuapp.com';
 		this.apiKey = process.env.POPULAR_API_KEY;
 	}
 

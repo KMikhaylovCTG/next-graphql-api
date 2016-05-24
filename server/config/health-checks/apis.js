@@ -26,7 +26,7 @@ export default {
 			technicalSummary: 'Tries to fetch popular topics from the Popular API',
 			panicGuide: 'https://github.com/Financial-Times/next-popular-api',
 			type: 'json',
-			url: `https://ft-next-popular-api.herokuapp.com/topics?apiKey=${process.env.POPULAR_API_KEY}`,
+			url: `https://ft-next-popular-api-eu.herokuapp.com/topics?apiKey=${process.env.POPULAR_API_KEY}`,
 			callback: popularTopics => popularTopics.length,
 			checkResult : {
 				PASSED: 'Successful response from the Popular API',
@@ -41,7 +41,7 @@ export default {
 			technicalSummary: 'Tries to fetch popular articles from the Popular API',
 			panicGuide: 'https://github.com/Financial-Times/next-popular-api',
 			type: 'json',
-			url: `https://ft-next-popular-api.herokuapp.com/articles?apiKey=${process.env.POPULAR_API_KEY}`,
+			url: `https://ft-next-popular-api-eu.herokuapp.com/articles?apiKey=${process.env.POPULAR_API_KEY}`,
 			callback: popularArticles => popularArticles.articles && popularArticles.articles.length,
 			checkResult : {
 				PASSED: 'Successful response from the Most Popular API',

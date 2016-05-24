@@ -15,7 +15,7 @@ describe('Popular API', () => {
 
 		before(() => {
 			fetchMock.mock(
-				'^https://ft-next-popular-api.herokuapp.com/topics',
+				'^https://ft-next-popular-api-eu.herokuapp.com/topics',
 				[{ id: 'topic-one' }, { id: 'topic-two' }, { id: 'topic-three' }]
 			);
 		});
