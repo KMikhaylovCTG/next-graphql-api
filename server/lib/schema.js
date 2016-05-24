@@ -17,10 +17,17 @@ const queryType = new GraphQLObjectType({
 	name: 'Query',
 	description: 'FT content API',
 	fields: {
-		brexit: {
+		brexitCoverage: {
 			type: List,
 			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
-				const uuid = sources['brexit'].uuid;
+				const uuid = sources['brexitCoverage'].uuid;
+				return backend(flags).capi.list(uuid);
+			}
+		},
+		brexitBuildup: {
+			type: List,
+			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
+				const uuid = sources['brexitBuildup'].uuid;
 				return backend(flags).capi.list(uuid);
 			}
 		},

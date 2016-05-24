@@ -49,9 +49,13 @@ const sources = {
 		type: 'list',
 		uuid: '73667f46-1a55-11e5-a130-2e7db721f996'
 	},
-	brexit: {
+	brexitCoverage: {
 		type: 'list',
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
+	},
+	brexitBuildup: {
+		type: 'list',
+		uuid: '7a084d44-b95a-11e5-b151-8e15c9a029fb'
 	}
 };
 
