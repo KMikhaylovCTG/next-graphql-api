@@ -1,0 +1,36 @@
+{
+  "id": "http://api.ft.com/things/108d4bd9-d774-404c-b8f2-0b8a29990634",
+  "title": "Test TopStories List for Markets stream",
+  "apiUrl": "http://api.ft.com/lists/108d4bd9-d774-404c-b8f2-0b8a29990634",
+  "concept": {
+    "tmeIdentifier": "NzE=-U2VjdGlvbnM=",
+    "prefLabel": "Markets"
+  },
+  "listType": "TopStories",
+  "items": [
+    {
+      "id": "http://api.ft.com/things/1ca5e202-1cbe-11e6-b286-cddde55ca122",
+      "apiUrl": "http://api.ft.com/content/1ca5e202-1cbe-11e6-b286-cddde55ca122"
+    },
+    {
+      "id": "http://api.ft.com/things/12fd7774-1c55-11e6-b286-cddde55ca122",
+      "apiUrl": "http://api.ft.com/content/12fd7774-1c55-11e6-b286-cddde55ca122"
+    },
+    {
+      "id": "http://api.ft.com/things/96566916-1852-11e6-b197-a4af20d5575e",
+      "apiUrl": "http://api.ft.com/content/96566916-1852-11e6-b197-a4af20d5575e"
+    },
+    {
+      "id": "http://api.ft.com/things/5fca47de-1c24-11e6-a7bc-ee846770ec15",
+      "apiUrl": "http://api.ft.com/content/5fca47de-1c24-11e6-a7bc-ee846770ec15"
+    },
+    {
+      "id": "http://api.ft.com/things/ee23d618-1ce6-11e6-8fa5-44094f6d9c46",
+      "apiUrl": "http://api.ft.com/content/ee23d618-1ce6-11e6-8fa5-44094f6d9c46"
+    },
+    {
+      "id": "http://api.ft.com/things/76ba9a3e-1c42-11e6-b286-cddde55ca122",
+      "apiUrl": "http://api.ft.com/content/76ba9a3e-1c42-11e6-b286-cddde55ca122"
+    }
+  ]
+}

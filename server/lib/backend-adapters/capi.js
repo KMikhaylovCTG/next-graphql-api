@@ -130,6 +130,24 @@ export default class {
 		});
 	}
 
+	listOfType (listType, concept, ttl = 60) {
+		return this.cache.cached(`${this.type}.lists.${listType}.${concept}`, ttl, () => {
+			const headers = { Authorization: process.env.LIST_API_AUTHORIZATION };
+			return fetch(`https://prod-coco-up-read.ft.com/lists?${listType}For=${concept}`, { headers })
+				.then(response => {
+					if (!response.ok) {
+						logger.warn('Failed getting List response', {
+							listType,
+							concept,
+							status: response.status
+						});
+					}
+					return response;
+				})
+				.then(fetchresJson);
+		});
+	}
+
 	things (uuids, type = 'idV1', ttl = 60 * 10) {
 		const cacheKey = `${this.type}.things.${type}.${Array.isArray(uuids) ? uuids.join('_') : uuids}`;
 		return this.cache.cached(cacheKey, ttl, () =>

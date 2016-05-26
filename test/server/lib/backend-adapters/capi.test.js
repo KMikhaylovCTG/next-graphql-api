@@ -7,6 +7,7 @@ chai.use(chaiAsPromised);
 
 import CAPI from '../../../../server/lib/backend-adapters/capi';
 
+const listOfTypeFixture = require('../../../fixtures/listOfTypeFixture.json');
 const cachedSpy = () => sinon.spy((cacheKey, cacheTTL, value) => value());
 
 describe('CAPI', () => {
@@ -104,6 +105,37 @@ describe('CAPI', () => {
 				});
 		});
 
+	});
+
+	describe('#listOfType', () => {
+		const listType = 'curatedTopStoriesFor';
+		const concept = 'NzE=-U2VjdGlvbnM=';
+
+		before(() => {
+			fetchMock.mock(
+				new RegExp(`https://[^\.]*.ft.com/lists`),
+					listOfTypeFixture
+			);
+		});
+
+		after(() => {
+			fetchMock.restore();
+		});
+
+		it('should be able to fetch a listType', () => {
+			const cached = cachedSpy();
+			const cache = { cached };
+			const capi = new CAPI(cache);
+
+			return capi.listOfType(listType, concept)
+				.then(list => {
+					list.items.should.have.length(6);
+					list.title.should.equal('Test TopStories List for Markets stream');
+					cached.alwaysCalledWith(`capi.lists.${listType}.${concept}`, 60).should.be.true;
+					// make sure mock was called
+					fetchMock.called().should.be.true;
+				});
+		});
 	});
 
 	describe('#search', () => {

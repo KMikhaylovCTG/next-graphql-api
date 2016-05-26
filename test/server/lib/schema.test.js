@@ -5,6 +5,7 @@ chai.should();
 const expect = chai.expect;
 
 import schema from '../../../server/lib/schema';
+import listOfTypeFixture from '../../fixtures/listOfTypeFixture.json';
 
 describe('Schema', () => {
 
@@ -221,6 +222,48 @@ describe('Schema', () => {
 					data.concepts.length.should.eq(2);
 					expect(data.concepts[0]).to.deep.equal({ name: 'One', url: '/stream/fooId/abc' });
 					expect(data.concepts[1]).to.deep.equal({ name: 'Two', url: '/stream/barId/def' });
+				});
+		});
+	});
+
+	describe('List Of Type', () => {
+
+		it('returns an array of articles', () => {
+
+			const listOfTypeStub = sinon.stub();
+			const contentStub = sinon.stub();
+			listOfTypeStub.returns(Promise.resolve(listOfTypeFixture));
+			contentStub.returns(Promise.resolve([
+				{
+					id: 'http://api.ft.com/things/5b0be968-dff3-11e5-b67f-a61732c1d025',
+					title: 'Super Tuesday results: sweeping victories for Trump and Clinton'
+				},
+				{
+					id: 'http://api.ft.com/things/5b0be968-dff3-11e5-b67f-a61732c1d025',
+					title: 'Super Tuesday results: sweeping victories for Trump and Clinton'
+				}
+			]));
+
+			const backend = () => ({
+				capi: {
+					listOfType: listOfTypeStub,
+					content: contentStub
+				}
+			});
+
+			const query = `
+				query GetListOfType{
+					listOfType(listType: "curatedTopStories", concept: "NzE=-U2VjdGlvbnM=") {
+						id
+					}
+				}
+			`
+
+			return graphql(schema, query, { backend })
+				.then(({data}) => {
+					expect(data.listOfType.length).to.equal(2);
+					expect(data.listOfType[0].id).to.exist;
+					expect(data.listOfType[1].id).to.exist;
 				});
 		});
 	});

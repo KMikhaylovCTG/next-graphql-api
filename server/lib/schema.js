@@ -324,6 +324,25 @@ const queryType = new GraphQLObjectType({
 						});
 					});
 			}
+		},
+		listOfType: {
+			type: new GraphQLList(Content),
+			args: {
+				listType : {
+					type: GraphQLString
+				},
+				concept: {
+					type: GraphQLString
+				}
+			},
+			resolve: (root, { listType, concept }, { rootValue: { flags, backend = backendReal }}) => {
+				const be = backend(flags);
+				return be.capi.listOfType(listType, concept)
+					.then(list => {
+						const articlesUuids = list.items.map(item => item.id.substring(item.id.length - 36));
+						return be.capi.content(articlesUuids)
+					});
+			}
 		}
 	}
 });
