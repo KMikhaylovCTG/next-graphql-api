@@ -134,17 +134,14 @@ export default class {
 		return this.cache.cached(`${this.type}.lists.${listType}.${concept}`, ttl, () => {
 			const headers = { Authorization: process.env.LIST_API_AUTHORIZATION };
 			return fetch(`https://prod-coco-up-read.ft.com/lists?${listType}For=${concept}`, { headers })
-				.then(response => {
-					if (!response.ok) {
-						logger.warn('Failed getting List response', {
-							listType,
-							concept,
-							status: response.status
-						});
-					}
-					return response;
-				})
-				.then(fetchresJson);
+				.then(fetchresJson)
+				.catch(error => {
+					logger.warn('Failed getting List Of Type response', {
+						listType,
+						concept,
+						error
+					});
+				});
 		});
 	}
 

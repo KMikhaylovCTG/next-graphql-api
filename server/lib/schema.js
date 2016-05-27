@@ -339,6 +339,9 @@ const queryType = new GraphQLObjectType({
 				const be = backend(flags);
 				return be.capi.listOfType(listType, concept)
 					.then(list => {
+						if (!list) {
+							return;
+						}
 						const articlesUuids = list.items.map(item => item.id.substring(item.id.length - 36));
 						return be.capi.content(articlesUuids)
 					});

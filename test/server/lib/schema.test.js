@@ -228,10 +228,30 @@ describe('Schema', () => {
 
 	describe('List Of Type', () => {
 
+		const query = `
+		query GetListOfType{
+			listOfType(listType: "curatedTopStories", concept: "NzE=-U2VjdGlvbnM=") {
+				id
+			}
+		}
+		`
+		const listOfTypeStub = sinon.stub();
+		const contentStub = sinon.stub();
+		const backend = () => ({
+			capi: {
+				listOfType: listOfTypeStub,
+				content: contentStub
+			}
+		});
+
+		afterEach(() => {
+			listOfTypeStub.reset();
+			contentStub.reset();
+		});
+
+
 		it('returns an array of articles', () => {
 
-			const listOfTypeStub = sinon.stub();
-			const contentStub = sinon.stub();
 			listOfTypeStub.returns(Promise.resolve(listOfTypeFixture));
 			contentStub.returns(Promise.resolve([
 				{
@@ -244,26 +264,25 @@ describe('Schema', () => {
 				}
 			]));
 
-			const backend = () => ({
-				capi: {
-					listOfType: listOfTypeStub,
-					content: contentStub
-				}
-			});
-
-			const query = `
-				query GetListOfType{
-					listOfType(listType: "curatedTopStories", concept: "NzE=-U2VjdGlvbnM=") {
-						id
-					}
-				}
-			`
-
 			return graphql(schema, query, { backend })
 				.then(({data}) => {
 					expect(data.listOfType.length).to.equal(2);
 					expect(data.listOfType[0].id).to.exist;
 					expect(data.listOfType[1].id).to.exist;
+					expect(listOfTypeStub.calledOnce).to.be.true;
+					expect(contentStub.calledOnce).to.be.true;
+				});
+		});
+
+		it('gracefully handles no data being returned', () => {
+
+			listOfTypeStub.returns(Promise.resolve(undefined));
+
+			return graphql(schema, query, { backend })
+				.then(({data}) => {
+					expect(data.listOfType).to.be.null;
+					expect(listOfTypeStub.calledOnce).to.be.true;
+					expect(contentStub.called).to.be.false;
 				});
 		});
 	});

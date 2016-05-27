@@ -4,6 +4,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 chai.should();
 chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 import CAPI from '../../../../server/lib/backend-adapters/capi';
 
@@ -111,23 +112,25 @@ describe('CAPI', () => {
 		const listType = 'curatedTopStoriesFor';
 		const concept = 'NzE=-U2VjdGlvbnM=';
 
-		before(() => {
-			fetchMock.mock(
-				new RegExp(`https://[^\.]*.ft.com/lists`),
+		context('Successful response', () => {
+
+			before(() => {
+				fetchMock.mock(
+					new RegExp(`https://[^\.]*.ft.com/lists`),
 					listOfTypeFixture
-			);
-		});
+				);
+			});
 
-		after(() => {
-			fetchMock.restore();
-		});
+			after(() => {
+				fetchMock.restore();
+			});
 
-		it('should be able to fetch a listType', () => {
-			const cached = cachedSpy();
-			const cache = { cached };
-			const capi = new CAPI(cache);
+			it('should be able to fetch a listType', () => {
+				const cached = cachedSpy();
+				const cache = { cached };
+				const capi = new CAPI(cache);
 
-			return capi.listOfType(listType, concept)
+				return capi.listOfType(listType, concept)
 				.then(list => {
 					list.items.should.have.length(6);
 					list.title.should.equal('Test TopStories List for Markets stream');
@@ -135,7 +138,38 @@ describe('CAPI', () => {
 					// make sure mock was called
 					fetchMock.called().should.be.true;
 				});
+			});
+
 		});
+
+		context('Unsuccessful response', () => {
+
+			before(() => {
+				fetchMock.mock(
+					new RegExp(`https://[^\.]*.ft.com/lists`),
+					404
+				);
+			});
+
+			after(() => {
+				fetchMock.restore();
+			});
+
+			it('should gracefully handle getting no response from capi', () => {
+				const cached = cachedSpy();
+				const cache = { cached };
+				const capi = new CAPI(cache);
+
+				return capi.listOfType(listType, concept)
+				.then(list => {
+					expect(list).to.be.undefined;
+					// make sure mock was called
+					fetchMock.called().should.be.true;
+				});
+			});
+
+		});
+
 	});
 
 	describe('#search', () => {
