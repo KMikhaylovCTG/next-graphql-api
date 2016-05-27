@@ -55,7 +55,7 @@ const sources = {
 	},
 	brexitBuildup: {
 		type: 'list',
-		uuid: '7a084d44-b95a-11e5-b151-8e15c9a029fb'
+		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
 	}
 };
 
