@@ -342,6 +342,11 @@ const queryType = new GraphQLObjectType({
 						if (!list) {
 							return;
 						}
+						// When there are multiple lists meeting the criteria an array is returned
+						// We're only interested in the first of the array - the most recent
+						if (Array.isArray(list)) {
+							list = list[0];
+						}
 						const articlesUuids = list.items.map(item => item.id.substring(item.id.length - 36));
 						return be.capi.content(articlesUuids)
 					});

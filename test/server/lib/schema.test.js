@@ -274,6 +274,29 @@ describe('Schema', () => {
 				});
 		});
 
+		it('handles getting an array of lists returned', () => {
+			listOfTypeStub.returns(Promise.resolve([listOfTypeFixture, listOfTypeFixture]));
+			contentStub.returns(Promise.resolve([
+				{
+					id: 'http://api.ft.com/things/5b0be968-dff3-11e5-b67f-a61732c1d025',
+					title: 'Super Tuesday results: sweeping victories for Trump and Clinton'
+				},
+				{
+					id: 'http://api.ft.com/things/5b0be968-dff3-11e5-b67f-a61732c1d025',
+					title: 'Super Tuesday results: sweeping victories for Trump and Clinton'
+				}
+			]));
+
+			return graphql(schema, query, { backend })
+				.then(({data}) => {
+					expect(data.listOfType.length).to.equal(2);
+					expect(data.listOfType[0].id).to.exist;
+					expect(data.listOfType[1].id).to.exist;
+					expect(listOfTypeStub.calledOnce).to.be.true;
+					expect(contentStub.calledOnce).to.be.true;
+				});
+		});
+
 		it('gracefully handles no data being returned', () => {
 
 			listOfTypeStub.returns(Promise.resolve(undefined));
