@@ -140,6 +140,30 @@ describe('Content', () => {
 					});
 			});
 
+			it('should be able to get author\'s headshot if author\'s name contains an apostrophe', () => {
+				const schema = testSchema({
+					metadata: [
+						{ taxonomy: 'authors', idV1: 'Q0ItMDAwMTA1NQ==-QXV0aG9ycw==', prefLabel: 'Sarah O\'Connor' }
+					]
+				});
+				const query = `
+					query Content {
+						content {
+							authors {
+								headshot
+							}
+						}
+					}
+				`;
+
+				return graphql(schema, query)
+					.then(({ data }) => {
+						data.content.authors.should.eql([
+							{ headshot: 'https://next-geebee.ft.com/image/v1/images/raw/fthead:sarah-o-connor' }
+						]);
+					});
+			});
+
 			it('should flag if author is a brand', () => {
 				const schema = testSchema({
 					metadata: [
