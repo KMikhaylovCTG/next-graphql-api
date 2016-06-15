@@ -31,6 +31,20 @@ const queryType = new GraphQLObjectType({
 				return backend(flags).capi.list(uuid);
 			}
 		},
+		brexitPrimary: {
+			type: List,
+			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
+				const uuid = sources['brexitPrimary'].uuid;
+				return backend(flags).capi.list(uuid);
+			}
+		},
+		brexitSecondary: {
+			type: List,
+			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
+				const uuid = sources['brexitSecondary'].uuid;
+				return backend(flags).capi.list(uuid);
+			}
+		},
 		top: {
 			type: Page,
 			args: {
