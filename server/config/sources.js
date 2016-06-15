@@ -49,10 +49,21 @@ const sources = {
 		type: 'list',
 		uuid: '73667f46-1a55-11e5-a130-2e7db721f996'
 	},
+	brexitPrimary: {
+		type: 'list',
+		uuid: '5ae77144-3162-11e6-ad39-3fee5ffe5b5b'
+	},
+	brexitSecondary: {
+		type: 'list',
+		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
+	},
+
+	// TODO remove brexitCoverage, once next-front-page has switched to using new source "brexitPrimary"
 	brexitCoverage: {
 		type: 'list',
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
 	},
+	// TODO remove brexitBuildup, once next-front-page has switched to using new source "brexitSecondary"
 	brexitBuildup: {
 		type: 'list',
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
