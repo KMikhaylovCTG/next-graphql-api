@@ -51,7 +51,7 @@ const sources = {
 	},
 	brexitPrimary: {
 		type: 'list',
-		uuid: '5ae77144-3162-11e6-ad39-3fee5ffe5b5b'
+		uuid: 'c647acc6-32e1-11e6-bda0-04585c31b153'
 	},
 	brexitSecondary: {
 		type: 'list',
