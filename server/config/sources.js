@@ -57,17 +57,6 @@ const sources = {
 		type: 'list',
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
 	},
-
-	// TODO remove brexitCoverage, once next-front-page has switched to using new source "brexitPrimary"
-	brexitCoverage: {
-		type: 'list',
-		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
-	},
-	// TODO remove brexitBuildup, once next-front-page has switched to using new source "brexitSecondary"
-	brexitBuildup: {
-		type: 'list',
-		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
-	}
 };
 
 export default sources;
