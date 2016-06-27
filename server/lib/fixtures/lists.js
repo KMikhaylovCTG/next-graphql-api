@@ -1,7 +1,7 @@
 export default {
 	'73667f46-1a55-11e5-a130-2e7db721f996': {
 		id: 'http://api.ft.com/thing/73667f46-1a55-11e5-a130-2e7db721f996',
-		title: 'Editor\'s pick',
+		title: 'Editor’s pick',
 		apiUrl: 'http://api.ft.com/lists/73667f46-1a55-11e5-a130-2e7db721f996',
 		publishedDate: '2015-06-24T09:44:00.000Z',
 		items: [
