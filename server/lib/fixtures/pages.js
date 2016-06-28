@@ -13,19 +13,6 @@ export default {
 			'1b5aaa1e-3456-11e5-bdbb-35e55cbae175'
 		]
 	},
-	'ec66fcc8-cd25-11de-a748-00144feabdc0': {
-		'title': 'comment',
-		'items': [
-			'27db9c44-3483-11e5-bdbb-35e55cbae175',
-			'cd64108c-344d-11e5-bdbb-35e55cbae175',
-			'44592984-3449-11e5-bdbb-35e55cbae175',
-			'895c857e-344b-11e5-bdbb-35e55cbae175',
-			'6e61a4f2-3450-11e5-bdbb-35e55cbae175',
-			'604a2956-343d-11e5-b05b-b01debd57852',
-			'08ccabba-3229-11e5-8873-775ba7c2ea3d',
-			'0f52ef40-2c8d-11e5-acfb-cbd2e1c81cca'
-		]
-	},
 	'4c499f12-4e94-11de-8d4c-00144feabdc0': {
 		'title': 'Front page',
 		'items': [
