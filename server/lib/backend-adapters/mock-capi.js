@@ -45,7 +45,10 @@ export default class {
 		);
 
 		return Promise.all(contentPromises)
-			.then(content => content.map(item => Array.isArray(item) ? item[0] : item))
+			.then(content => content
+				.map(item => Array.isArray(item) ? item[0] : item)
+				.filter(item => item)
+			)
 			.then(filterContent(opts, resolveContentType));
 	}
 
