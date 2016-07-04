@@ -4,10 +4,10 @@ import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-import Cache from '../../../server/lib/cache';
+import MemCache from '../../../server/lib/mem-cache';
 
-describe('GraphQL Cache', () => {
-	const cache = new Cache(10);
+describe('Mem Cache', () => {
+	const memCache = new MemCache(10);
 	const fetcher = () => {
 		return Promise.resolve('fresh');
 	};
@@ -18,13 +18,13 @@ describe('GraphQL Cache', () => {
 
 	describe('#cached', () => {
 		it('fetches fresh data when nothing is cached', () => {
-			expect(cache.cached('test-key-1', 1, fetcher)).to.eventually.eq('fresh');
+			expect(memCache.cached('test-key-1', 1, fetcher)).to.eventually.eq('fresh');
 		});
 
 		it('returns cached data when fresh', () => {
-			return cache.cached('test-key-2', 10, () => Promise.resolve('orig'))
+			return memCache.cached('test-key-2', 10, () => Promise.resolve('orig'))
 			.then(() => {
-				return cache.cached('test-key-2', 10, fetcher)
+				return memCache.cached('test-key-2', 10, fetcher)
 			})
 			.then((it) => {
 				expect(it).to.eq('orig');
@@ -32,9 +32,9 @@ describe('GraphQL Cache', () => {
 		});
 
 		it('returns stale data when expired', () => {
-			return cache.cached('test-key-3', -1, () => Promise.resolve('stale'))
+			return memCache.cached('test-key-3', -1, () => Promise.resolve('stale'))
 			.then(() => {
-				return cache.cached('test-key-3', 10, fetcher);
+				return memCache.cached('test-key-3', 10, fetcher);
 			})
 			.then((it) => {
 				expect(it).to.eq('stale')
@@ -42,23 +42,23 @@ describe('GraphQL Cache', () => {
 		});
 
 
-		it('fetches new data when cache expires', () => {
-			return cache.cached('test-key-4', -10, () => Promise.resolve('stale'))
+		it('fetches new data when memCache expires', () => {
+			return memCache.cached('test-key-4', -10, () => Promise.resolve('stale'))
 			.then(() => {
-				return cache.cached('test-key-4', 10, fetcher);
+				return memCache.cached('test-key-4', 10, fetcher);
 			})
 			.then((it) => {
 				expect(it).to.eq('stale');
-				return cache.cached('test-key-4', 10, () => Promise.resolve('too fresh'));
+				return memCache.cached('test-key-4', 10, () => Promise.resolve('too fresh'));
 			})
 			.then((it) => {
 				expect(it).to.eq('fresh');
 			})
 		});
 
-		it('only fetches new data once at a time when cache expires', () => {
-			let p1 = cache.cached('test-key-5', 10, fetcher);
-			let p2 = cache.cached('test-key-5', 10, fetcher);
+		it('only fetches new data once at a time when memCache expires', () => {
+			let p1 = memCache.cached('test-key-5', 10, fetcher);
+			let p2 = memCache.cached('test-key-5', 10, fetcher);
 
 			// both should be the same promise
 			expect(p1).to.eq(p2);
@@ -66,14 +66,14 @@ describe('GraphQL Cache', () => {
 
 		it('clean up finished and failed fetches', () => {
 			let p3 = null;
-			let p1 = cache.cached('test-key-6', -1, fail)
+			let p1 = memCache.cached('test-key-6', -1, fail)
 
 			return p1.then(() => {
-				let p2 = cache.cached('test-key-6', -1, fetcher)
+				let p2 = memCache.cached('test-key-6', -1, fetcher)
 
 				return p2.then(() => {
-					cache.clear('test-key-6');
-					p3 = cache.cached('test-key-6', 10, fetcher);
+					memCache.clear('test-key-6');
+					p3 = memCache.cached('test-key-6', 10, fetcher);
 
 					// now they shouldn't be the same promise
 					expect(p1).to.not.equal(p2);
@@ -87,13 +87,13 @@ describe('GraphQL Cache', () => {
 
 	it('returns stale data on a fetch error', () => {
 		const clock = sinon.useFakeTimers();
-		const cache = new Cache(10 * 60, 5 * 60);
+		const cache = new MemCache(10 * 60, 5 * 60);
 		return cache.cached('test-key-7', -1, () => Promise.resolve('stale'))
 		.then(() => {
 			return cache.cached('test-key-7', 10, () => Promise.reject('error'));
 		})
 		.then((it) => {
-			//Stale object in cache, so ignore error and return that
+			//Stale object in memCache, so ignore error and return that
 			expect(it).to.eq('stale');
 			clock.tick(1000 * 60 * 4);
 			return cache.cached('test-key-7', 10, () => Promise.reject('error'));
@@ -105,21 +105,21 @@ describe('GraphQL Cache', () => {
 			return cache.cached('test-key-7', 10, () => Promise.reject('error'));
 		})
 		.then((it) => {
-			//After 10 minutes we've cleared our cache, so give up and return undefined
+			//After 10 minutes we've cleared our memCache, so give up and return undefined
 			expect(it).to.eq(undefined);
 		})
 	});
 
-	it('does not cache undefined', () => {
-		return cache.cached('test-key-8', -1, () => Promise.resolve('stale'))
+	it('does not memCache undefined', () => {
+		return memCache.cached('test-key-8', -1, () => Promise.resolve('stale'))
 		.then((it) => {
 			//return stale and go and fetch
 			expect(it).to.eq('stale');
-			return cache.cached('test-key-8', 10, () => Promise.resolve(undefined));
+			return memCache.cached('test-key-8', 10, () => Promise.resolve(undefined));
 		})
 		.then((it) => {
 			expect(it).to.eq('stale')
-			return cache.cached('test-key-8', 10, () => Promise.resolve(undefined));
+			return memCache.cached('test-key-8', 10, () => Promise.resolve(undefined));
 		})
 		.then((it) => {
 			expect(it).to.eq('stale')
@@ -127,16 +127,16 @@ describe('GraphQL Cache', () => {
 	});
 
 
-	it('cleans up cache items stale items and unused stale items seperately', () => {
+	it('cleans up memCache items stale items and unused stale items seperately', () => {
 		const clock = sinon.useFakeTimers();
-		const cache = new Cache(10 * 60, 5 * 60);
+		const cache = new MemCache(10 * 60, 5 * 60);
 
 
 		const p1 = cache.cached('test-key-1', 1, fetcher);
 		const p2 = cache.cached('test-key-unused', 1, fetcher);
 		return Promise.all([p1,p2]).then(() => {
 
-			//After two minutes, both are still valid so remain in cache
+			//After two minutes, both are still valid so remain in memCache
 			clock.tick(1000 * 60 * 2);
 			expect(cache.contentCache['test-key-1']).to.exist;
 			expect(cache.contentCache['test-key-unused']).to.exist;

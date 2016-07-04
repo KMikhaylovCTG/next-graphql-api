@@ -12,7 +12,7 @@ import Myft from './myft';
 import TodaysTopics from './todays-topics';
 import Bertha from './bertha';
 
-import MemCache from '../cache';
+import MemCache from '../mem-cache';
 import RedisCache from '../redis-cache';
 
 const memCache = new MemCache(12 * 60 * 60, 30 * 60);
