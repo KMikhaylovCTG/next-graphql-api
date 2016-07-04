@@ -4,7 +4,8 @@ import Redis from '../redis';
 
 export default class {
 	constructor () {
-		this.redis = new Redis({ redisUrl: process.env.REDIS_URL });
+		const redisUrl = process.env.REGION === 'US' ? process.env.REDIS_URL_US : process.env.REDIS_URL_EU;
+		this.redis = new Redis({ redisUrl });
 		this.currentRequests = {};
 	}
 
