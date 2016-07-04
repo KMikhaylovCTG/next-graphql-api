@@ -4,7 +4,7 @@ import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-import MemCache from '../../../server/lib/mem-cache';
+import MemCache from '../../../../server/lib/caches/mem-cache';
 
 describe('Mem Cache', () => {
 	const memCache = new MemCache(10);

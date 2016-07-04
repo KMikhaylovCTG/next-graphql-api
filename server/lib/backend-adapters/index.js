@@ -12,8 +12,8 @@ import Myft from './myft';
 import TodaysTopics from './todays-topics';
 import Bertha from './bertha';
 
-import MemCache from '../mem-cache';
-import RedisCache from '../redis-cache';
+import MemCache from '../caches/mem-cache';
+import RedisCache from '../caches/redis-cache';
 
 const memCache = new MemCache(12 * 60 * 60, 30 * 60);
 const redisCache = new RedisCache();

@@ -3,21 +3,22 @@ import redis from 'redis';
 import logger from '@financial-times/n-logger';
 import denodeify from 'denodeify';
 
-const redisUrl = url.parse(process.env.REDIS_URL);
+export default class {
+	constructor (redisUrl) {
+		const redisUrlObject = url.parse(redisUrl);
+		const redisClient = redis.createClient({
+			port: redisUrlObject.port,
+			host: redisUrlObject.hostname,
+			enable_offline_queue: false // fail fast when redis is down
+		});
+		if (redisUrlObject.auth) {
+			redisClient.auth(redisUrlObject.auth.split(':')[1]);
+		}
+		redisClient.on('error', err => {
+			logger.error('Redis Error', err);
+		});
 
-const redisClient = redis.createClient({
-	port: redisUrl.port,
-	host: redisUrl.hostname,
-	enable_offline_queue: false // fail fast when redis is down
-});
-
-redisClient.auth(redisUrl.auth.split(':')[1]);
-
-redisClient.on('error', err => {
-	logger.error('Redis Error', err);
-});
-
-const get = denodeify(redisClient.get.bind(redisClient));
-const setex = denodeify(redisClient.setex.bind(redisClient));
-
-export { get, setex };
+		this.get = denodeify(redisClient.get.bind(redisClient));
+		this.set = denodeify(redisClient.setex.bind(redisClient));
+	}
+}

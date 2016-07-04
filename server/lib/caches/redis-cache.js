@@ -1,20 +1,21 @@
 import logger from '@financial-times/n-logger';
 import { metrics } from '@financial-times/n-express';
-import * as redis from './redis';
+import Redis from '../redis';
 
 export default class {
 	constructor () {
-		this.cache = redis;
-		this.requestMap = [];
+		this.redis = new Redis(process.env.REDIS_URL);
+		this.currentRequests = [];
 	}
 
 	cached (key, ttl, fetcher) {
 		const metricsKey = key.split('.')[0];
 
-		return this.cache.get(key)
+		return this.redis
+			.get(key)
 			.then(data => {
-				// we have fresh data
 				if (data) {
+					// we have fresh data
 					metrics.count(`cache.${metricsKey}.cached`, 1);
 					return JSON.parse(data);
 				}
@@ -25,31 +26,29 @@ export default class {
 	}
 
 	fetchAndSet (key, ttl, fetcher) {
-		if (this.requestMap[key]) {
-			return this.requestMap[key];
+		if (this.currentRequests[key]) {
+			return this.currentRequests[key];
 		}
 		const metricsKey = key.split('.')[0];
-		metrics.count(`cache.${metricsKey}.fresh`, 1);
-		this.requestMap[key] = fetcher()
+
+		return this.currentRequests[key] = fetcher()
 			.then(res => {
-				if(!res) {
+				if (!res) {
 					return;
 				}
+				metrics.count(`cache.${metricsKey}.fresh`, 1);
 				const data = JSON.stringify(res);
-
-				return this.cache
-					.setex(key, ttl, data)
+				return this.redis
+					.set(key, ttl, data)
 					.then(() => {
-						delete this.requestMap[key];
+						delete this.currentRequests[key];
 						return res;
 					});
 			})
 			.catch(err => {
 				metrics.count(`cache.${metricsKey}.error`, 1);
-				delete this.requestMap[key];
+				delete this.currentRequests[key];
 				logger.error(err);
 			});
-
-		return this.requestMap[key];
 	}
 }
