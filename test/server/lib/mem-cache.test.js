@@ -42,7 +42,7 @@ describe('Mem Cache', () => {
 		});
 
 
-		it('fetches new data when memCache expires', () => {
+		it('fetches new data when mem cache expires', () => {
 			return memCache.cached('test-key-4', -10, () => Promise.resolve('stale'))
 			.then(() => {
 				return memCache.cached('test-key-4', 10, fetcher);
@@ -56,7 +56,7 @@ describe('Mem Cache', () => {
 			})
 		});
 
-		it('only fetches new data once at a time when memCache expires', () => {
+		it('only fetches new data once at a time when mem cache expires', () => {
 			let p1 = memCache.cached('test-key-5', 10, fetcher);
 			let p2 = memCache.cached('test-key-5', 10, fetcher);
 
@@ -66,10 +66,10 @@ describe('Mem Cache', () => {
 
 		it('clean up finished and failed fetches', () => {
 			let p3 = null;
-			let p1 = memCache.cached('test-key-6', -1, fail)
+			let p1 = memCache.cached('test-key-6', -1, fail);
 
 			return p1.then(() => {
-				let p2 = memCache.cached('test-key-6', -1, fetcher)
+				let p2 = memCache.cached('test-key-6', -1, fetcher);
 
 				return p2.then(() => {
 					memCache.clear('test-key-6');
@@ -93,7 +93,7 @@ describe('Mem Cache', () => {
 			return cache.cached('test-key-7', 10, () => Promise.reject('error'));
 		})
 		.then((it) => {
-			//Stale object in memCache, so ignore error and return that
+			//Stale object in mem cache, so ignore error and return that
 			expect(it).to.eq('stale');
 			clock.tick(1000 * 60 * 4);
 			return cache.cached('test-key-7', 10, () => Promise.reject('error'));
@@ -105,7 +105,7 @@ describe('Mem Cache', () => {
 			return cache.cached('test-key-7', 10, () => Promise.reject('error'));
 		})
 		.then((it) => {
-			//After 10 minutes we've cleared our memCache, so give up and return undefined
+			//After 10 minutes we've cleared our mem cache, so give up and return undefined
 			expect(it).to.eq(undefined);
 		})
 	});
@@ -127,7 +127,7 @@ describe('Mem Cache', () => {
 	});
 
 
-	it('cleans up memCache items stale items and unused stale items seperately', () => {
+	it('cleans up mem cache items stale items and unused stale items seperately', () => {
 		const clock = sinon.useFakeTimers();
 		const cache = new MemCache(10 * 60, 5 * 60);
 
@@ -136,7 +136,7 @@ describe('Mem Cache', () => {
 		const p2 = cache.cached('test-key-unused', 1, fetcher);
 		return Promise.all([p1,p2]).then(() => {
 
-			//After two minutes, both are still valid so remain in memCache
+			//After two minutes, both are still valid so remain in mem cache
 			clock.tick(1000 * 60 * 2);
 			expect(cache.contentCache['test-key-1']).to.exist;
 			expect(cache.contentCache['test-key-unused']).to.exist;
