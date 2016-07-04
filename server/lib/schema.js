@@ -351,6 +351,17 @@ const queryType = new GraphQLObjectType({
 						return be.capi.content(articlesUuids)
 					});
 			}
+		},
+		page: {
+			type: Page,
+			args: {
+				uuid: {
+					type: GraphQLString
+				}
+			},
+			resolve: (root, { uuid }, { rootValue: { flags, backend = backendReal }}) => {
+				return backend(flags).capi.page(uuid);
+			}
 		}
 	}
 });

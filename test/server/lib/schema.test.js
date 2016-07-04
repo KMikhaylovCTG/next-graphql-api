@@ -309,4 +309,32 @@ describe('Schema', () => {
 				});
 		});
 	});
+
+	describe('Page', () => {
+
+		it('should be able to fetch', () => {
+			const pageStub = sinon.stub();
+			pageStub.returns({ title: 'UK Stories', url: '1234' });
+			const backend = () => ({
+				capi: {
+					page: pageStub
+				}
+			});
+			const query = `
+				query Page {
+					page(uuid: "2836ebbe-cd26-11de-a748-00144feabdc0") {
+						url
+						title
+					}
+				}
+			`;
+
+			return graphql(schema, query, { backend })
+				.then(({ data }) => {
+					data.page.title.should.equal('UK Stories');
+					data.page.url.should.equal('1234');
+				})
+		});
+
+	});
 });
