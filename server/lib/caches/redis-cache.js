@@ -5,7 +5,7 @@ import Redis from '../redis';
 export default class {
 	constructor () {
 		this.redis = new Redis(process.env.REDIS_URL);
-		this.currentRequests = [];
+		this.currentRequests = {};
 	}
 
 	cached (key, ttl, fetcher) {
