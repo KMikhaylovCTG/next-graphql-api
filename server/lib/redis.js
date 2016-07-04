@@ -4,7 +4,7 @@ import logger from '@financial-times/n-logger';
 import denodeify from 'denodeify';
 
 export default class {
-	constructor (redisUrl) {
+	constructor ({ redisUrl = 'http://localhost:6379' }) {
 		const redisUrlObject = url.parse(redisUrl);
 		const redisClient = redis.createClient({
 			port: redisUrlObject.port,
