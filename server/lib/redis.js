@@ -21,4 +21,3 @@ const get = denodeify(redisClient.get.bind(redisClient));
 const setex = denodeify(redisClient.setex.bind(redisClient));
 
 export { get, setex };
-
