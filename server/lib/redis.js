@@ -14,8 +14,7 @@ const redisClient = redis.createClient({
 redisClient.auth(redisUrl.auth.split(':')[1]);
 
 redisClient.on('error', err => {
-	console.log('Redis Error', err);
-	logger.error(err);
+	logger.error('Redis Error', err);
 });
 
 const get = denodeify(redisClient.get.bind(redisClient));
