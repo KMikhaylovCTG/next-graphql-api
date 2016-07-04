@@ -1,5 +1,5 @@
 import logger from '@financial-times/n-logger';
-import { metrics } from 'ft-next-express';
+import { metrics } from '@financial-times/n-express';
 import * as redis from './redis';
 
 export default class {
