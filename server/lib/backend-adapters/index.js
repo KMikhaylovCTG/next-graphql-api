@@ -19,18 +19,21 @@ export default (flags = {}) => {
 	if (!Object.keys(adapters).length) {
 		const redisUrl = process.env.REGION === 'US' ? process.env.REDIS_URL_US : process.env.REDIS_URL_EU;
 		const redisCache = new RedisCache({ redisUrl });
+		const capi = new CAPI(redisCache);
+		const liveblog = new Liveblog(redisCache);
+
 		Object.assign(adapters, {
-			capi: new CAPI(redisCache),
-			mockCapi: new MockCapi(capi),
-			fastFT: new FastFtFeed(sources.fastFt),
+			capi,
+			liveblog,
 			hui: new Hui(redisCache),
-			liveblog: new Liveblog(redisCache),
-			mockLiveblog: new MockLiveblog(liveblog),
 			myft: new Myft(redisCache),
 			popularApi: new PopularAPI(redisCache),
 			video: new Video(redisCache),
 			todaysTopics: new TodaysTopics(redisCache),
-			bertha: new Bertha(redisCache)
+			bertha: new Bertha(redisCache),
+			fastFT: new FastFtFeed(sources.fastFt),
+			mockCapi: new MockCapi(capi),
+			mockLiveblog: new MockLiveblog(liveblog)
 		});
 	}
 
