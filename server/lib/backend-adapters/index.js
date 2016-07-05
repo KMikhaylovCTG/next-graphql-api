@@ -13,28 +13,36 @@ import TodaysTopics from './todays-topics';
 import Bertha from './bertha';
 import RedisCache from '../caches/redis-cache';
 
-const redisCache = new RedisCache();
+const adapters = {};
 
-const capi = new CAPI(redisCache);
-const mockCapi = new MockCapi(capi);
-const fastFT = new FastFtFeed(sources.fastFt);
-const hui = new Hui(redisCache);
-const liveblog = new Liveblog(redisCache);
-const mockLiveblog = new MockLiveblog(liveblog);
-const myft = new Myft(redisCache);
-const popularApi = new PopularAPI(redisCache);
-const video = new Video(redisCache);
-const todaysTopics = new TodaysTopics(redisCache);
-const bertha = new Bertha(redisCache);
+export default (flags = {}) => {
+	if (!Object.keys(adapters).length) {
+		const redisUrl = process.env.REGION === 'US' ? process.env.REDIS_URL_US : process.env.REDIS_URL_EU;
+		const redisCache = new RedisCache({ redisUrl });
+		Object.assign(adapters, {
+			capi: new CAPI(redisCache),
+			mockCapi: new MockCapi(capi),
+			fastFT: new FastFtFeed(sources.fastFt),
+			hui: new Hui(redisCache),
+			liveblog: new Liveblog(redisCache),
+			mockLiveblog: new MockLiveblog(liveblog),
+			myft: new Myft(redisCache),
+			popularApi: new PopularAPI(redisCache),
+			video: new Video(redisCache),
+			todaysTopics: new TodaysTopics(redisCache),
+			bertha: new Bertha(redisCache)
+		});
+	}
 
-export default (flags = {}) => ({
-	capi: flags.mockData ? mockCapi : capi,
-	fastFT,
-	hui,
-	liveblog: flags.mockData ? mockLiveblog : liveblog,
-	myft,
-	popularApi,
-	video,
-	todaysTopics,
-	bertha
-});
+	return {
+		capi: flags.mockData ? adapters.mockCapi : adapters.capi,
+		fastFT: adapters.fastFT,
+		hui: adapters.hui,
+		liveblog: flags.mockData ? adapters.mockLiveblog : adapters.liveblog,
+		myft: adapters.myft,
+		popularApi: adapters.popularApi,
+		video: adapters.video,
+		todaysTopics: adapters.todaysTopics,
+		bertha: adapters.bertha
+	};
+};

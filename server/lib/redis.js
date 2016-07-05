@@ -4,11 +4,11 @@ import logger from '@financial-times/n-logger';
 import denodeify from 'denodeify';
 
 export default class {
-	constructor ({ redisUrl = 'http://localhost:6379' }) {
+	constructor ({ redisUrl = 'http://localhost:6379' } = {}) {
 		const redisUrlObject = url.parse(redisUrl);
 		const redisClient = redis.createClient({
-			port: redisUrlObject.port,
 			host: redisUrlObject.hostname,
+			port: redisUrlObject.port,
 			enable_offline_queue: false // fail fast when redis is down
 		});
 		if (redisUrlObject.auth) {

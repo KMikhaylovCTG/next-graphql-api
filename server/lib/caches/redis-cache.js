@@ -3,9 +3,8 @@ import { metrics } from '@financial-times/n-express';
 import Redis from '../redis';
 
 export default class {
-	constructor () {
-		const redisUrl = process.env.REGION === 'US' ? process.env.REDIS_URL_US : process.env.REDIS_URL_EU;
-		this.redis = new Redis({ redisUrl });
+	constructor ({ redisUrl, redis } = { }) {
+		this.redis = redis || new Redis({ redisUrl });
 		this.currentRequests = {};
 	}
 
