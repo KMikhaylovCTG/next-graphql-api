@@ -1,9 +1,16 @@
 .DS_Store
+.editorconfig
+.eslintrc.js
+.scss-lint.yml
+dump.rdb
+webpack.config.js
 
 /.editorconfig
 /.env
 /.scss-lint.yml
 /npm-debug.log*
+
+!/nodemon.json
 
 /.haikro-cache/
 /.idea/
@@ -12,9 +19,3 @@
 /bower_components/
 /node*/
 /public/
-
-!/nodemon.json
-.editorconfig
-.eslintrc.js
-.scss-lint.yml
-webpack.config.js

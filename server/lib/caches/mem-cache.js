@@ -5,7 +5,7 @@ export default class {
 	constructor (staleTtl, unusedStaleTtl) {
 		// in-memory content cache
 		this.contentCache = {};
-		this.requestMap = {};
+		this.currentRequests = {};
 		unusedStaleTtl = unusedStaleTtl || staleTtl;
 
 		const sweeper = () => {
@@ -61,12 +61,12 @@ export default class {
 	_fetch (key, now, ttl, fetcher) {
 		const metricsKey = key.split('.')[0];
 
-		if(this.requestMap[key])
-			return this.requestMap[key];
+		if(this.currentRequests[key])
+			return this.currentRequests[key];
 
 		metrics.count(`cache.${metricsKey}.fresh`, 1);
 
-		this.requestMap[key] = fetcher()
+		this.currentRequests[key] = fetcher()
 		.then((it) => {
 			if(!it) {
 				return;
@@ -78,16 +78,16 @@ export default class {
 				data: it
 			};
 
-			delete this.requestMap[key];
+			delete this.currentRequests[key];
 
 			return it;
 		})
 		.catch((err) => {
 			metrics.count(`cache.${metricsKey}.error`, 1);
-			delete this.requestMap[key];
+			delete this.currentRequests[key];
 			logger.error(err);
 
 		});
-		return this.requestMap[key];
+		return this.currentRequests[key];
 	}
 }

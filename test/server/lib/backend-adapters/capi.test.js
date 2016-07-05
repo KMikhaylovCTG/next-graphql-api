@@ -116,7 +116,7 @@ describe('CAPI', () => {
 
 			before(() => {
 				fetchMock.mock(
-					new RegExp(`https://[^\.]*.ft.com/lists`),
+					new RegExp('https://[^\.]*.ft.com/lists'),
 					listOfTypeFixture
 				);
 			});
@@ -146,7 +146,7 @@ describe('CAPI', () => {
 
 			before(() => {
 				fetchMock.mock(
-					new RegExp(`https://[^\.]*.ft.com/lists`),
+					new RegExp('https://[^\.]*.ft.com/lists'),
 					404
 				);
 			});
