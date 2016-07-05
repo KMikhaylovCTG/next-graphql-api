@@ -13,7 +13,7 @@ const redisClientSpy = {
 	setex: sinon.spy()
 };
 const redisSpy = {
-	createClient: sinon.spy(opts => redisClientSpy)
+	createClient: sinon.spy(() => redisClientSpy)
 };
 const Redis = proxyquire('../../../server/lib/redis', { redis: redisSpy });
 

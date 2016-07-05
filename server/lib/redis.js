@@ -17,8 +17,20 @@ export default class {
 		redisClient.on('error', err => {
 			logger.error('Redis Error', err);
 		});
+		const ready = new Promise((resolve, reject) => {
+			redisClient.on('ready', err => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			});
+		});
 
-		this.get = denodeify(redisClient.get.bind(redisClient));
-		this.set = denodeify(redisClient.setex.bind(redisClient));
+		const denodeifiedGet = denodeify(redisClient.get);
+		const denodeifiedSetex = denodeify(redisClient.setex);
+
+		this.get = (...args) => ready.then(denodeifiedGet.apply(redisClient, args));
+		this.set = (...args) => ready.then(denodeifiedSetex.apply(redisClient, args));
 	}
 }
