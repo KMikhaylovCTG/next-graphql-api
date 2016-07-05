@@ -4,9 +4,9 @@ import logger from '@financial-times/n-logger';
 import denodeify from 'denodeify';
 
 export default class {
-	constructor ({ redisUrl = 'http://localhost:6379' } = {}) {
-		const redisUrlObject = url.parse(redisUrl);
-		const redisClient = redis.createClient({
+	constructor (opts = {}) {
+		const redisUrlObject = url.parse(opts.redisUrl || 'http://localhost:6379');
+		const redisClient = (opts.redis || redis).createClient({
 			host: redisUrlObject.hostname,
 			port: redisUrlObject.port,
 			enable_offline_queue: false // fail fast when redis is down
@@ -30,7 +30,6 @@ export default class {
 		const denodeifiedGet = denodeify(redisClient.get);
 		const denodeifiedSetex = denodeify(redisClient.setex);
 
-		// NOTE: absolutely no idea why this has to be a full method with body (breaks otherwise)
 		this.get = (...args) => ready.then(() => {
 			return denodeifiedGet.apply(redisClient, args);
 		});

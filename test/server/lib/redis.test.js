@@ -1,4 +1,3 @@
-import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
@@ -6,27 +5,43 @@ import sinonChai from 'sinon-chai';
 chai.should();
 chai.use(sinonChai);
 
-const redisClientSpy = {
-	auth: sinon.spy(),
-	on: sinon.spy(),
-	get: sinon.spy(),
-	setex: sinon.spy()
-};
-const redisSpy = {
-	createClient: sinon.spy(() => redisClientSpy)
-};
-const Redis = proxyquire('../../../server/lib/redis', { redis: redisSpy });
+import Redis from '../../../server/lib/redis';
+
+class RedisClientMock {
+	constructor () {
+		this.events = { };
+	}
+	auth () { }
+	on (event, func) {
+		this.events[event] = func;
+	}
+	get (key, func) {
+		func(null, key);
+	}
+	setex () { }
+	_fire (event) {
+		this.events[event]();
+	}
+}
+
+const createRedisMock = redisClient => ({
+	createClient: sinon.spy(() => redisClient)
+});
 
 describe('Redis', () => {
 
 	it('should be able to initialise', () => {
-		const redis = new Redis();
+		const redisMock = createRedisMock(new RedisClientMock());
+		const redis = new Redis({ redis: redisMock });
+
 		redis.should.be.defined;
 	});
 
 	it('should use host localhost, port 6379, if no url supplied', () => {
-		new Redis();
-		redisSpy.createClient.should.have.been.calledWith({
+		const redisMock = createRedisMock(new RedisClientMock());
+		new Redis({ redis: redisMock });
+
+		redisMock.createClient.should.have.been.calledWith({
 			host: 'localhost',
 			port: '6379',
 			enable_offline_queue: false
@@ -34,8 +49,10 @@ describe('Redis', () => {
 	});
 
 	it('should use url if supplied', () => {
-		new Redis({ redisUrl: 'http://www.foo.com:6666' });
-		redisSpy.createClient.should.have.been.calledWith({
+		const redisMock = createRedisMock(new RedisClientMock());
+		new Redis({ redisUrl: 'http://www.foo.com:6666', redis: redisMock });
+
+		redisMock.createClient.should.have.been.calledWith({
 			host: 'www.foo.com',
 			port: '6666',
 			enable_offline_queue: false
@@ -43,21 +60,42 @@ describe('Redis', () => {
 	});
 
 	it('should auth, if supplied', () => {
-		new Redis({ redisUrl: 'http://:secret@www.foo.com:6666' });
-		redisClientSpy.auth.should.have.been.calledWith('secret');
+		const redisClientMock = new RedisClientMock();
+		const authSpy = sinon.spy(redisClientMock, 'auth');
+		const redisMock = createRedisMock(redisClientMock);
+		new Redis({ redisUrl: 'http://:secret@www.foo.com:6666', redis: redisMock });
+
+		authSpy.should.have.been.calledWith('secret');
 	});
 
-	it('should be able to get', () => {
-		const redis = new Redis();
-		redis.get('some-key');
-		redisClientSpy.get.should.have.been.calledWith('some-key');
+	it('should be able to get', done => {
+		const redisClientMock = new RedisClientMock();
+		const getSpy = sinon.spy(redisClientMock, 'get');
+		const redisMock = createRedisMock(redisClientMock);
+		const redis = new Redis({ redis: redisMock });
+
+		redis.get('some-key')
+			.then(() => {
+				getSpy.should.have.been.calledWith('some-key');
+				done()
+			})
+			.catch(done);
+		redisClientMock._fire('ready');
 	});
 
-	it('should be able to set', () => {
-		const redis = new Redis();
-		const fetcher = () => { };
-		redis.set('some-key', 60, fetcher);
-		redisClientSpy.setex.should.have.been.calledWith('some-key', 60, fetcher);
+	it('should be able to set', done => {
+		const redisClientMock = new RedisClientMock();
+		const setSpy = sinon.spy(redisClientMock, 'setex');
+		const redisMock = createRedisMock(redisClientMock);
+		const redis = new Redis({ redis: redisMock });
+
+		redis.set('some-key', 60, 'some data')
+			.then(() => {
+				setSpy.should.have.been.calledWith('some-key', 60, 'some data');
+				done()
+			})
+			.catch(done);
+		redisClientMock._fire('ready');
 	});
 
 });
