@@ -30,7 +30,7 @@ export default (req, res) => {
 			const err = Array.isArray(errs) ? errs.shift() : errs;
 			const error = err instanceof GraphQLError && err.originalError ? err.originalError : err;
 			const status = error instanceof HttpError ? error.status : 500;
-			logger.error(error, { ip: req.ip });
+			logger.error(error);
 
 			return res.status(status).jsonp({
 				type: httpStatus.getStatusText(status),
