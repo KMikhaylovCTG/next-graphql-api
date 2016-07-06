@@ -21,11 +21,13 @@ export default class {
 	}
 
 	personalisedFeed (uuid, { limit = 10 }) {
-		return fetch(`https://ft-next-personalised-feed-api.herokuapp.com/v2/feed/${uuid}?originatingSignals=followed&from=-7d`, {
-			headers: {
-				'X-FT-Personalised-Feed-Api-Key': process.env.PERSONALISED_FEED_API_KEY
-			}
-		})
+		return fetch(
+			`https://ft-next-personalised-feed-api.herokuapp.com/v2/feed/${uuid}?originatingSignals=followed&from=-7d`,
+			{
+				headers: {
+					'X-FT-Personalised-Feed-Api-Key': process.env.PERSONALISED_FEED_API_KEY
+				}
+			})
 			.then(res => res.json())
 			.then(res =>
 				(new TopicCards(res.results).process())
@@ -53,29 +55,29 @@ export default class {
 
 	getMostReadTopics ({ limit = 10 }) {
 		return myftClient.fetchJson('GET', 'recommendation/most-read/concept', { limit })
-				.then(results => results.items.filter(nonEmpty))
-				.catch(err => {
-					logger.error(err);
-					return [];
-				});
+			.then(results => results.items.filter(nonEmpty))
+			.catch(err => {
+				logger.error(err);
+				return [];
+			});
 	}
 
 	getMostFollowedTopics ({ limit = 10 }) {
 		return myftClient.fetchJson('GET', 'recommendation/most-followed/concept', { limit })
-				.then(results => results.items.filter(nonEmpty))
-				.catch(err => {
-					logger.error(err);
-					return [];
-				});
+			.then(results => results.items.filter(nonEmpty))
+			.catch(err => {
+				logger.error(err);
+				return [];
+			});
 	}
 
 	getRecommendedTopics (uuid, { limit = 10 }) {
 		return myftClient.fetchJson('GET', `recommendation/user/${uuid}/concept`, { limit })
-				.then(results => results.items.filter(nonEmpty))
-				.catch(err => {
-					logger.error(err);
-					return [];
-				});
+			.then(results => results.items.filter(nonEmpty))
+			.catch(err => {
+				logger.error(err);
+				return [];
+			});
 	}
 
 }

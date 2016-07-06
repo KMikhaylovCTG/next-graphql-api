@@ -3,9 +3,8 @@ import { metrics } from '@financial-times/n-express';
 import Redis from '../redis';
 
 export default class {
-	constructor () {
-		const redisUrl = process.env.REGION === 'US' ? process.env.REDIS_URL_US : process.env.REDIS_URL_EU;
-		this.redis = new Redis({ redisUrl });
+	constructor ({ redisUrl, redis } = { }) {
+		this.redis = redis || new Redis({ redisUrl });
 		this.currentRequests = {};
 	}
 
@@ -22,6 +21,10 @@ export default class {
 				}
 
 				// we don't have fresh data, fetch it
+				return this.fetchAndSet(key, ttl, fetcher);
+			})
+			.catch(err => {
+				logger.error('Error getting data from Redis', err);
 				return this.fetchAndSet(key, ttl, fetcher);
 			});
 	}
@@ -41,6 +44,7 @@ export default class {
 				const data = JSON.stringify(res);
 				return this.redis
 					.set(key, ttl, data)
+					.catch(err => logger.error('Error setting data to Redis', err))
 					.then(() => {
 						delete this.currentRequests[key];
 						return res;
@@ -49,7 +53,7 @@ export default class {
 			.catch(err => {
 				metrics.count(`cache.${metricsKey}.error`, 1);
 				delete this.currentRequests[key];
-				logger.error(err);
+				logger.error('Error fetching data', err);
 			});
 	}
 }

@@ -6,33 +6,33 @@ export default class {
 	}
 
 	parse (json, limit) {
-			const dated = json.filter(it => !!it.data.datemodified);
-			const [first, second] = dated.slice(0, 2);
+		const dated = json.filter(it => !!it.data.datemodified);
+		const [first, second] = dated.slice(0, 2);
 
-			// make sure updates are in order from latest to earliest
-			if ((first && first.data.datemodified) < (second && second.data.datemodified)) {
-				json.reverse();
+		// make sure updates are in order from latest to earliest
+		if ((first && first.data.datemodified) < (second && second.data.datemodified)) {
+			json.reverse();
+		}
+
+		// dedupe updates and only keep messages, decide on status
+		let [, updates, status] = json.reduce(([skip, updates, status], event) => {
+			if (event.event === 'end') { return [skip, updates, 'closed']; }
+
+			if (event.event === 'msg' && event.data.mid && !skip[event.data.mid]) {
+				updates.push(event);
+				skip[event.data.mid] = true;
+				status = status || 'inprogress';
 			}
 
-			// dedupe updates and only keep messages, decide on status
-			let [, updates, status] = json.reduce(([skip, updates, status], event) => {
-				if (event.event === 'end') { return [skip, updates, 'closed']; }
+			return [skip, updates, status];
+		}, [{}, [], null]);
 
-				if (event.event === 'msg' && event.data.mid && !skip[event.data.mid]) {
-					updates.push(event);
-					skip[event.data.mid] = true;
-					status = status || 'inprogress';
-				}
+		if (limit) {
+			updates = updates.slice(0, limit);
+		}
 
-				return [skip, updates, status];
-			}, [{}, [], null]);
-
-			if (limit) {
-				updates = updates.slice(0, limit);
-			}
-
-			status = status || 'comingsoon';
-			return {updates, status};
+		status = status || 'comingsoon';
+		return {updates, status};
 	}
 
 	fetch (uri, opts, ttl = 60) {
