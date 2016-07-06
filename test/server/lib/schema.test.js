@@ -23,7 +23,8 @@ describe('Schema', () => {
 			contentStub.returns([
 				{
 					id: 'http://api.ft.com/things/5b0be968-dff3-11e5-b67f-a61732c1d025',
-					title: 'Super Tuesday results: sweeping victories for Trump and Clinton'
+					title: 'Super Tuesday results: sweeping victories for Trump and Clinton',
+					url: 'https://www.ft.com/content/5b0be968-dff3-11e5-b67f-a61732c1d025'
 				}
 			]);
 			const backend = () => ({
@@ -39,6 +40,7 @@ describe('Schema', () => {
 						items {
 							id
 							title
+							url
 						}
 					}
 				}
@@ -51,7 +53,8 @@ describe('Schema', () => {
 					data.editorsPicks.items.should.deep.equal([
 						{
 							id: 'http://api.ft.com/things/5b0be968-dff3-11e5-b67f-a61732c1d025',
-							title: 'Super Tuesday results: sweeping victories for Trump and Clinton'
+							title: 'Super Tuesday results: sweeping victories for Trump and Clinton',
+							url: 'https://www.ft.com/content/5b0be968-dff3-11e5-b67f-a61732c1d025'
 						}
 					]);
 				});

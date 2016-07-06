@@ -3,27 +3,33 @@ const query = `
 		top(region: UK) {
 			lead: items(limit: 1, type: Article) {
 				title
+				url
 			}
 			liveBlogs: items(type: LiveBlog) {
 				title
+				url
 			}
 			items(from: 1, type: Article) {
 				title
+				url
 			}
 		}
 		topStoriesList(region: UK) {
 			layoutHint
 			items(limit: 10) {
 				title
+				url
 			}
 		}
 		fastFT(limit: 5) {
 			title
+			url
 		}
 		opinion {
 			url
 			items {
 				title
+				url
 				branding {
 					headshot
 					taxonomy
@@ -34,12 +40,14 @@ const query = `
 			name
 			items(limit: 1) {
 				title
+				url
 			}
 		}
 		editorsPicks {
 			title
 			items(limit: 6) {
 				title
+				url
 			}
 		}
 		popularArticles {
@@ -49,18 +57,21 @@ const query = `
 			url
 			items(limit: 2, genres: ["analysis", "comment"]) {
 				title
+				url
 			}
 		}
 		markets {
 			url
 			items(limit: 2, genres: ["analysis", "comment"]) {
 				title
+				url
 			}
 		}
 		lifestyle {
 			url
 			items(limit: 2) {
 				title
+				url
 			}
 		}
 		videos {

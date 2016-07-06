@@ -48,6 +48,9 @@ const Content = new graphql.GraphQLInterfaceType({
 		title: {
 			type: graphql.GraphQLString
 		},
+		url: {
+			type: graphql.GraphQLString
+		},
 		genre: {
 			type: graphql.GraphQLString
 		},
@@ -119,6 +122,9 @@ const getContentFields = () => ({
 		type: graphql.GraphQLID
 	},
 	title: {
+		type: graphql.GraphQLString
+	},
+	url: {
 		type: graphql.GraphQLString
 	},
 	genre: {
