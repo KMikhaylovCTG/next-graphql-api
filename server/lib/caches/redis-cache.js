@@ -16,15 +16,17 @@ export default class {
 			.then(data => {
 				if (data) {
 					// we have fresh data
-					metrics.count(`cache.${metricsKey}.cached`, 1);
+					metrics.count(`cache.${metricsKey}.hit`, 1);
 					return JSON.parse(data);
 				}
+				metrics.count(`cache.${metricsKey}.miss`, 1);
 
 				// we don't have fresh data, fetch it
 				return this.fetchAndSet(key, ttl, fetcher);
 			})
 			.catch(err => {
-				logger.error('Error getting data from Redis', err);
+				logger.error('Error fetching data from Redis', err, { cache_key: key });
+				metrics.count(`cache.${metricsKey}.error`, 1);
 				return this.fetchAndSet(key, ttl, fetcher);
 			});
 	}
@@ -44,16 +46,21 @@ export default class {
 				const data = JSON.stringify(res);
 				return this.redis
 					.set(key, ttl, data)
-					.catch(err => logger.error('Error setting data to Redis', err))
+					.then(() => {
+						metrics.count(`cache.${metricsKey}.write`, 1);
+					})
+					.catch(err => {
+						logger.error('Error writing data to Redis', err, { cache_key: key });
+						metrics.count(`cache.${metricsKey}.error`, 1);
+					})
 					.then(() => {
 						delete this.currentRequests[key];
 						return res;
 					});
 			})
 			.catch(err => {
-				metrics.count(`cache.${metricsKey}.error`, 1);
+				logger.error('Error fetching data for cache', err);
 				delete this.currentRequests[key];
-				logger.error('Error fetching data', err);
 			});
 	}
 }
