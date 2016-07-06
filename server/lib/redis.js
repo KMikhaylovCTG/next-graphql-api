@@ -30,9 +30,7 @@ export default class {
 		const denodeifiedGet = denodeify(redisClient.get);
 		const denodeifiedSetex = denodeify(redisClient.setex);
 
-		this.get = (...args) => ready.then(() => {
-			return denodeifiedGet.apply(redisClient, args);
-		});
-		this.set = (...args) => ready.then(denodeifiedSetex.apply(redisClient, args));
+		this.get = (...args) => ready.then(() => denodeifiedGet.apply(redisClient, args));
+		this.set = (...args) => ready.then(() => denodeifiedSetex.apply(redisClient, args));
 	}
 }

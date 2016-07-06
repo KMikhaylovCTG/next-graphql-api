@@ -10,15 +10,18 @@ import Redis from '../../../server/lib/redis';
 class RedisClientMock {
 	constructor () {
 		this.events = { };
+		this.db = { };
 	}
 	auth () { }
 	on (event, func) {
 		this.events[event] = func;
 	}
 	get (key, func) {
-		func(null, key);
+		func(null, this.db[key]);
 	}
-	setex () { }
+	setex (key, ttl, data, func) {
+		func(null);
+	}
 	_fire (event) {
 		this.events[event]();
 	}
@@ -71,11 +74,14 @@ describe('Redis', () => {
 	it('should be able to get', done => {
 		const redisClientMock = new RedisClientMock();
 		const getSpy = sinon.spy(redisClientMock, 'get');
+		// put some data in its 'database'
+		redisClientMock.db['some-key'] = '{"foo":"bar"}';
 		const redisMock = createRedisMock(redisClientMock);
 		const redis = new Redis({ redis: redisMock });
 
 		redis.get('some-key')
-			.then(() => {
+			.then(data => {
+				data.should.equal('{"foo":"bar"}');
 				getSpy.should.have.been.calledWith('some-key');
 				done()
 			})
