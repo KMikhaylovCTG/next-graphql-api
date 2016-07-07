@@ -4,14 +4,18 @@ export default class {
 		this.cache = cache;
 	}
 
-	get (sheetKey, sheetName, ttl = 60 * 10) {
-		const cacheKey = `${this.type}.sheet.${sheetKey}.${sheetName}`;
-		return this.cache.cached(cacheKey, ttl, () => {
-			return fetch(`https://bertha.ig.ft.com/view/publish/gss/${sheetKey}/${sheetName}`, {
-				method: 'get',
-				headers: { 'Content-Type': 'application/json' }
-			})
-			.then(r => r.json());
-		});
+	get (key, name, { ttl = 60 * 10 } = { }) {
+		const cacheKey = `${this.type}.sheet.${key}.${name}`;
+		const fetcher = () =>
+			fetch(
+				`https://bertha.ig.ft.com/view/publish/gss/${key}/${name}`,
+				{
+					method: 'get',
+					headers: { 'Content-Type': 'application/json' }
+				}
+			)
+				.then(sheet => sheet.json());
+
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 }

@@ -15,22 +15,18 @@ const sources = {
 		idV1: 'NTlhNzEyMzMtZjBjZi00Y2U1LTg0ODUtZWVjNmEyYmU1NzQ2-QnJhbmRz'
 	},
 	opinion: {
-		url: '/comment',
 		type: 'list',
 		uuid: 'bc81b5bc-1995-11e5-a130-2e7db721f996'
 	},
 	markets: {
-		url: '/markets',
 		genres: ['analysis', 'comment'],
 		uuid: '011debcc-cd26-11de-a748-00144feabdc0'
 	},
 	technology: {
-		url: '/companies/technology',
 		genres: ['analysis', 'comment'],
 		uuid: 'e900741c-f7e8-11df-8d91-00144feab49a'
 	},
 	lifestyle: {
-		url: '/life-arts',
 		uuid: 'cec106aa-cd25-11de-a748-00144feabdc0'
 	},
 	management: {
@@ -55,7 +51,7 @@ const sources = {
 	brexitSecondary: {
 		type: 'list',
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
-	},
+	}
 };
 
 export default sources;

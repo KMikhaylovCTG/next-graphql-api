@@ -37,7 +37,8 @@ const Page = new GraphQLObjectType({
 			},
 			resolve: (page, { from, limit, genres, type }, { rootValue: { flags, backend = backendReal }}) =>
 				(page.items && page.items.length) ?
-					backend(flags).capi.content(page.items, {from, limit, genres, type}) : []
+					backend(flags).capi.content(page.items, { from, limit, genres, type }) :
+					[]
 		}
 	}
 });
@@ -73,7 +74,9 @@ const List = new GraphQLObjectType({
 				}
 			},
 			resolve: (result, args, { rootValue: { flags, backend = backendReal }}) =>
-				(result.items && result.items.length) ? backend(flags).capi.content(result.items.map(contentToUiid), args) : []
+				(result.items && result.items.length) ?
+					backend(flags).capi.content(result.items.map(contentToUiid), args) :
+					[]
 		}
 	}
 });
@@ -95,20 +98,22 @@ const Collection = new GraphQLObjectType({
 				Approximate number of articles published with this concept since the given date, up to a
 				maximum value of count (default date is 1 week, default count is 100)`,
 			args: {
+				limit: {
+					type: GraphQLInt,
+					defaultValue: 100
+				},
 				since: {
 					type: GraphQLString,
 					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD')
-				},
-				count: {
-					type: GraphQLInt,
-					defaultValue: 100
 				}
 			},
-			resolve: (collection, { since, count }, { rootValue: { flags, backend = backendReal }}) => {
-				return Promise.all(collection.concepts.map(c => c.id).map(id =>
-					backend(flags).capi.searchCount('metadata.idV1', id, { count, since})
-				)).then(counts => counts.filter(identity).reduce((a, b) => a + b, 0));
-			}
+			resolve: (collection, { since, count }, { rootValue: { flags, backend = backendReal }}) =>
+				Promise.all(
+					collection.concepts
+						.map(c => c.id)
+						.map(id => backend(flags).capi.searchCount('metadata.idV1', id, { count, since }) )
+				)
+					.then(counts => counts.filter(identity).reduce((a, b) => a + b, 0))
 		}
 	}
 });
