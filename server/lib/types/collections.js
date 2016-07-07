@@ -37,8 +37,7 @@ const Page = new GraphQLObjectType({
 			},
 			resolve: (page, { from, limit, genres, type }, { rootValue: { flags, backend = backendReal }}) =>
 				(page.items && page.items.length) ?
-					backend(flags).capi.content(page.items, { from, limit, genres, type }) :
-					[]
+					backend(flags).capi.content(page.items, { from, limit, genres, type }) : []
 		}
 	}
 });
@@ -75,8 +74,7 @@ const List = new GraphQLObjectType({
 			},
 			resolve: (result, args, { rootValue: { flags, backend = backendReal }}) =>
 				(result.items && result.items.length) ?
-					backend(flags).capi.content(result.items.map(contentToUiid), args) :
-					[]
+					backend(flags).capi.content(result.items.map(contentToUiid), args) : []
 		}
 	}
 });
@@ -102,16 +100,21 @@ const Collection = new GraphQLObjectType({
 					type: GraphQLInt,
 					defaultValue: 100
 				},
+				// DEPRECATED - use `limit`
+				count: {
+					type: GraphQLInt,
+					defaultValue: 100
+				},
 				since: {
 					type: GraphQLString,
 					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD')
 				}
 			},
-			resolve: (collection, { since, count }, { rootValue: { flags, backend = backendReal }}) =>
+			resolve: (collection, { limit, count, since }, { rootValue: { flags, backend = backendReal }}) =>
 				Promise.all(
 					collection.concepts
 						.map(c => c.id)
-						.map(id => backend(flags).capi.searchCount('metadata.idV1', id, { count, since }) )
+						.map(id => backend(flags).capi.searchCount('metadata.idV1', id, { limit: limit || count, since }) )
 				)
 					.then(counts => counts.filter(identity).reduce((a, b) => a + b, 0))
 		}

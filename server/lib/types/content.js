@@ -307,14 +307,19 @@ const Concept = new graphql.GraphQLObjectType({
 					type: graphql.GraphQLInt,
 					defaultValue: 100
 				},
+				// DEPRECATED - use `limit`
+				count: {
+					type: GraphQLInt,
+					defaultValue: 100
+				},
 				since: {
 					type: graphql.GraphQLString,
 					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD')
 				}
 			},
-			resolve: (concept, { since, limit }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { limit, count, since }, { rootValue: { flags, backend = backendReal }}) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
-				return backend(flags).capi.searchCount('metadata.idV1', id, { limit, since });
+				return backend(flags).capi.searchCount('metadata.idV1', id, { limit: limit || count, since });
 			}
 		},
 		items: {
@@ -327,6 +332,10 @@ const Concept = new graphql.GraphQLObjectType({
 				limit: {
 					type: graphql.GraphQLInt
 				},
+				// DEPRECATED - use `limit`
+				count: {
+					type: graphql.GraphQLInt
+				},
 				since: {
 					type: graphql.GraphQLString
 				},
@@ -337,9 +346,9 @@ const Concept = new graphql.GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (concept, { from, limit, since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { from, limit, count, since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
-				return backend(flags).capi.search('metadata.idV1', id, { from, limit, since, genres, type });
+				return backend(flags).capi.search('metadata.idV1', id, { from, limit: limit || count, since, genres, type });
 			}
 		}
 	})
