@@ -5,11 +5,11 @@ export default class {
 		this.realBackend = realBackend;
 	}
 
-	fetch (uri, opts, ttl = 50) {
+	fetch (uri, { limit, ttl = 50 } = { }) {
 		const liveblog = liveblogs[uri];
 
 		return liveblog ?
-			Promise.resolve(liveblog).then((json) => this.realBackend.parse(json, opts.limit)) :
+			Promise.resolve(liveblog).then(json => this.realBackend.parse(json, limit)) :
 			this.realBackend.fetch(uri, ttl);
 	}
 }
