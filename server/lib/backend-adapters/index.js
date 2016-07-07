@@ -1,5 +1,3 @@
-import sources from '../../config/sources';
-
 import FastFtFeed from './fast-ft';
 import CAPI from './capi';
 import MockCapi from './mock-capi';
@@ -31,7 +29,7 @@ export default (flags = {}) => {
 			video: new Video(redisCache),
 			todaysTopics: new TodaysTopics(redisCache),
 			bertha: new Bertha(redisCache),
-			fastFT: new FastFtFeed(sources.fastFt),
+			fastFT: new FastFtFeed(redisCache),
 			mockCapi: new MockCapi(capi),
 			mockLiveblog: new MockLiveblog(liveblog)
 		});

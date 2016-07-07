@@ -5,19 +5,10 @@ import TopicCards from '../models/topic-cards';
 
 const nonEmpty = item => item;
 
-// NOTE: not caching, as would get too diluted keying off the uuid
 export default class {
-	constructor () {
+	constructor (cache) {
 		this.type = 'myft';
-	}
-
-	getAllRelationship (uuid, relationship, model, args) {
-		return myftClient.getAllRelationship('user', uuid, relationship, model, args)
-			.then(res => res.items)
-			.catch(err => {
-				logger.error(err);
-				return [];
-			});
+		this.cache = cache;
 	}
 
 	personalisedFeed (uuid, { limit = 10 }) {
@@ -35,49 +26,80 @@ export default class {
 					.map(card => card.term)
 			)
 			.catch(err => {
-				logger.error(err);
+				logger.error('Failed getting personalise feed', err, { uuid });
 				return [];
 			});
+	}
+
+	getAllRelationship (uuid, relationship, model, { limit = 10 }) {
+		const cacheKey = `${this.type}.all-relationship.${uuid}:relationship=${relationship}:model=${model}:limit=${limit}`;
+		const fetcher = () =>
+			myftClient.getAllRelationship('user', uuid, relationship, model, { limit })
+				.then(res => res.items)
+				.catch(err => {
+					logger.error('Failed getting all relationship', err, { uuid, relationship, model });
+					return [];
+				});
+
+		return this.cache.cached(cacheKey, 60, fetcher);
 	}
 
 	getViewed (uuid, { limit = 10 }) {
-		return myftClient.fetchJson('GET', `next/popular-concepts/${uuid}`)
-			.then(results =>
-				results.viewed
-					.filter(nonEmpty)
-					.slice(0, limit)
-			)
-			.catch(err => {
-				logger.error(err);
-				return [];
-			});
+		const cacheKey = `${this.type}.viewed.${uuid}:limit=${limit}`;
+		const fetcher = () =>
+			myftClient.fetchJson('GET', `next/popular-concepts/${uuid}`)
+				.then(results =>
+					results.viewed
+						.filter(nonEmpty)
+						.slice(0, limit)
+				)
+				.catch(err => {
+					logger.error('Failed getting viewed', err, { uuid });
+					return [];
+				});
+
+		return this.cache.cached(cacheKey, 60, fetcher);
 	}
 
 	getMostReadTopics ({ limit = 10 }) {
-		return myftClient.fetchJson('GET', 'recommendation/most-read/concept', { limit })
-			.then(results => results.items.filter(nonEmpty))
-			.catch(err => {
-				logger.error(err);
-				return [];
-			});
+		const cacheKey = `${this.type}.most-read-topics:limit=${limit}`;
+		const fetcher = () => {
+			return myftClient.fetchJson('GET', 'recommendation/most-read/concept', { limit })
+				.then(results => results.items.filter(nonEmpty))
+				.catch(err => {
+					logger.error('Failed getting most read topics', err);
+					return [];
+				});
+		};
+
+		return this.cache.cached(cacheKey, 60, fetcher);
 	}
 
 	getMostFollowedTopics ({ limit = 10 }) {
-		return myftClient.fetchJson('GET', 'recommendation/most-followed/concept', { limit })
-			.then(results => results.items.filter(nonEmpty))
-			.catch(err => {
-				logger.error(err);
-				return [];
-			});
+		const cacheKey = `${this.type}.most-followed-topics:limit=${limit}`;
+		const fetcher = () =>
+			myftClient.fetchJson('GET', 'recommendation/most-followed/concept', { limit })
+				.then(results => results.items.filter(nonEmpty))
+				.catch(err => {
+					logger.error('Failed getting most followed topics', err);
+					logger.error(err);
+					return [];
+				});
+
+		return this.cache.cached(cacheKey, 60, fetcher);
 	}
 
 	getRecommendedTopics (uuid, { limit = 10 }) {
-		return myftClient.fetchJson('GET', `recommendation/user/${uuid}/concept`, { limit })
-			.then(results => results.items.filter(nonEmpty))
-			.catch(err => {
-				logger.error(err);
-				return [];
-			});
+		const cacheKey = `${this.type}.recommended-topics.${uuid}:limit=${limit}`;
+		const fetcher = () =>
+			myftClient.fetchJson('GET', `recommendation/user/${uuid}/concept`, { limit })
+				.then(results => results.items.filter(nonEmpty))
+				.catch(err => {
+					logger.error('Failed getting recommended topics', err, { uuid });
+					return [];
+				});
+
+		return this.cache.cached(cacheKey, 60, fetcher);
 	}
 
 }

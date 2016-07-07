@@ -12,7 +12,6 @@ const sources = {
 		uuid: 'b0d8e4fe-10ff-11e5-8413-00144feabdc0'
 	},
 	fastFt: {
-		uuid: '5c7592a8-1f0c-11e4-b0cb-b2227cce2b54',
 		idV1: 'NTlhNzEyMzMtZjBjZi00Y2U1LTg0ODUtZWVjNmEyYmU1NzQ2-QnJhbmRz'
 	},
 	opinion: {
