@@ -293,7 +293,7 @@ describe('CAPI', () => {
 			const cache = {cached: cachedSpy()};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
+			return capi.searchCount('metadata.idV1', 'topicId', { since: '2016-03-21' })
 				.then(count => {
 					count.should.eql(3);
 				});
@@ -304,9 +304,9 @@ describe('CAPI', () => {
 			const cache = {cached};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
+			return capi.searchCount('metadata.idV1', 'topicId', { since: '2016-03-21' })
 				.then(() => {
-					cached.should.always.have.been.calledWith('capi.search-count:metadata.idV1=topicId:limit=50:since=2016-03-21', 600);
+					cached.should.always.have.been.calledWith('capi.search-count:metadata.idV1=topicId:since=2016-03-21', 600);
 				});
 		});
 
@@ -315,9 +315,9 @@ describe('CAPI', () => {
 			const cache = {cached};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', ['topicId1', 'topicId2', 'topicId3'], { limit: 50, since: '2016-03-21' })
+			return capi.searchCount('metadata.idV1', ['topicId1', 'topicId2', 'topicId3'], { since: '2016-03-21' })
 				.then(() => {
-					cached.should.always.have.been.calledWith('capi.search-count:metadata.idV1=topicId1,topicId2,topicId3:limit=50:since=2016-03-21', 600);
+					cached.should.always.have.been.calledWith('capi.search-count:metadata.idV1=topicId1,topicId2,topicId3:since=2016-03-21', 600);
 				});
 		});
 
@@ -334,7 +334,7 @@ describe('CAPI', () => {
 			const cache = {cached: cachedSpy()};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
+			return capi.searchCount('metadata.idV1', 'topicId', { since: '2016-03-21' })
 				.then(count => {
 					count.should.eql(0);
 				});
