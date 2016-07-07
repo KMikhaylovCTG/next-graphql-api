@@ -37,7 +37,7 @@ export default class {
 				.map(item => Array.isArray(item) ? item[0] : item)
 				.filter(item => item)
 			)
-			.then(filterContent(opts, resolveContentType));
+			.then(filterContent({ from, limit, genres, type }, resolveContentType));
 	}
 
 	list (uuid, { ttl = 60 } = { }) {

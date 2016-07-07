@@ -75,10 +75,10 @@ export default class {
 
 	// searchCount is separate from search so that we can look a long way back just for the sake of counting articles
 	// and cache the count only, avoiding caching loads of unused content
-	searchCount (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {
-		const cacheKey = `${this.type}.search-count:${termName}=${termValue}:${createCacheKeyOpts({ from, limit, since, genres, type })}`;
+	searchCount (termName, termValue, { since, genres, type, ttl = 60 * 10 } = {}) {
+		const cacheKey = `${this.type}.search-count:${termName}=${termValue}:${createCacheKeyOpts({ since, genres, type })}`;
 		const fetcher = () =>
-			ApiClient.search(getSearchOpts(termName, termValue, { from, limit, since }))
+			ApiClient.search(getSearchOpts(termName, termValue, { since }))
 				.then(filterContent({ genres, type }, resolveContentType))
 				.then(items => items.length);
 

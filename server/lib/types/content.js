@@ -299,27 +299,17 @@ const Concept = new graphql.GraphQLObjectType({
 		},
 		articleCount: {
 			type: graphql.GraphQLInt,
-			description: `
-				Approximate number of articles published with this concept since the given date, up to a
-				maximum value of count (default date is 1 week, default count is 100)`,
+			description: 'Approximate number of articles published with this concept',
 			args: {
-				limit: {
-					type: graphql.GraphQLInt,
-					defaultValue: 100
-				},
-				// DEPRECATED - use `limit`
-				count: {
-					type: graphql.GraphQLInt,
-					defaultValue: 100
-				},
 				since: {
 					type: graphql.GraphQLString,
-					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD')
+					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD'),
+					definition: 'Default is one week ago'
 				}
 			},
-			resolve: (concept, { limit, count, since }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { since }, { rootValue: { flags, backend = backendReal }}) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
-				return backend(flags).capi.searchCount('metadata.idV1', id, { limit: limit || count, since });
+				return backend(flags).capi.searchCount('metadata.idV1', id, { since });
 			}
 		},
 		items: {
@@ -332,10 +322,6 @@ const Concept = new graphql.GraphQLObjectType({
 				limit: {
 					type: graphql.GraphQLInt
 				},
-				// DEPRECATED - use `limit`
-				count: {
-					type: graphql.GraphQLInt
-				},
 				since: {
 					type: graphql.GraphQLString
 				},
@@ -346,9 +332,9 @@ const Concept = new graphql.GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (concept, { from, limit, count, since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { from, limit, since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
-				return backend(flags).capi.search('metadata.idV1', id, { from, limit: limit || count, since, genres, type });
+				return backend(flags).capi.search('metadata.idV1', id, { from, limit, since, genres, type });
 			}
 		}
 	})

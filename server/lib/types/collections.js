@@ -92,29 +92,19 @@ const Collection = new GraphQLObjectType({
 		},
 		articleCount: {
 			type: GraphQLInt,
-			description: `
-				Approximate number of articles published with this concept since the given date, up to a
-				maximum value of count (default date is 1 week, default count is 100)`,
+			description: 'Approximate number of articles published with each of the sub-concepts',
 			args: {
-				limit: {
-					type: GraphQLInt,
-					defaultValue: 100
-				},
-				// DEPRECATED - use `limit`
-				count: {
-					type: GraphQLInt,
-					defaultValue: 100
-				},
 				since: {
 					type: GraphQLString,
-					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD')
+					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD'),
+					definition: 'Default is one week ago'
 				}
 			},
-			resolve: (collection, { limit, count, since }, { rootValue: { flags, backend = backendReal }}) =>
+			resolve: (collection, { since }, { rootValue: { flags, backend = backendReal }}) =>
 				Promise.all(
 					collection.concepts
 						.map(c => c.id)
-						.map(id => backend(flags).capi.searchCount('metadata.idV1', id, { limit: limit || count, since }) )
+						.map(id => backend(flags).capi.searchCount('metadata.idV1', id, { since }) )
 				)
 					.then(counts => counts.filter(identity).reduce((a, b) => a + b, 0))
 		}
