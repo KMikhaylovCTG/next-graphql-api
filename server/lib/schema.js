@@ -67,7 +67,7 @@ const queryType = new GraphQLObjectType({
 				}
 			},
 			resolve: (root, { from, limit }, { rootValue: { flags, backend = backendReal }}) =>
-				backend(flags).fastFT.fetch({from, limit})
+				backend(flags).fastFT.fetch({ from, limit })
 		},
 		editorsPicks: {
 			type: List,
