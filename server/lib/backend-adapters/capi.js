@@ -36,9 +36,12 @@ const getSearchOpts = (termName, termValue, { from, limit, since } = { }) => {
 	return searchOpts;
 };
 
+const nonEmpty = item => item;
+
 const createCacheKeyOpts = (opts = {}) =>
 	Object.keys(opts)
-		.map(optName => `${optName}=${opts[optName]}`)
+		.map(optName => opts[optName] ? `${optName}=${opts[optName]}` : '')
+		.filter(nonEmpty)
 		.join(':');
 
 export default class {
@@ -62,7 +65,7 @@ export default class {
 	}
 
 	search (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {
-		const cacheKey =  `${this.type}.search.${termName}.${termValue}:${createCacheKeyOpts({ from, limit, since })}`;
+		const cacheKey = `${this.type}.search:${termName}=${termValue}:${createCacheKeyOpts({ from, limit, since })}`;
 		const fetcher = () =>
 			ApiClient.search(getSearchOpts(termName, termValue, { from, limit, since }));
 
@@ -73,7 +76,7 @@ export default class {
 	// searchCount is separate from search so that we can look a long way back just for the sake of counting articles
 	// and cache the count only, avoiding caching loads of unused content
 	searchCount (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {
-		const cacheKey =  `${this.type}.search-count.${termName}.${termValue}:${createCacheKeyOpts({ from, limit, since, genres, type })}`;
+		const cacheKey = `${this.type}.search-count:${termName}=${termValue}:${createCacheKeyOpts({ from, limit, since, genres, type })}`;
 		const fetcher = () =>
 			ApiClient.search(getSearchOpts(termName, termValue, { from, limit, since }))
 				.then(filterContent({ genres, type }, resolveContentType))

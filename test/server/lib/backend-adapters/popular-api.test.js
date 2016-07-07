@@ -73,7 +73,7 @@ describe('Popular API', () => {
 
 			return popular.topics()
 				.then(() => {
-					cache.cached.alwaysCalledWith('popular-api.topics', 600).should.be.true;
+					cache.cached.should.always.have.been.calledWith('popular-api.topics', 600);
 				})
 		});
 
@@ -81,7 +81,7 @@ describe('Popular API', () => {
 			const cache = { cached: cachedSpy() };
 			const popular = new Popular(cache);
 
-			return popular.topics({}, 100)
+			return popular.topics({ ttl: 100 })
 				.then(() => {
 					cache.cached.firstCall.args[1].should.be.equal(100);
 				})

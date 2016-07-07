@@ -309,7 +309,7 @@ const Concept = new graphql.GraphQLObjectType({
 				},
 				// DEPRECATED - use `limit`
 				count: {
-					type: GraphQLInt,
+					type: graphql.GraphQLInt,
 					defaultValue: 100
 				},
 				since: {

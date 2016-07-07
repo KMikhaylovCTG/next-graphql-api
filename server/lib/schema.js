@@ -243,7 +243,7 @@ const queryType = new GraphQLObjectType({
 					type: GraphQLInt
 				}
 			},
-			resolve: (root, { industry, position, sector, country, period }, { rootValue: { flags, backend = backendReal }}) =>
+			resolve: (root, { industry, position, sector, country, period, limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags)
 					.hui.topics({ industry, position, sector, country, period })
 					.then(items => backend(flags).capi

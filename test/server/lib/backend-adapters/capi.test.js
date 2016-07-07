@@ -1,10 +1,12 @@
 import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
-import chai from 'chai';
+import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import sinonChai from 'sinon-chai';
+
 chai.should();
+chai.use(sinonChai);
 chai.use(chaiAsPromised);
-const expect = chai.expect;
 
 import CAPI from '../../../../server/lib/backend-adapters/capi';
 
@@ -55,7 +57,7 @@ describe('CAPI', () => {
 
 			return capi.content(['content-one', 'content-two'])
 				.then(() => {
-					cached.alwaysCalledWith('capi.content.content-one_content-two', 60).should.be.true;
+					cached.should.always.have.been.calledWith('capi.content.content-one_content-two', 60);
 				});
 		});
 
@@ -100,7 +102,7 @@ describe('CAPI', () => {
 				.then(list => {
 					list.items.should.have.length(2);
 					list.items.should.deep.equal([{ id: 'content-one' }, { id: 'content-two' }]);
-					cached.alwaysCalledWith('capi.lists.73667f46-1a55-11e5-a130-2e7db721f996', 60).should.be.true;
+					cached.should.always.have.been.calledWith('capi.list.73667f46-1a55-11e5-a130-2e7db721f996', 60);
 					// make sure mock was called
 					fetchMock.called().should.be.true;
 				});
@@ -134,7 +136,7 @@ describe('CAPI', () => {
 				.then(list => {
 					list.items.should.have.length(6);
 					list.title.should.equal('Test TopStories List for Markets stream');
-					cached.alwaysCalledWith(`capi.lists.${listType}.${concept}`, 60).should.be.true;
+					cached.should.always.have.been.calledWith(`capi.list-of-type.${listType}.${concept}`, 60);
 					// make sure mock was called
 					fetchMock.called().should.be.true;
 				});
@@ -213,9 +215,9 @@ describe('CAPI', () => {
 			const cache = {cached};
 			const capi = new CAPI(cache);
 
-			return capi.search('metadata.idV1', 'topicId', {count: 50, since: '2016-03-21'})
+			return capi.search('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
 				.then(() => {
-					cached.alwaysCalledWith('capi.search.metadata.idV1:topicId:since_2016-03-21:count_50', 600).should.be.true;
+					cached.should.always.have.been.calledWith('capi.search:metadata.idV1=topicId:limit=50:since=2016-03-21', 600);
 				});
 		});
 
@@ -224,9 +226,9 @@ describe('CAPI', () => {
 			const cache = {cached};
 			const capi = new CAPI(cache);
 
-			return capi.search('metadata.idV1', ['topicId1', 'topicId2', 'topicId3'], {count: 50, since: '2016-03-21'})
+			return capi.search('metadata.idV1', ['topicId1', 'topicId2', 'topicId3'], { limit: 50, since: '2016-03-21' })
 				.then(() => {
-					cached.alwaysCalledWith('capi.search.metadata.idV1:topicId1,topicId2,topicId3:since_2016-03-21:count_50', 600).should.be.true;
+					cached.should.always.have.been.calledWith('capi.search:metadata.idV1=topicId1,topicId2,topicId3:limit=50:since=2016-03-21', 600);
 				});
 		});
 
@@ -243,7 +245,7 @@ describe('CAPI', () => {
 			const cache = {cached: cachedSpy()};
 			const capi = new CAPI(cache);
 
-			return capi.search('metadata.idV1', 'topicId', {count: 50, since: '2016-03-21'})
+			return capi.search('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
 				.then(content => {
 					const expectedResult = [];
 					expectedResult.total = 0;
@@ -291,7 +293,7 @@ describe('CAPI', () => {
 			const cache = {cached: cachedSpy()};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', 'topicId', {count: 50, since: '2016-03-21'})
+			return capi.searchCount('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
 				.then(count => {
 					count.should.eql(3);
 				});
@@ -302,9 +304,9 @@ describe('CAPI', () => {
 			const cache = {cached};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', 'topicId', {count: 50, since: '2016-03-21'})
+			return capi.searchCount('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
 				.then(() => {
-					cached.alwaysCalledWith('capi.searchCount.metadata.idV1:topicId:since_2016-03-21:count_50', 600).should.be.true;
+					cached.should.always.have.been.calledWith('capi.search-count:metadata.idV1=topicId:limit=50:since=2016-03-21', 600);
 				});
 		});
 
@@ -313,9 +315,9 @@ describe('CAPI', () => {
 			const cache = {cached};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', ['topicId1', 'topicId2', 'topicId3'], {count: 50, since: '2016-03-21'})
+			return capi.searchCount('metadata.idV1', ['topicId1', 'topicId2', 'topicId3'], { limit: 50, since: '2016-03-21' })
 				.then(() => {
-					cached.alwaysCalledWith('capi.searchCount.metadata.idV1:topicId1,topicId2,topicId3:since_2016-03-21:count_50', 600).should.be.true;
+					cached.should.always.have.been.calledWith('capi.search-count:metadata.idV1=topicId1,topicId2,topicId3:limit=50:since=2016-03-21', 600);
 				});
 		});
 
@@ -332,7 +334,7 @@ describe('CAPI', () => {
 			const cache = {cached: cachedSpy()};
 			const capi = new CAPI(cache);
 
-			return capi.searchCount('metadata.idV1', 'topicId', {count: 50, since: '2016-03-21'})
+			return capi.searchCount('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
 				.then(count => {
 					count.should.eql(0);
 				});
