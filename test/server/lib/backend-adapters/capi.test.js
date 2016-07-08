@@ -202,11 +202,9 @@ describe('CAPI', () => {
 			const cache = {cached: cachedSpy()};
 			const capi = new CAPI(cache);
 
-			return capi.search('metadata.idV1', 'topicId', {count: 50, since: '2016-03-21'})
+			return capi.search('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
 				.then(content => {
-					const expectedResult = [{id: 'content-one'}];
-					expectedResult.total = 1;
-					content.should.eql(expectedResult);
+					content.should.eql([{ id: 'content-one' }]);
 				});
 		});
 
@@ -247,9 +245,7 @@ describe('CAPI', () => {
 
 			return capi.search('metadata.idV1', 'topicId', { limit: 50, since: '2016-03-21' })
 				.then(content => {
-					const expectedResult = [];
-					expectedResult.total = 0;
-					content.should.eql(expectedResult);
+					content.should.eql([]);
 				});
 		});
 

@@ -4,7 +4,6 @@ import { Content, Concept } from './content';
 import { ContentType } from './basic';
 import backendReal from '../backend-adapters/index';
 import moment from 'moment';
-import identity from '../identity';
 
 const contentToUiid = content => content.id.replace(/http:\/\/api\.ft\.com\/things?\//, '');
 
