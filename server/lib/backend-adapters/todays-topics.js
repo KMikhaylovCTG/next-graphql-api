@@ -1,9 +1,12 @@
 import sources from '../../config/sources';
 import backend from '.';
 
+const nonEmpty = item => item;
+
 const createCacheKeyOpts = (opts = {}) =>
 	Object.keys(opts)
-		.map(optName => `${optName}=${opts[optName]}`)
+		.map(optName => opts[optName] ? `${optName}=${opts[optName]}` : '')
+		.filter(nonEmpty)
 		.join(':');
 
 function getPrimaryTag (metadata) {

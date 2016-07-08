@@ -302,14 +302,18 @@ const Concept = new graphql.GraphQLObjectType({
 			description: 'Approximate number of articles published with this concept',
 			args: {
 				since: {
-					type: graphql.GraphQLString,
-					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD'),
-					definition: 'Default is one week ago'
+					type: graphql.GraphQLString
+				},
+				genres: {
+					type: new graphql.GraphQLList(graphql.GraphQLString)
+				},
+				type: {
+					type: ContentType
 				}
 			},
-			resolve: (concept, { since }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
-				return backend(flags).capi.searchCount('metadata.idV1', id, { since });
+				return backend(flags).capi.searchCount('metadata.idV1', id, { since, genres, type });
 			}
 		},
 		items: {

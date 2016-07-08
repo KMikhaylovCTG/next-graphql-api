@@ -98,15 +98,16 @@ const Collection = new GraphQLObjectType({
 					type: GraphQLString,
 					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD'),
 					definition: 'Default is one week ago'
+				},
+				genres: {
+					type: new GraphQLList(GraphQLString)
+				},
+				type: {
+					type: ContentType
 				}
 			},
-			resolve: (collection, { since }, { rootValue: { flags, backend = backendReal }}) =>
-				Promise.all(
-					collection.concepts
-						.map(c => c.id)
-						.map(id => backend(flags).capi.searchCount('metadata.idV1', id, { since }) )
-				)
-					.then(counts => counts.filter(identity).reduce((a, b) => a + b, 0))
+			resolve: (collection, { since, genres, type }, { rootValue: { flags, backend = backendReal }}) =>
+				backend(flags).capi.searchCount('metadata.idV1', collection.concepts.map(c => c.id), { since, genres, type })
 		}
 	}
 });

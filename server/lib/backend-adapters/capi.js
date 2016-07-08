@@ -5,7 +5,26 @@ import ApiClient from 'next-ft-api-client';
 import filterContent from '../helpers/filter-content';
 import resolveContentType from '../helpers/resolve-content-type';
 
-const getSearchOpts = (termName, termValue, { from, limit, since } = { }) => {
+const genreMap = {
+	analysis: [
+		'MQ==-R2VucmVz',
+		'Mw==-R2VucmVz',
+		'OQ==-R2VucmVz',
+		'MTA=-R2VucmVz',
+		'ODFmNjI1ODYtMzllYi00MzQzLTg2Y2EtNmM1ZGQ4MjExMWZh-R2VucmVz'
+	],
+	comment: [
+		'OA==-R2VucmVz',
+		'NQ==-R2VucmVz',
+		'Ng==-R2VucmVz',
+		'NA==-R2VucmVz',
+		'NGQ2MWQ0NDMtMDc5Mi00NWExLTlkMGQtNWZhZjk0NGExOWU2-R2VucmVz'
+	]
+};
+
+const getSearchOpts = (termName, termValue, { from, limit, since, genres = [], type } = { }) => {
+	console.log('#####');
+	console.log(termValue);
 	const searchOpts = {
 		filter: {
 			bool: {
@@ -17,6 +36,30 @@ const getSearchOpts = (termName, termValue, { from, limit, since } = { }) => {
 			}
 		}
 	};
+	const genreIds = genres.reduce(
+		(currentGenreIds, genre) => genreMap[genre] ? currentGenreIds.concat(genreMap[genre]) : currentGenreIds, []
+	);
+	if (genreIds.length) {
+		searchOpts.filter.bool.must.push({
+			term: { 'metadata.idV1': genreIds }
+		});
+	}
+	if (type) {
+		const liveBlogWebUrl = '.*(liveblog|marketslive|liveqa).*';
+		if (type === 'liveblog') {
+			searchOpts.filter.bool.must.push({
+				regexp: {
+					webUrl: liveBlogWebUrl
+				}
+			});
+		} else {
+			searchOpts.filter.bool.must_not = [{
+				regexp: {
+					webUrl: liveBlogWebUrl
+				}
+			}];
+		}
+	}
 	if (from) {
 		searchOpts.offset = from;
 	}
@@ -65,22 +108,21 @@ export default class {
 	}
 
 	search (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {
-		const cacheKey = `${this.type}.search:${termName}=${termValue}:${createCacheKeyOpts({ from, limit, since })}`;
+		const cacheKey = `${this.type}.search:${termName}=${termValue}:${createCacheKeyOpts({ from, limit, since, genres, type })}`;
 		const fetcher = () =>
-			ApiClient.search(getSearchOpts(termName, termValue, { from, limit, since }));
+			ApiClient.search(getSearchOpts(termName, termValue, { from, limit, since, genres, type }))
+				.then(results => results.slice());
 
-		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then(filterContent({ genres, type }, resolveContentType));
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
 	// searchCount is separate from search so that we can look a long way back just for the sake of counting articles
 	// and cache the count only, avoiding caching loads of unused content
-	searchCount (termName, termValue, { since, genres, type, ttl = 60 * 10 } = {}) {
+	searchCount (termName, termValue, { since, type, genres, ttl = 60 * 10 } = {}) {
 		const cacheKey = `${this.type}.search-count:${termName}=${termValue}:${createCacheKeyOpts({ since, genres, type })}`;
 		const fetcher = () =>
-			ApiClient.search(getSearchOpts(termName, termValue, { since }))
-				.then(filterContent({ genres, type }, resolveContentType))
-				.then(items => items.length);
+			ApiClient.search(getSearchOpts(termName, termValue, { since, genres, type }))
+				.then(results => results.total);
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
