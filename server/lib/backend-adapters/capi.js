@@ -1,5 +1,4 @@
 import logger from '@financial-times/n-logger';
-import { json as fetchresJson } from 'fetchres';
 import ApiClient from 'next-ft-api-client';
 
 import filterContent from '../helpers/filter-content';
@@ -100,7 +99,11 @@ export default class {
 					id: uuid,
 					title: page.title,
 					items: page.slice()
-				}));
+				}))
+				.catch(err => {
+					logger.error('Failed getting a CAPI page', err, { uuid });
+					return {}
+				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
@@ -109,7 +112,11 @@ export default class {
 		const cacheKey = `${this.type}.search:${termName}=${termValue}:${createCacheKeyOpts({ from, limit, since, genres, type })}`;
 		const fetcher = () =>
 			ApiClient.search(getSearchOpts(termName, termValue, { from, limit, since, genres, type }))
-				.then(results => results.slice());
+				.then(results => results.slice())
+				.catch(err => {
+					logger.error('Failed making a CAPI search', err, { term_name: termName, term_value: termValue });
+					return []
+				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
@@ -123,7 +130,13 @@ export default class {
 		searchOpts.fields = false;
 		const fetcher = () =>
 			ApiClient.search(searchOpts)
-				.then(results => results.total);
+				.then(results => results.total || 0)
+				.catch(err => {
+					logger.error('Failed making a CAPI search count', err, { term_name: termName, term_value: termValue });
+					return 0;
+				});
+
+		// return fetcher();
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
@@ -134,7 +147,11 @@ export default class {
 			ApiClient.content({
 				uuid: uuids,
 				index: 'v3_api_v2'
-			});
+			})
+				.catch(err => {
+					logger.error('Failed getting CAPI content', err, { uuids });
+					return [];
+				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
 			.then(filterContent({ from, limit, genres, type }, resolveContentType));
@@ -154,13 +171,25 @@ export default class {
 					}
 					return response;
 				})
-				.then(fetchresJson)
+				.then(res => {
+					if (res.ok) {
+						return res.json()
+					} else {
+						return res.text(text => {
+							throw new Error(`COCO list responded with "${text}" (${res.status})`);
+						});
+					}
+				})
 				.then(list => ({
 					id: uuid,
 					title: list.title,
 					items: list.items,
 					layoutHint: list.layoutHint
-				}));
+				}))
+				.catch(err => {
+					logger.error('Failed getting a CAPI list', err, { uuid });
+					return {};
+				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
@@ -170,9 +199,18 @@ export default class {
 		const headers = { Authorization: this.listApiAuthorization };
 		const fetcher = () =>
 			fetch(`https://prod-coco-up-read.ft.com/lists?${type}For=${concept}`, { headers })
-				.then(fetchresJson)
+				.then(res => {
+					if (res.ok) {
+						return res.json()
+					} else {
+						return res.text(text => {
+							throw new Error(`COCO list-of-type responded with "${text}" (${res.status})`);
+						});
+					}
+				})
 				.catch(err => {
-					logger.warn('Failed getting List Of Type response', err, { type, concept });
+					logger.error('Failed getting a CAPI list-of-type', err, { type, concept });
+					return [];
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
@@ -185,7 +223,11 @@ export default class {
 				identifierValues: uuids,
 				identifierType: type,
 				authority: 'http://api.ft.com/system/FT-TME'
-			});
+			})
+				.catch(err => {
+					logger.error('Failed getting things from CAPI', err, { uuids });
+					return [];
+				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}

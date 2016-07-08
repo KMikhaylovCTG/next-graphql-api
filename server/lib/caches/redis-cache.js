@@ -14,7 +14,7 @@ export default class {
 		return this.redis
 			.get(key)
 			.then(data => {
-				if (data) {
+				if (data !== null) {
 					// we have fresh data
 					metrics.count(`cache.${metricsKey}.hit`, 1);
 					return JSON.parse(data);
@@ -39,7 +39,7 @@ export default class {
 
 		return this.currentRequests[key] = fetcher()
 			.then(res => {
-				if (!res) {
+				if (res === undefined) {
 					return;
 				}
 				metrics.count(`cache.${metricsKey}.fresh`, 1);
