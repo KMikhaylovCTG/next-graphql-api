@@ -20,7 +20,7 @@ export default class {
 			ApiClient
 				.hui({ model: 'content', industry, position, sector, country, period })
 				.catch(err => {
-					logger.err('Failed getting hui content', err);
+					logger.error('Failed getting hui content', err);
 					return [];
 				});
 
@@ -33,7 +33,7 @@ export default class {
 		const fetcher = () =>
 			ApiClient.hui({ model: 'annotations', industry, position, sector, country, period })
 				.catch(err => {
-					logger.err('Failed getting hui topics', err);
+					logger.error('Failed getting hui topics', err);
 					return [];
 				});
 
