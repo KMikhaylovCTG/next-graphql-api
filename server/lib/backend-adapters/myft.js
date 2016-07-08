@@ -19,14 +19,23 @@ export default class {
 					'X-FT-Personalised-Feed-Api-Key': process.env.PERSONALISED_FEED_API_KEY
 				}
 			})
-			.then(res => res.json())
+			.then(res => {
+				if (res.ok) {
+					return res.json()
+				} else {
+					return res.text()
+						.then(text => {
+							throw new Error(`Personalised feed responded with "${text}" (${res.status})`);
+						});
+				}
+			})
 			.then(res =>
 				(new TopicCards(res.results).process())
 					.slice(0, limit)
 					.map(card => card.term)
 			)
 			.catch(err => {
-				logger.error('Failed getting personalise feed', err, { uuid });
+				logger.error('Failed getting personalise feed from myFT', err, { uuid });
 				return [];
 			});
 	}
@@ -37,7 +46,7 @@ export default class {
 			myftClient.getAllRelationship('user', uuid, relationship, model, { limit })
 				.then(res => res.items)
 				.catch(err => {
-					logger.error('Failed getting all relationship', err, { uuid, relationship, model });
+					logger.error('Failed getting all relationships from myFT', err, { uuid, relationship, model });
 					return [];
 				});
 
@@ -54,7 +63,7 @@ export default class {
 						.slice(0, limit)
 				)
 				.catch(err => {
-					logger.error('Failed getting viewed', err, { uuid });
+					logger.error('Failed getting viewed from myFT', err, { uuid });
 					return [];
 				});
 
@@ -67,7 +76,7 @@ export default class {
 			return myftClient.fetchJson('GET', 'recommendation/most-read/concept', { limit })
 				.then(results => results.items.filter(nonEmpty))
 				.catch(err => {
-					logger.error('Failed getting most read topics', err);
+					logger.error('Failed getting most read topics from myFT', err);
 					return [];
 				});
 		};
@@ -81,7 +90,7 @@ export default class {
 			myftClient.fetchJson('GET', 'recommendation/most-followed/concept', { limit })
 				.then(results => results.items.filter(nonEmpty))
 				.catch(err => {
-					logger.error('Failed getting most followed topics', err);
+					logger.error('Failed getting most followed topics from myFT', err);
 					logger.error(err);
 					return [];
 				});
@@ -95,7 +104,7 @@ export default class {
 			myftClient.fetchJson('GET', `recommendation/user/${uuid}/concept`, { limit })
 				.then(results => results.items.filter(nonEmpty))
 				.catch(err => {
-					logger.error('Failed getting recommended topics', err, { uuid });
+					logger.error('Failed getting recommended topics from myFT', err, { uuid });
 					return [];
 				});
 

@@ -163,11 +163,11 @@ describe('CAPI', () => {
 				const capi = new CAPI(cache);
 
 				return capi.listOfType(listType, concept)
-				.then(list => {
-					expect(list).to.be.undefined;
-					// make sure mock was called
-					fetchMock.called().should.be.true;
-				});
+					.then(list => {
+						expect(list).to.eql([]);
+						// make sure mock was called
+						fetchMock.called().should.be.true;
+					});
 			});
 
 		});

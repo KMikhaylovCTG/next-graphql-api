@@ -1,3 +1,5 @@
+import logger from '@financial-times/n-logger';
+
 export default class {
 	constructor (cache) {
 		this.cache = cache;
@@ -30,15 +32,28 @@ export default class {
 		}
 
 		status = status || 'comingsoon';
-		return {updates, status};
+		return { updates, status };
 	}
 
 	fetch (uri, { limit, ttl = 60 } = { }) {
 		const cacheKey = `liveblogs.${uri}:limit=${limit}`;
 		const fetcher = () =>
 			fetch(`${uri}?action=catchup&format=json`)
-				.then(res => res.json())
-				.then(json => this.parse(json, { limit }));
+				.then(res => {
+					if (res.ok) {
+						return res.json()
+					} else {
+						return res.text()
+							.then(text => {
+								throw new Error(`Liveblog feed responded with "${text}" (${res.status})`);
+							});
+					}
+				})
+				.then(liveblogs => this.parse(liveblogs, { limit }))
+				.catch(err => {
+					logger.error('Failed fetching a liveblog', err);
+					return { };
+				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
