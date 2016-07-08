@@ -14,7 +14,7 @@ export default class {
 	page (uuid, { ttl = 50 } = { }) {
 		const page = pages[uuid];
 
-		return page ? Promise.resolve(page) : this.realBackend.page(uuid, ttl);
+		return page ? Promise.resolve(page) : this.realBackend.page(uuid, { ttl });
 	}
 
 	search (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {

@@ -199,7 +199,7 @@ export default class {
 		const cacheKey = `${this.type}.list-of-type.${type}.${concept}`;
 		const headers = { Authorization: this.listApiAuthorization };
 		const fetcher = () =>
-			fetch(`https://prod-coco-up-read.ft.com/lists?${type}For=${concept}`, { headers })
+			fetch(`https://prod-coco-up-read.ft.com/lists?curated${type}For=${concept}`, { headers })
 				.then(res => {
 					if (res.ok) {
 						return res.json()
@@ -212,7 +212,7 @@ export default class {
 				})
 				.catch(err => {
 					logger.error('Failed getting a CAPI list-of-type', err, { type, concept });
-					return [];
+					return null;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
@@ -226,6 +226,7 @@ export default class {
 				identifierType: type,
 				authority: 'http://api.ft.com/system/FT-TME'
 			})
+				.then(results => results.items || [])
 				.catch(err => {
 					logger.error('Failed getting things from CAPI', err, { uuids });
 					return [];

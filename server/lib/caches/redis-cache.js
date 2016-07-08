@@ -9,6 +9,7 @@ export default class {
 	}
 
 	cached (key, ttl, fetcher) {
+		return fetcher();
 		const metricsKey = key.split('.')[0];
 
 		return this.redis

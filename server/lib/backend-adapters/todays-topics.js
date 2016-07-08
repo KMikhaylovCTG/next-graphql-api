@@ -9,11 +9,13 @@ const createCacheKeyOpts = (opts = {}) =>
 		.filter(nonEmpty)
 		.join(':');
 
-function getPrimaryTag (metadata) {
+const getPrimaryTag = metadata => {
 	const primarySection = metadata.find(tag => tag.primary === 'section');
 	const primaryTheme = metadata.find(tag => tag.primary === 'theme');
 	return primaryTheme || primarySection || null;
 }
+
+const extractUuid = item => item.id.replace(/http:\/\/api\.ft\.com\/things?\//, '');
 
 export default class {
 	constructor (cache) {
@@ -28,14 +30,14 @@ export default class {
 			const args = { from, limit, genres, type };
 			return Promise.all([
 				be.capi.page(sources[`${region}Top`].uuid)
-					.then(p => be.capi.content(p.items, args))
-					.then(c => c.map(c => getPrimaryTag(c.metadata))),
-				be.capi.page(sources.opinion.uuid, sources.opinion.sectionsId)
-					.then(p => p ? be.capi.content(p.items, args) : [])
-					.then(c => c.map(c => getPrimaryTag(c.metadata))),
+					.then(page => page.items ? be.capi.content(page.items, args) : [])
+					.then(items => items.map(item => getPrimaryTag(item.metadata))),
+				be.capi.list(sources.opinion.uuid)
+					.then(list => list.items ? be.capi.content(list.items.map(extractUuid), args) : [])
+					.then(items => items.map(item => getPrimaryTag(item.metadata))),
 				be.capi.list(sources.editorsPicks.uuid)
-					.then(r => be.capi.content(r.items.map(i => i.id.replace(/http:\/\/api\.ft\.com\/things?\//, '')), args))
-					.then(c => c.map(c => getPrimaryTag(c.metadata)))
+					.then(list => list.items ? be.capi.content(list.items.map(extractUuid), args) : [])
+					.then(items => items.map(item => getPrimaryTag(item.metadata)))
 			])
 				.then(data => {
 					//Flatten results

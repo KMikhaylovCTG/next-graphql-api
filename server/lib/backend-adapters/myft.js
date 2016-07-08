@@ -35,7 +35,7 @@ export default class {
 					.map(card => card.term)
 			)
 			.catch(err => {
-				logger.error('Failed getting personalise feed from myFT', err, { uuid });
+				logger.error('Failed getting personalised feed from myFT', err, { uuid });
 				return [];
 			});
 	}
