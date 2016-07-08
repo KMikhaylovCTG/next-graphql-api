@@ -18,9 +18,10 @@ export default class {
 					if (res.ok) {
 						return res.json()
 					} else {
-						return res.text(text => {
-							throw new Error(`Popular api topics responded with "${text}" (${res.status})`);
-						});
+						return res.text()
+							.then(text => {
+								throw new Error(`Popular api topics responded with "${text}" (${res.status})`);
+							});
 					}
 				})
 				.catch(err => {
@@ -41,9 +42,10 @@ export default class {
 						if (res.ok) {
 							return res.json()
 						} else {
-							return res.text(text => {
-								throw new Error(`Popular api responded with "${text}" (${res.status})`);
-							});
+							return res.text()
+								.then(text => {
+									throw new Error(`Popular api responded with "${text}" (${res.status})`);
+								});
 						}
 					})
 					.then(json => (json.articles || []).map(article => article.uuid))

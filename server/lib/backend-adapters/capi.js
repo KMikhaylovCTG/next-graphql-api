@@ -175,9 +175,10 @@ export default class {
 					if (res.ok) {
 						return res.json()
 					} else {
-						return res.text(text => {
-							throw new Error(`COCO list responded with "${text}" (${res.status})`);
-						});
+						return res.text()
+							.then(text => {
+								throw new Error(`COCO list responded with "${text}" (${res.status})`);
+							});
 					}
 				})
 				.then(list => ({
@@ -203,9 +204,10 @@ export default class {
 					if (res.ok) {
 						return res.json()
 					} else {
-						return res.text(text => {
-							throw new Error(`COCO list-of-type responded with "${text}" (${res.status})`);
-						});
+						return res.text()
+							.then(text => {
+								throw new Error(`COCO list-of-type responded with "${text}" (${res.status})`);
+							});
 					}
 				})
 				.catch(err => {

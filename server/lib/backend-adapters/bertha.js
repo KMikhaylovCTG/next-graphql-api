@@ -20,9 +20,10 @@ export default class {
 					if (res.ok) {
 						return res.json()
 					} else {
-						return res.text(text => {
-							throw new Error(`Bertha responded with "${text}" (${res.status}) sheet_key=${key} sheet_name=${name}`);
-						});
+						return res.text()
+							.then(text => {
+								throw new Error(`Bertha responded with "${text}" (${res.status}) sheet_key=${key} sheet_name=${name}`);
+							});
 					}
 				})
 				.catch(err => {
