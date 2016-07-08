@@ -57,7 +57,7 @@ describe('CAPI', () => {
 
 			return capi.content(['content-one', 'content-two'])
 				.then(() => {
-					cached.should.always.have.been.calledWith('capi.content.content-one_content-two', 60);
+					cached.should.always.have.been.calledWith('capi.content.content-one,content-two', 60);
 				});
 		});
 

@@ -23,8 +23,6 @@ const genreMap = {
 };
 
 const getSearchOpts = (termName, termValue, { from, limit, since, genres = [], type } = { }) => {
-	console.log('#####');
-	console.log(termValue);
 	const searchOpts = {
 		filter: {
 			bool: {
@@ -120,15 +118,18 @@ export default class {
 	// and cache the count only, avoiding caching loads of unused content
 	searchCount (termName, termValue, { since, type, genres, ttl = 60 * 10 } = {}) {
 		const cacheKey = `${this.type}.search-count:${termName}=${termValue}:${createCacheKeyOpts({ since, genres, type })}`;
+		const searchOpts = getSearchOpts(termName, termValue, { since, genres, type });
+		// no need for source (just getting total count)
+		searchOpts.fields = false;
 		const fetcher = () =>
-			ApiClient.search(getSearchOpts(termName, termValue, { since, genres, type }))
+			ApiClient.search(searchOpts)
 				.then(results => results.total);
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
 	content (uuids, { from, limit, genres, type, ttl = 60 } = { }) {
-		const cacheKey = `${this.type}.content.${Array.isArray(uuids) ? uuids.join('_') : uuids}`;
+		const cacheKey = `${this.type}.content.${uuids}`;
 		const fetcher = () =>
 			ApiClient.content({
 				uuid: uuids,
@@ -178,7 +179,7 @@ export default class {
 	}
 
 	things (uuids, { type = 'idV1', ttl = 60 * 10 } = { }) {
-		const cacheKey = `${this.type}.things.${type}.${Array.isArray(uuids) ? uuids.join('_') : uuids}`;
+		const cacheKey = `${this.type}.things.${type}.${uuids}`;
 		const fetcher = () =>
 			ApiClient.things({
 				identifierValues: uuids,
