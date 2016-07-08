@@ -5,7 +5,6 @@ import articleBranding from 'ft-n-article-branding';
 import capifyMetadata from '../helpers/capify-metadata';
 import backendReal from '../backend-adapters/index';
 import { LiveBlogStatus, ContentType } from './basic';
-import moment from 'moment';
 
 const podcastIdV1 = 'NjI2MWZlMTEtMTE2NS00ZmI0LWFkMzMtNDhiYjA3YjcxYzIy-U2VjdGlvbnM=';
 
@@ -31,13 +30,7 @@ const getAuthorHeadshot = (id, name) => {
 const Content = new graphql.GraphQLInterfaceType({
 	name: 'Content',
 	description: 'A piece of FT content',
-	resolveType: content => {
-		if (/liveblog|marketslive|liveqa/i.test(content.webUrl)) {
-			return LiveBlog;
-		} else {
-			return Article;
-		}
-	},
+	resolveType: content => /liveblog|marketslive|liveqa/i.test(content.webUrl) ? LiveBlog : Article,
 	fields: () => ({
 		id: {
 			type: graphql.GraphQLID
@@ -188,8 +181,12 @@ const getContentFields = () => ({
 	relatedContent: {
 		type: new graphql.GraphQLList(Content),
 		args: {
-			from: { type: graphql.GraphQLInt },
-			limit: { type: graphql.GraphQLInt }
+			from: {
+				type: graphql.GraphQLInt
+			},
+			limit: {
+				type: graphql.GraphQLInt
+			}
 		},
 		resolve: (content, { from, limit }, { rootValue: { flags, backend = backendReal }}) => {
 			const storyPackageIds = (content.storyPackage || []).map(story => story.id);
@@ -252,20 +249,20 @@ const LiveBlog = new graphql.GraphQLObjectType({
 		},
 		status: {
 			type: LiveBlogStatus,
-			resolve: (content, _, { rootValue: { flags, backend = backendReal }}) => (
-				backend(flags).liveblog.fetch(content.webUrl, { })
+			resolve: (content, _, { rootValue: { flags, backend = backendReal }}) =>
+				backend(flags).liveblog.fetch(content.webUrl)
 					.then(extras => extras.status)
-			)
 		},
 		updates: {
 			type: new graphql.GraphQLList(LiveBlogUpdate),
 			args: {
-				limit: { type: graphql.GraphQLInt }
+				limit: {
+					type: graphql.GraphQLInt
+				}
 			},
-			resolve: (content, { limit }, { rootValue: { flags, backend = backendReal }}) => (
+			resolve: (content, { limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).liveblog.fetch(content.webUrl, { limit })
 					.then(extras => extras.updates)
-			)
 		}
 	})
 });
@@ -301,38 +298,46 @@ const Concept = new graphql.GraphQLObjectType({
 		},
 		articleCount: {
 			type: graphql.GraphQLInt,
-			description: `
-				Approximate number of articles published with this concept since the given date, up to a
-				maximum value of count (default date is 1 week, default count is 100)`,
+			description: 'Approximate number of articles published with this concept',
 			args: {
 				since: {
-					type: graphql.GraphQLString,
-					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD')
+					type: graphql.GraphQLString
 				},
-				count: {
-					type: graphql.GraphQLInt,
-					defaultValue: 100
+				genres: {
+					type: new graphql.GraphQLList(graphql.GraphQLString)
+				},
+				type: {
+					type: ContentType
 				}
 			},
-			resolve: (concept, { since, count }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
-				return backend(flags).capi.searchCount('metadata.idV1', id, { count, since});
+				return backend(flags).capi.searchCount('metadata.idV1', id, { since, genres, type });
 			}
 		},
 		items: {
 			type: new graphql.GraphQLList(Content),
 			description: 'Latest articles published with this concept',
 			args: {
-				from: { type: graphql.GraphQLInt },
-				limit: { type: graphql.GraphQLInt },
-				genres: { type: new graphql.GraphQLList(graphql.GraphQLString) },
-				type: { type: ContentType },
-				count: { type: graphql.GraphQLInt },
-				since: { type: graphql.GraphQLString }
+				from: {
+					type: graphql.GraphQLInt
+				},
+				limit: {
+					type: graphql.GraphQLInt
+				},
+				since: {
+					type: graphql.GraphQLString
+				},
+				genres: {
+					type: new graphql.GraphQLList(graphql.GraphQLString)
+				},
+				type: {
+					type: ContentType
+				}
 			},
-			resolve: (concept, { from, limit, genres, type, count, since }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { from, limit, since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
-				return backend(flags).capi.search('metadata.idV1', id, { from, limit, genres, type, count, since});
+				return backend(flags).capi.search('metadata.idV1', id, { from, limit, since, genres, type });
 			}
 		}
 	})

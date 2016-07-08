@@ -4,7 +4,6 @@ import { Content, Concept } from './content';
 import { ContentType } from './basic';
 import backendReal from '../backend-adapters/index';
 import moment from 'moment';
-import identity from '../identity';
 
 const contentToUiid = content => content.id.replace(/http:\/\/api\.ft\.com\/things?\//, '');
 
@@ -37,7 +36,7 @@ const Page = new GraphQLObjectType({
 			},
 			resolve: (page, { from, limit, genres, type }, { rootValue: { flags, backend = backendReal }}) =>
 				(page.items && page.items.length) ?
-					backend(flags).capi.content(page.items, {from, limit, genres, type}) : []
+					backend(flags).capi.content(page.items, { from, limit, genres, type }) : []
 		}
 	}
 });
@@ -73,7 +72,8 @@ const List = new GraphQLObjectType({
 				}
 			},
 			resolve: (result, args, { rootValue: { flags, backend = backendReal }}) =>
-				(result.items && result.items.length) ? backend(flags).capi.content(result.items.map(contentToUiid), args) : []
+				(result.items && result.items.length) ?
+					backend(flags).capi.content(result.items.map(contentToUiid), args) : []
 		}
 	}
 });
@@ -91,24 +91,22 @@ const Collection = new GraphQLObjectType({
 		},
 		articleCount: {
 			type: GraphQLInt,
-			description: `
-				Approximate number of articles published with this concept since the given date, up to a
-				maximum value of count (default date is 1 week, default count is 100)`,
+			description: 'Approximate number of articles published with each of the sub-concepts',
 			args: {
 				since: {
 					type: GraphQLString,
-					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD')
+					defaultValue: moment().subtract(7, 'days').format('YYYY-MM-DD'),
+					definition: 'Default is one week ago'
 				},
-				count: {
-					type: GraphQLInt,
-					defaultValue: 100
+				genres: {
+					type: new GraphQLList(GraphQLString)
+				},
+				type: {
+					type: ContentType
 				}
 			},
-			resolve: (collection, { since, count }, { rootValue: { flags, backend = backendReal }}) => {
-				return Promise.all(collection.concepts.map(c => c.id).map(id =>
-					backend(flags).capi.searchCount('metadata.idV1', id, { count, since})
-				)).then(counts => counts.filter(identity).reduce((a, b) => a + b, 0));
-			}
+			resolve: (collection, { since, genres, type }, { rootValue: { flags, backend = backendReal }}) =>
+				backend(flags).capi.searchCount('metadata.idV1', collection.concepts.map(c => c.id), { since, genres, type })
 		}
 	}
 });

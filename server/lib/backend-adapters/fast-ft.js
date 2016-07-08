@@ -10,7 +10,7 @@ export default class {
 		this.idV1 = idV1;
 	}
 
-	fetch ({ from = 0, limit = 20 } = { }) {
+	fetch ({ from = 0, limit = 20, ttl = 30 } = { }) {
 		const cacheKey = `${this.type}.items:from=${from}:limit=${limit}`;
 		const fetcher = () =>
 			ApiClient
@@ -23,11 +23,12 @@ export default class {
 					offset: from,
 					count: limit
 				})
+				.then(results => results.slice())
 				.catch(err => {
 					logger.err('Error getting fastFT content', err);
 					return [];
 				});
 
-		return this.cache.cached(cacheKey, 30, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 }

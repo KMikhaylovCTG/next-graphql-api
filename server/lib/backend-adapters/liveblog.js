@@ -1,11 +1,9 @@
-import logger from '@financial-times/n-logger';
-
 export default class {
 	constructor (cache) {
 		this.cache = cache;
 	}
 
-	parse (json, limit) {
+	parse (json, { limit } = { }) {
 		const dated = json.filter(it => !!it.data.datemodified);
 		const [first, second] = dated.slice(0, 2);
 
@@ -35,18 +33,13 @@ export default class {
 		return {updates, status};
 	}
 
-	fetch (uri, opts, ttl = 60) {
-		const then = new Date();
+	fetch (uri, { limit, ttl = 60 } = { }) {
+		const cacheKey = `liveblogs.${uri}:limit=${limit}`;
+		const fetcher = () =>
+			fetch(`${uri}?action=catchup&format=json`)
+				.then(res => res.json())
+				.then(json => this.parse(json, { limit }));
 
-		return this.cache.cached(`liveblogs.${uri}`, ttl, () =>
-				fetch(`${uri}?action=catchup&format=json`)
-					.then(res => {
-						const now = new Date();
-						logger.info(`Fetching live blog updates from ${uri}?action=catchup&format=json took ${now - then} ms`);
-						return res;
-					})
-					.then(res => res.json())
-			)
-			.then(json => this.parse(json, opts.limit));
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 }

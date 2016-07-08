@@ -5,7 +5,24 @@ import ApiClient from 'next-ft-api-client';
 import filterContent from '../helpers/filter-content';
 import resolveContentType from '../helpers/resolve-content-type';
 
-function getSearchOpts (termName, termValue, opts) {
+const genreMap = {
+	analysis: [
+		'MQ==-R2VucmVz',
+		'Mw==-R2VucmVz',
+		'OQ==-R2VucmVz',
+		'MTA=-R2VucmVz',
+		'ODFmNjI1ODYtMzllYi00MzQzLTg2Y2EtNmM1ZGQ4MjExMWZh-R2VucmVz'
+	],
+	comment: [
+		'OA==-R2VucmVz',
+		'NQ==-R2VucmVz',
+		'Ng==-R2VucmVz',
+		'NA==-R2VucmVz',
+		'NGQ2MWQ0NDMtMDc5Mi00NWExLTlkMGQtNWZhZjk0NGExOWU2-R2VucmVz'
+	]
+};
+
+const getSearchOpts = (termName, termValue, { from, limit, since, genres = [], type } = { }) => {
 	const searchOpts = {
 		filter: {
 			bool: {
@@ -17,97 +34,117 @@ function getSearchOpts (termName, termValue, opts) {
 			}
 		}
 	};
-
-	if (opts.since) {
+	const genreIds = genres.reduce(
+		(currentGenreIds, genre) => genreMap[genre] ? currentGenreIds.concat(genreMap[genre]) : currentGenreIds, []
+	);
+	if (genreIds.length) {
+		searchOpts.filter.bool.must.push({
+			term: { 'metadata.idV1': genreIds }
+		});
+	}
+	if (type) {
+		const liveBlogWebUrl = '.*(liveblog|marketslive|liveqa).*';
+		if (type === 'liveblog') {
+			searchOpts.filter.bool.must.push({
+				regexp: {
+					webUrl: liveBlogWebUrl
+				}
+			});
+		} else {
+			searchOpts.filter.bool.must_not = [{
+				regexp: {
+					webUrl: liveBlogWebUrl
+				}
+			}];
+		}
+	}
+	if (from) {
+		searchOpts.offset = from;
+	}
+	if (limit) {
+		searchOpts.count = limit;
+	}
+	if (since) {
 		searchOpts.filter.bool.must.push({
 			range: {
 				publishedDate: {
-					gte: opts.since
+					gte: since
 				}
 			}
 		});
 	}
 
-	if (opts.count) {
-		searchOpts.count = opts.count;
-	}
-
 	return searchOpts;
-}
+};
+
+const nonEmpty = item => item;
+
+const createCacheKeyOpts = (opts = {}) =>
+	Object.keys(opts)
+		.map(optName => opts[optName] ? `${optName}=${opts[optName]}` : '')
+		.filter(nonEmpty)
+		.join(':');
 
 export default class {
 	constructor (cache) {
 		this.type = 'capi';
 		this.cache = cache;
+		this.listApiAuthorization = process.env.LIST_API_AUTHORIZATION;
 	}
 
-	page (uuid, url, ttl = 60) {
-		return this.cache.cached(`${this.type}.pages.${uuid}`, ttl, () =>
-			ApiClient.pages({ uuid: uuid })
-				.then(it => ({
+	page (uuid, { ttl = 60 } = { }) {
+		const cacheKey = `${this.type}.page.${uuid}`;
+		const fetcher = () =>
+			ApiClient.pages({ uuid })
+				.then(page => ({
 					id: uuid,
-					title: it.title,
-					url: url,
-					items: it.slice()
-				}))
-		);
+					title: page.title,
+					items: page.slice()
+				}));
+
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	byConcept (uuid, title, ttl = 60) {
-		return this.cache.cached(`${this.type}.byconcept.${uuid}`, ttl, () =>
-			ApiClient.contentAnnotatedBy({ uuid: uuid })
-				.then(ids => ({
-					title: title,
-					conceptId: uuid,
-					sectionId: null,
-					items: ids.slice()
-				}))
-		);
-	}
+	search (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {
+		const cacheKey = `${this.type}.search:${termName}=${termValue}:${createCacheKeyOpts({ from, limit, since, genres, type })}`;
+		const fetcher = () =>
+			ApiClient.search(getSearchOpts(termName, termValue, { from, limit, since, genres, type }))
+				.then(results => results.slice());
 
-	search (termName, termValue, opts, ttl = 60 * 10) {
-		return this._search('search', termName, termValue, opts, ttl);
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
 	// searchCount is separate from search so that we can look a long way back just for the sake of counting articles
 	// and cache the count only, avoiding caching loads of unused content
-	searchCount (termName, termValue, opts, ttl = 60 * 10) {
-		return this._search('searchCount', termName, termValue, opts, ttl, (items => items.length));
+	searchCount (termName, termValue, { since, type, genres, ttl = 60 * 10 } = {}) {
+		const cacheKey = `${this.type}.search-count:${termName}=${termValue}:${createCacheKeyOpts({ since, genres, type })}`;
+		const searchOpts = getSearchOpts(termName, termValue, { since, genres, type });
+		// no need for source (just getting total count)
+		searchOpts.fields = false;
+		const fetcher = () =>
+			ApiClient.search(searchOpts)
+				.then(results => results.total);
+
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	_search (cacheKeyAction, termName, termValue, opts, ttl, andThen) {
+	content (uuids, { from, limit, genres, type, ttl = 60 } = { }) {
+		const cacheKey = `${this.type}.content.${uuids}`;
+		const fetcher = () =>
+			ApiClient.content({
+				uuid: uuids,
+				index: 'v3_api_v2'
+			});
 
-		const optsCacheKey = `${opts.since ? `:since_${opts.since}` : ''}${opts.count ? `:count_${opts.count}` : ''}`;
-		const cacheKey = `${this.type}.${cacheKeyAction}.${termName}:${termValue}${optsCacheKey}`;
-
-		return this.cache.cached(cacheKey, ttl, () => {
-
-			let cachedRequest = ApiClient.search(getSearchOpts(termName, termValue, opts))
-				.then(filterContent(opts, resolveContentType));
-
-			if(typeof andThen === 'function') {
-				cachedRequest = cachedRequest.then(andThen);
-			}
-
-			return cachedRequest;
-		});
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then(filterContent({ from, limit, genres, type }, resolveContentType));
 	}
 
-	content (uuids, opts = {}, ttl = 60) {
-		const cacheKey = `${this.type}.content.${Array.isArray(uuids) ? uuids.join('_') : uuids}`;
-		return this.cache.cached(cacheKey, ttl, () =>
-				ApiClient.content({
-					uuid: uuids,
-					index: 'v3_api_v2'
-				})
-			)
-			.then(filterContent(opts, resolveContentType))
-	}
-
-	list (uuid, url, ttl = 60) {
-		return this.cache.cached(`${this.type}.lists.${uuid}`, ttl, () => {
-			const headers = { Authorization: process.env.LIST_API_AUTHORIZATION };
-			return fetch(`https://prod-coco-up-read.ft.com/lists/${uuid}`, { headers })
+	list (uuid, { ttl = 60 } = { }) {
+		const cacheKey = `${this.type}.list.${uuid}`;
+		const headers = { Authorization: this.listApiAuthorization };
+		const fetcher = () =>
+			fetch(`https://prod-coco-up-read.ft.com/lists/${uuid}`, { headers })
 				.then(response => {
 					if (!response.ok) {
 						logger.warn('Failed getting List response', {
@@ -118,41 +155,38 @@ export default class {
 					return response;
 				})
 				.then(fetchresJson)
-				.then(it => {
-					return {
-						id: uuid,
-						title: it.title,
-						url: url,
-						items: it.items,
-						layoutHint: it.layoutHint
-					};
-				});
-		});
+				.then(list => ({
+					id: uuid,
+					title: list.title,
+					items: list.items,
+					layoutHint: list.layoutHint
+				}));
+
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	listOfType (listType, concept, ttl = 60) {
-		return this.cache.cached(`${this.type}.lists.${listType}.${concept}`, ttl, () => {
-			const headers = { Authorization: process.env.LIST_API_AUTHORIZATION };
-			return fetch(`https://prod-coco-up-read.ft.com/lists?${listType}For=${concept}`, { headers })
+	listOfType (type, concept, { ttl = 60 } = { }) {
+		const cacheKey = `${this.type}.list-of-type.${type}.${concept}`;
+		const headers = { Authorization: this.listApiAuthorization };
+		const fetcher = () =>
+			fetch(`https://prod-coco-up-read.ft.com/lists?${type}For=${concept}`, { headers })
 				.then(fetchresJson)
-				.catch(error => {
-					logger.warn('Failed getting List Of Type response', {
-						listType,
-						concept,
-						error
-					});
+				.catch(err => {
+					logger.warn('Failed getting List Of Type response', err, { type, concept });
 				});
-		});
+
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	things (uuids, type = 'idV1', ttl = 60 * 10) {
-		const cacheKey = `${this.type}.things.${type}.${Array.isArray(uuids) ? uuids.join('_') : uuids}`;
-		return this.cache.cached(cacheKey, ttl, () =>
+	things (uuids, { type = 'idV1', ttl = 60 * 10 } = { }) {
+		const cacheKey = `${this.type}.things.${type}.${uuids}`;
+		const fetcher = () =>
 			ApiClient.things({
 				identifierValues: uuids,
 				identifierType: type,
 				authority: 'http://api.ft.com/system/FT-TME'
-			})
-		);
+			});
+
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 }
