@@ -45,7 +45,9 @@ export default new GraphQLObjectType({
 				}
 			},
 			resolve: ({ uuid }, { limit }, { rootValue: { flags, backend = backendReal }}) =>
-				backend(flags).myft.personalisedFeed(uuid, { limit })
+				backend(flags).myft
+					.getAllRelationship(uuid, 'followed', 'concept', { limit })
+					.then(concepts => concepts.map(({ name, uuid, taxonomy }) => ({ name, id: uuid, taxonomy })))
 		},
 		viewed: {
 			type: new GraphQLList(Concept),
@@ -58,20 +60,7 @@ export default new GraphQLObjectType({
 			resolve: ({ uuid }, { limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).myft
 					.getViewed(uuid, { limit })
-					.then(concepts => !concepts ? [] : concepts)
-		},
-		personalisedFeed: {
-			type: new GraphQLList(Content),
-			args: {
-				limit: {
-					type: GraphQLInt,
-					defaultValue: 10
-				}
-			},
-			resolve: ({ uuid }, { limit }, { rootValue: { flags, backend = backendReal }}) =>
-				backend(flags).myft
-					.personalisedFeed(uuid, { limit })
-					.then(items => !items ? [] : items.map(item => item.content))
+					.then(concepts => concepts.map(({ name, uuid, taxonomy }) => ({ name, id: uuid, taxonomy })))
 		},
 		recommendedTopics: {
 			type: new GraphQLList(Concept),
@@ -84,7 +73,7 @@ export default new GraphQLObjectType({
 			resolve: ({ uuid }, { limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags)
 					.myft.getRecommendedTopics(uuid, { limit })
-					.then(concepts => !concepts ? [] : concepts)
+					.then(concepts => concepts.map(({ name, uuid, taxonomy }) => ({ name, id: uuid, taxonomy })))
 		}
 	}
 });

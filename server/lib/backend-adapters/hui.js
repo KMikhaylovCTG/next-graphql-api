@@ -31,7 +31,8 @@ export default class {
 	topics ({ industry, position, sector, country, period = 'last-1-week', ttl = 60 * 60 * 60 }) {
 		const cacheKey = `${this.type}.topics:${createCacheKeyOpts({ industry, position, sector, country, period })}`;
 		const fetcher = () =>
-			ApiClient.hui({ model: 'annotations', industry, position, sector, country, period })
+			ApiClient
+				.hui({ model: 'annotations', industry, position, sector, country, period })
 				.catch(err => {
 					logger.error('Failed getting hui topics', err);
 					return [];

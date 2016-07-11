@@ -13,7 +13,7 @@ export default class {
 	topics ({ from, limit, ttl = 60 * 10 } = { }) {
 		const cacheKey = `${this.type}.topics`;
 		const fetcher = () =>
-			fetch(`${this.baseUrl}/topics?apiKey=${this.apiKey}`)
+			fetch(`${this.baseUrl}/topics?apiKey=${this.apiKey}`, { timeout: 3000 })
 				.then(res => {
 					if (res.ok) {
 						return res.json()
@@ -37,7 +37,7 @@ export default class {
 		const cacheKey = `${this.type}.articles${concept ? `:concept=${concept}` : ''}`;
 		const url = `${this.baseUrl}/articles?apiKey=${this.apiKey}${concept ? `&conceptid=${concept}` : ''}`;
 		const fetcher = () =>
-				fetch(url)
+				fetch(url, { timeout: 3000 })
 					.then(res => {
 						if (res.ok) {
 							return res.json()

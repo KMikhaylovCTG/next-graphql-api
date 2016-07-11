@@ -13,7 +13,8 @@ export default class {
 				`https://bertha.ig.ft.com/view/publish/gss/${key}/${name}`,
 				{
 					method: 'get',
-					headers: { 'Content-Type': 'application/json' }
+					headers: { 'Content-Type': 'application/json' },
+					timeout: 3000
 				}
 			)
 				.then(res => {
