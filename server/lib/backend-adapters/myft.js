@@ -15,7 +15,10 @@ export default class {
 			myftClient.getAllRelationship('user', uuid, relationship, model, { limit })
 				.then(res => res.items)
 				.catch(err => {
-					logger.error('Failed getting all relationships from myFT', err, { uuid, relationship, model });
+					// don't log if it's just a 'no user data' error
+					if (err.message !== 'No user data exists') {
+						logger.error('Failed getting all relationships from myFT', err, { uuid, relationship, model });
+					}
 					return [];
 				});
 
