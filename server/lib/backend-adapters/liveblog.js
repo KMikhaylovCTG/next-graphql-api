@@ -42,7 +42,7 @@ export default class {
 				.then(liveblog => this.parse(liveblog))
 				.catch(err => {
 					logger.error('Failed fetching a liveblog', err);
-					return { };
+					return { updates: [] };
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
