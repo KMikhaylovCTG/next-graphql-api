@@ -60,19 +60,6 @@ export default new GraphQLObjectType({
 					.getViewed(uuid, { limit })
 					.then(concepts => !concepts ? [] : concepts)
 		},
-		personalisedFeed: {
-			type: new GraphQLList(Content),
-			args: {
-				limit: {
-					type: GraphQLInt,
-					defaultValue: 10
-				}
-			},
-			resolve: ({ uuid }, { limit }, { rootValue: { flags, backend = backendReal }}) =>
-				backend(flags).myft
-					.personalisedFeed(uuid, { limit })
-					.then(items => !items ? [] : items.map(item => item.content))
-		},
 		recommendedTopics: {
 			type: new GraphQLList(Concept),
 			args: {

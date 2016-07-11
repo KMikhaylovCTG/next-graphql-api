@@ -136,8 +136,6 @@ export default class {
 					return 0;
 				});
 
-		// return fetcher();
-
 		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 

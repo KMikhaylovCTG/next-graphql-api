@@ -11,8 +11,9 @@ export default class {
 		this.cache = cache;
 	}
 
-	personalisedFeed (uuid, { limit = 10 }) {
-		return fetch(
+	personalisedFeed (uuid, { limit = 10, ttl = 60 }) {
+		const cacheKey = `${this.type}.personalised-feed.${uuid}`;
+		const fetcher = () => fetch(
 			`https://ft-next-personalised-feed-api.herokuapp.com/v2/feed/${uuid}?originatingSignals=followed&from=-7d`,
 			{
 				headers: {
@@ -22,6 +23,7 @@ export default class {
 			.then(res => {
 				if (res.ok) {
 					return res.json()
+						.then(res => res.results);
 				} else {
 					return res.text()
 						.then(text => {
@@ -29,18 +31,20 @@ export default class {
 						});
 				}
 			})
-			.then(res =>
-				(new TopicCards(res.results).process())
-					.slice(0, limit)
-					.map(card => card.term)
-			)
 			.catch(err => {
 				logger.error('Failed getting personalised feed from myFT', err, { uuid });
 				return [];
 			});
+
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then(articles =>
+				(new TopicCards(articles).process())
+					.slice(0, limit)
+					.map(card => card.term)
+			);
 	}
 
-	getAllRelationship (uuid, relationship, model, { limit = 10 }) {
+	getAllRelationship (uuid, relationship, model, { limit = 10, ttl = 60 }) {
 		const cacheKey = `${this.type}.all-relationship.${uuid}:relationship=${relationship}:model=${model}:limit=${limit}`;
 		const fetcher = () =>
 			myftClient.getAllRelationship('user', uuid, relationship, model, { limit })
@@ -50,10 +54,10 @@ export default class {
 					return [];
 				});
 
-		return this.cache.cached(cacheKey, 60, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	getViewed (uuid, { limit = 10 }) {
+	getViewed (uuid, { limit = 10, ttl = 60 }) {
 		const cacheKey = `${this.type}.viewed.${uuid}:limit=${limit}`;
 		const fetcher = () =>
 			myftClient.fetchJson('GET', `next/popular-concepts/${uuid}`)
@@ -67,10 +71,10 @@ export default class {
 					return [];
 				});
 
-		return this.cache.cached(cacheKey, 60, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	getMostReadTopics ({ limit = 10 }) {
+	getMostReadTopics ({ limit = 10, ttl = 60 }) {
 		const cacheKey = `${this.type}.most-read-topics:limit=${limit}`;
 		const fetcher = () => {
 			return myftClient.fetchJson('GET', 'recommendation/most-read/concept', { limit })
@@ -81,10 +85,10 @@ export default class {
 				});
 		};
 
-		return this.cache.cached(cacheKey, 60, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	getMostFollowedTopics ({ limit = 10 }) {
+	getMostFollowedTopics ({ limit = 10, ttl = 60 }) {
 		const cacheKey = `${this.type}.most-followed-topics:limit=${limit}`;
 		const fetcher = () =>
 			myftClient.fetchJson('GET', 'recommendation/most-followed/concept', { limit })
@@ -95,10 +99,10 @@ export default class {
 					return [];
 				});
 
-		return this.cache.cached(cacheKey, 60, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
-	getRecommendedTopics (uuid, { limit = 10 }) {
+	getRecommendedTopics (uuid, { limit = 10, ttl = 60 }) {
 		const cacheKey = `${this.type}.recommended-topics.${uuid}:limit=${limit}`;
 		const fetcher = () =>
 			myftClient.fetchJson('GET', `recommendation/user/${uuid}/concept`, { limit })
@@ -108,7 +112,7 @@ export default class {
 					return [];
 				});
 
-		return this.cache.cached(cacheKey, 60, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
 }
