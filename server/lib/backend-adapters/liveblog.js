@@ -38,7 +38,7 @@ export default class {
 	fetch (uri, { limit, ttl = 60 } = { }) {
 		const cacheKey = `liveblogs.${uri}:limit=${limit}`;
 		const fetcher = () =>
-			fetch(`${uri}?action=catchup&format=json`)
+			fetch(`${uri}?action=catchup&format=json`, { timeout: 3000 })
 				.then(res => {
 					if (res.ok) {
 						return res.json()

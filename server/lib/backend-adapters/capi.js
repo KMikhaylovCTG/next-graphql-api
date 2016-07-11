@@ -159,7 +159,7 @@ export default class {
 		const cacheKey = `${this.type}.list.${uuid}`;
 		const headers = { Authorization: this.listApiAuthorization };
 		const fetcher = () =>
-			fetch(`https://prod-coco-up-read.ft.com/lists/${uuid}`, { headers })
+			fetch(`https://prod-coco-up-read.ft.com/lists/${uuid}`, { headers, timeout: 3000 })
 				.then(response => {
 					if (!response.ok) {
 						logger.warn('Failed getting List response', {
@@ -197,7 +197,7 @@ export default class {
 		const cacheKey = `${this.type}.list-of-type.${type}.${concept}`;
 		const headers = { Authorization: this.listApiAuthorization };
 		const fetcher = () =>
-			fetch(`https://prod-coco-up-read.ft.com/lists?curated${type}For=${concept}`, { headers })
+			fetch(`https://prod-coco-up-read.ft.com/lists?curated${type}For=${concept}`, { headers, timeout: 3000 })
 				.then(res => {
 					if (res.ok) {
 						return res.json()

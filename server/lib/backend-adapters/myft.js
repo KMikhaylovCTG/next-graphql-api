@@ -16,9 +16,8 @@ export default class {
 		const fetcher = () => fetch(
 			`https://ft-next-personalised-feed-api.herokuapp.com/v2/feed/${uuid}?originatingSignals=followed&from=-7d`,
 			{
-				headers: {
-					'X-FT-Personalised-Feed-Api-Key': process.env.PERSONALISED_FEED_API_KEY
-				}
+				headers: { 'X-FT-Personalised-Feed-Api-Key': process.env.PERSONALISED_FEED_API_KEY },
+				timeout: 3000
 			})
 			.then(res => {
 				if (res.ok) {
