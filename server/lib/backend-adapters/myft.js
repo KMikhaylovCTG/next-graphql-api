@@ -22,7 +22,8 @@ export default class {
 					return [];
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		// NOTE: emulate a 0 sec cache, as setex doesn't allow a zero value
+		return ttl === 0 ? fetcher() : this.cache.cached(cacheKey, ttl, fetcher);
 	}
 
 	getViewed (uuid, { limit = 10, ttl = 60 }) {
