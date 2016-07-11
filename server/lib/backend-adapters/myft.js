@@ -1,8 +1,6 @@
 import logger from '@financial-times/n-logger';
 import myftClient from 'next-myft-client';
 
-import TopicCards from '../models/topic-cards';
-
 const nonEmpty = item => item;
 
 export default class {
