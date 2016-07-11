@@ -1,4 +1,3 @@
-import util from 'util';
 import logger from '@financial-times/n-logger';
 import httpStatus from 'http-status-codes';
 import { GraphQLError } from 'graphql/error'
