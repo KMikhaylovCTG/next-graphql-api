@@ -202,10 +202,11 @@ describe('Schema', () => {
 
 			const thingsStub = sinon.stub();
 			thingsStub.returns(Promise.resolve(
-				{items: [
+				[
 					{id: 'abc', taxonomy: 'foo', name: 'One'},
 					{id: 'def', taxonomy: 'bar', name: 'Two'}
-				]}));
+				]
+			));
 			const backend = () => ({
 				capi: {
 					things: thingsStub
@@ -306,7 +307,7 @@ describe('Schema', () => {
 
 			return graphql(schema, query, { backend })
 				.then(({data}) => {
-					expect(data.listOfType).to.be.null;
+					expect(data.listOfType).to.eql([]);
 					expect(listOfTypeStub.calledOnce).to.be.true;
 					expect(contentStub.called).to.be.false;
 				});

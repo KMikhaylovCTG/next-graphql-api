@@ -49,7 +49,7 @@ export default class {
 							});
 					}
 				})
-				.then(liveblogs => this.parse(liveblogs, { limit }))
+				.then(liveblog => this.parse(liveblog, { limit }))
 				.catch(err => {
 					logger.error('Failed fetching a liveblog', err);
 					return { };

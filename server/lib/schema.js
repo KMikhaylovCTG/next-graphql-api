@@ -146,7 +146,7 @@ const queryType = new GraphQLObjectType({
 			},
 			resolve: (root, { limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).myft.getMostReadTopics({ limit })
-					.then(items => backend(flags).capi.things(items.map(t => t.uuid)).then(c => c.items))
+					.then(items => backend(flags).capi.things(items.map(t => t.uuid)))
 		},
 		popularFollowedTopicsFromMyFtApi: {
 			type: new GraphQLList(Concept),
@@ -157,7 +157,7 @@ const queryType = new GraphQLObjectType({
 			},
 			resolve: (root, { limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).myft.getMostFollowedTopics({ limit })
-					.then(items => backend(flags).capi.things(items.map(t => t.uuid)).then(c => c.items))
+					.then(items => backend(flags).capi.things(items.map(t => t.uuid)))
 		},
 		popularArticles: {
 			type: new GraphQLList(Content),
@@ -248,10 +248,7 @@ const queryType = new GraphQLObjectType({
 					.hui.topics({ industry, position, sector, country, period })
 					.then(items => backend(flags).capi
 						.things(items, { type: 'prefLabel' })
-						.then(c => c.items
-							.filter(t => t)
-							.slice(0, limit)
-						)
+						.then(items => items.filter(t => t).slice(0, limit))
 					)
 		},
 		user: {
@@ -268,11 +265,12 @@ const queryType = new GraphQLObjectType({
 			type: new GraphQLList(Concept),
 			args: {
 				ids: {
-					type: new GraphQLList(GraphQLString)
+					type: new GraphQLList(GraphQLString),
+					defaultValue: []
 				}
 			},
 			resolve: (root, { ids }, { rootValue: { flags, backend = backendReal }}) =>
-				backend(flags).capi.things(ids).then(c => c.items)
+				backend(flags).capi.things(ids)
 		},
 		collections: {
 			type: new GraphQLList(Collection),
@@ -288,7 +286,7 @@ const queryType = new GraphQLObjectType({
 					.then(results => {
 						const collections = JSON.parse(JSON.stringify(results)).slice(0, limit);
 						const ids = [].concat(...collections.map(c => c.concepts));
-						return backend(flags).capi.things(ids).then(({items:concepts}) => {
+						return backend(flags).capi.things(ids).then(concepts => {
 							return collections.map(tap(collection => {
 								collection.concepts = collection
 									.concepts
@@ -302,10 +300,10 @@ const queryType = new GraphQLObjectType({
 			type: new GraphQLList(Content),
 			args: {
 				listType : {
-					type: GraphQLString
+					type: new GraphQLNonNull(GraphQLString)
 				},
 				concept: {
-					type: GraphQLString
+					type: new GraphQLNonNull(GraphQLString)
 				}
 			},
 			resolve: (root, { listType, concept }, { rootValue: { flags, backend = backendReal }}) => {
@@ -313,7 +311,7 @@ const queryType = new GraphQLObjectType({
 				return be.capi.listOfType(listType, concept)
 					.then(list => {
 						if (!list) {
-							return;
+							return [];
 						}
 						// When there are multiple lists meeting the criteria an array is returned
 						// We're only interested in the first of the array - the most recent
@@ -329,7 +327,7 @@ const queryType = new GraphQLObjectType({
 			type: Page,
 			args: {
 				uuid: {
-					type: GraphQLString
+					type: new GraphQLNonNull(GraphQLString)
 				}
 			},
 			resolve: (root, { uuid }, { rootValue: { flags, backend = backendReal }}) =>

@@ -164,7 +164,7 @@ describe('CAPI', () => {
 
 				return capi.listOfType(listType, concept)
 					.then(list => {
-						expect(list).to.eql([]);
+						expect(list).to.be.null;
 						// make sure mock was called
 						fetchMock.called().should.be.true;
 					});

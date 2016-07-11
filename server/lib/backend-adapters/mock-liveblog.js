@@ -9,7 +9,8 @@ export default class {
 		const liveblog = liveblogs[uri];
 
 		return liveblog ?
-			Promise.resolve(liveblog).then(json => this.realBackend.parse(json, limit)) :
-			this.realBackend.fetch(uri, ttl);
+			Promise.resolve(liveblog)
+				.then(liveblog => this.realBackend.parse(liveblog, limit)) :
+			this.realBackend.fetch(uri, { ttl });
 	}
 }
