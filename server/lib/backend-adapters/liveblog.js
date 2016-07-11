@@ -1,42 +1,32 @@
 import logger from '@financial-times/n-logger';
 
+const duplicateMessages = (message, index, messages) =>
+	messages.findIndex(otherMessage => otherMessage.mid === message.mid) === index;
+
 export default class {
 	constructor (cache) {
 		this.cache = cache;
 	}
 
-	parse (json, { limit } = { }) {
-		const dated = json.filter(it => !!it.data.datemodified);
-		const [first, second] = dated.slice(0, 2);
-
-		// make sure updates are in order from latest to earliest
-		if ((first && first.data.datemodified) < (second && second.data.datemodified)) {
-			json.reverse();
+	parse (liveblog) {
+		// pull out all the messages (and edit messages), and order by date
+		const updates = liveblog
+			.filter(message => ['msg', 'editmsg'].includes(message.event))
+			.map(message => message.data)
+			.sort((messageOne, messageTwo) => messageTwo.datemodified - messageOne.datemodified)
+			.filter(duplicateMessages);
+		let status = 'comingsoon';
+		if (liveblog.findIndex(message => message.event === 'end') !== -1) {
+			status = 'closed';
+		} else if (updates.length) {
+			status = 'inprogress';
 		}
 
-		// dedupe updates and only keep messages, decide on status
-		let [, updates, status] = json.reduce(([skip, updates, status], event) => {
-			if (event.event === 'end') { return [skip, updates, 'closed']; }
-
-			if (event.event === 'msg' && event.data.mid && !skip[event.data.mid]) {
-				updates.push(event);
-				skip[event.data.mid] = true;
-				status = status || 'inprogress';
-			}
-
-			return [skip, updates, status];
-		}, [{}, [], null]);
-
-		if (limit) {
-			updates = updates.slice(0, limit);
-		}
-
-		status = status || 'comingsoon';
 		return { updates, status };
 	}
 
 	fetch (uri, { limit, ttl = 60 } = { }) {
-		const cacheKey = `liveblogs.${uri}:limit=${limit}`;
+		const cacheKey = `liveblogs.${uri}`;
 		const fetcher = () =>
 			fetch(`${uri}?action=catchup&format=json`, { timeout: 3000 })
 				.then(res => {
@@ -49,12 +39,16 @@ export default class {
 							});
 					}
 				})
-				.then(liveblog => this.parse(liveblog, { limit }))
+				.then(liveblog => this.parse(liveblog))
 				.catch(err => {
 					logger.error('Failed fetching a liveblog', err);
 					return { };
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then(liveBlogInfo => ({
+				status: liveBlogInfo.status,
+				updates: limit ? liveBlogInfo.updates.slice(0, limit) : liveBlogInfo.updates
+			}));
 	}
 }

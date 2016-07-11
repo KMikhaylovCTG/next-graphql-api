@@ -393,19 +393,17 @@ const LiveBlogUpdate = new graphql.GraphQLObjectType({
 		},
 		author: {
 			type: graphql.GraphQLString,
-			resolve: update => update.data && update.data.authordisplayname
+			resolve: update => update.authordisplayname
 		},
 		date: {
 			type: graphql.GraphQLString,
-			resolve: update => update.data && new Date(update.data.datemodified * 1000).toISOString()
+			resolve: update => new Date(update.datemodified * 1000).toISOString()
 		},
 		text: {
-			type: graphql.GraphQLString,
-			resolve: update => update.data && update.data.text
+			type: graphql.GraphQLString
 		},
 		html: {
-			type: graphql.GraphQLString,
-			resolve: update => update.data && update.data.html
+			type: graphql.GraphQLString
 		}
 	})
 });

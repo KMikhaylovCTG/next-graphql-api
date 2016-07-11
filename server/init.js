@@ -15,11 +15,6 @@ import playground from './routes/playground';
 import cors from './middleware/cors';
 import additionalHealthChecks from './lib/health-checks/index';
 
-// Turn off console logging, see if that's what's logging twice
-if (process.env.NODE_ENV === 'production') {
-	logger.removeConsole();
-}
-
 const healthChecks = nHealth(path.resolve(__dirname, './config/health-checks'), additionalHealthChecks);
 const app = express({
 	layoutsDir: 'views/layouts',
