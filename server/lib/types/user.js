@@ -20,7 +20,7 @@ export default new GraphQLObjectType({
 			},
 			resolve: ({ uuid }, { limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).myft
-					.getAllRelationship(uuid, 'saved', 'content', { limit })
+					.getAllRelationship(uuid, 'saved', 'content', { limit, ttl: 0 })
 					.then(items => !items ? [] : backend(flags).capi.content(items.map(item => item.uuid), { limit }))
 		},
 		read: {
@@ -46,7 +46,7 @@ export default new GraphQLObjectType({
 			},
 			resolve: ({ uuid }, { limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).myft
-					.getAllRelationship(uuid, 'followed', 'concept', { limit })
+					.getAllRelationship(uuid, 'followed', 'concept', { limit, ttl: 0 })
 					.then(concepts => concepts.map(({ name, uuid, taxonomy }) => ({ name, id: uuid, taxonomy })))
 		},
 		viewed: {
