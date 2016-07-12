@@ -6,7 +6,6 @@ import authS3O from 's3o-middleware';
 import express from '@financial-times/n-express';
 import nHealth from 'n-health';
 import jsonpMiddleware from '@financial-times/n-jsonp';
-import logger from '@financial-times/n-logger';
 
 import query from './routes/query';
 import index from './routes/index';
@@ -14,11 +13,6 @@ import schema from './routes/schema';
 import playground from './routes/playground';
 import cors from './middleware/cors';
 import additionalHealthChecks from './lib/health-checks/index';
-
-// Turn off console logging, see if that's what's logging twice
-if (process.env.NODE_ENV === 'production') {
-	logger.removeConsole();
-}
 
 const healthChecks = nHealth(path.resolve(__dirname, './config/health-checks'), additionalHealthChecks);
 const app = express({
@@ -36,11 +30,10 @@ app.get('/__gtg', (req, res) => {
 	res.status(200).end();
 });
 
-
-function cacheControl (req, res, next) {
+const cacheControl = (req, res, next) => {
 	res.cache('no');
 	next();
-}
+};
 
 app.post('/', cacheControl, query);
 app.post('/data', cacheControl, query);

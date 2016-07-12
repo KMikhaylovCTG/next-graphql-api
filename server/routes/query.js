@@ -1,4 +1,3 @@
-import util from 'util';
 import logger from '@financial-times/n-logger';
 import httpStatus from 'http-status-codes';
 import { GraphQLError } from 'graphql/error'
@@ -12,15 +11,8 @@ export default (req, res) => {
 
 	if (!Object.keys(query).length) {
 		const message = 'Empty query supplied';
-		const errorInfo = {
-			host: req.hostname,
-			method: req.method,
-			body: util.inspect(req.body),
-			query: util.inspect(req.query),
-			contentType: req.get('Content-Type')
-		};
-		logger.warn(message, errorInfo);
-		return res.status(400).jsonp(Object.assign({ type: 'Bad Request', error: { message } }, errorInfo));
+		logger.warn(message);
+		return res.status(400).jsonp({ type: 'Bad Request', error: { message } });
 	}
 
 	graphql({ flags: { mockData: req.get('FT-Graphql-Mock-Data') === '1' ? true : false }, req })

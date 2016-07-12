@@ -32,6 +32,6 @@ export default class {
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then(topics => sliceList(topics, { from, limit }));
+			.then(videos => sliceList(videos, { from, limit }));
 	}
 }
