@@ -29,6 +29,13 @@ shared product-level rules, such as the most relevant articles for a given artic
 even surfacing the parsed body of articles as a queryable data object to let clients
 pull out specific content components from an article body.
 
+## Setup
+
+We cache responses in Redis, therefore for development you will need to install and run an instance of it
+
+    brew install redis
+    redis-server
+
 ## Using Next GraphQL API
 
 You will need a GraphQL API token from the config-vars. Once you have it, you can
