@@ -332,6 +332,19 @@ const queryType = new GraphQLObjectType({
 			},
 			resolve: (root, { uuid }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).capi.page(uuid)
+		},
+		search: {
+			type: new GraphQLList(Content),
+			args: {
+				termName: {
+					type: new GraphQLNonNull(GraphQLString)
+				},
+				termValue: {
+					type: new GraphQLNonNull(GraphQLString)
+				}
+			},
+			resolve: (root, { termName, termValue }, { rootValue: { flags, backend = backendReal }}) =>
+				backend(flags).capi.search(termName, termValue)
 		}
 	}
 });
