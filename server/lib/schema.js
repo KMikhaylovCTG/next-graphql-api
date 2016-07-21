@@ -341,10 +341,14 @@ const queryType = new GraphQLObjectType({
 				},
 				termValue: {
 					type: new GraphQLNonNull(GraphQLString)
+				},
+				limit: {
+					type: GraphQLInt,
+					defaultValue: 20
 				}
 			},
-			resolve: (root, { termName, termValue }, { rootValue: { flags, backend = backendReal }}) =>
-				backend(flags).capi.search(termName, termValue)
+			resolve: (root, { termName, termValue, limit }, { rootValue: { flags, backend = backendReal }}) =>
+				backend(flags).capi.search(termName, termValue, { limit })
 		}
 	}
 });
