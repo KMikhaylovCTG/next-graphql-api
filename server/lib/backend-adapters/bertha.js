@@ -28,7 +28,7 @@ export default class {
 					}
 				})
 				.catch(err => {
-					logger.err('Failed getting a bertha sheet', err);
+					logger.error('Failed getting a bertha sheet', err);
 					return [];
 				});
 

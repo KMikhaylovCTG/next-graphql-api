@@ -25,7 +25,7 @@ export default class {
 				})
 				.then(results => results.slice())
 				.catch(err => {
-					logger.err('Failed getting fastFT content', err);
+					logger.error('Failed getting fastFT content', err);
 					return [];
 				});
 
