@@ -3,13 +3,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import GraphiQL from 'graphiql';
 
-const fetcher = (apiKey, params) => {
-	console.log('GraphiQL submitted', params);
+const fetcher = (apiKey, { query, variables }) => {
+	const body = { query, variables: JSON.parse(variables || '{}') };
+	console.log('GraphiQL submitted', body);
 
 	return fetch(`/data?apiKey=${apiKey}`, {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(params)
+			body: JSON.stringify(body)
 		})
 		.then(response => response.json())
 		.then(data => ({ data }))
