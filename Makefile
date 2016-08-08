@@ -15,22 +15,22 @@ unit-test-watch:
 test: verify unit-test
 
 run:
-	nbt run --local
+	nht run --local
 
 provision:
-	nbt float -md --testapp ${TEST_APP}
-	nbt deploy-hashed-assets
-	nbt test-urls ${TEST_APP}
+	nht float -md --testapp ${TEST_APP}
+	nht deploy-hashed-assets
+	nht test-urls ${TEST_APP}
 
 tidy:
-	nbt destroy ${TEST_APP}
+	nht destroy ${TEST_APP}
 
 deploy:
-	nbt ship -m
-	nbt deploy-hashed-assets
+	nht ship -m
+	nht deploy-hashed-assets
 
 deploy-fastly-staging:
-	nbt deploy-vcl -e -s FASTLY_STAGING_SERVICE_ID --vars SERVICEID --main main.vcl ./src/vcl/
+	fastly-tools deploy -e -s FASTLY_STAGING_SERVICE_ID --vars SERVICEID --main main.vcl ./src/vcl/
 
 deploy-fastly:
-	nbt deploy-vcl -e -s FASTLY_SERVICE_ID --vars SERVICEID --main main.vcl ./src/vcl/
+	fastly-tools deploy -e -s FASTLY_SERVICE_ID --vars SERVICEID --main main.vcl ./src/vcl/

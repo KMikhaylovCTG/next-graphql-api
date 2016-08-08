@@ -1,3 +1,5 @@
+import boltsort;
+
 backend graphql_api_eu {
 	.connect_timeout = 1s;
 	.dynamic = true;
@@ -44,6 +46,9 @@ backend graphql_api_us {
 
 sub vcl_recv {
 	#FASTLY recv
+
+	# sort query string params to improve cache hit ratio
+	set req.url = boltsort.sort(req.url);
 
 	if (!req.http.X-Geoip-Continent) {
 		set req.http.X-Geoip-Continent = geoip.continent_code;
