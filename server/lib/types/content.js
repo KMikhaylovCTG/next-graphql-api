@@ -44,6 +44,9 @@ const Content = new graphql.GraphQLInterfaceType({
 		url: {
 			type: graphql.GraphQLString
 		},
+		webUrl: {
+			type: graphql.GraphQLString
+		},
 		genre: {
 			type: graphql.GraphQLString
 		},
@@ -118,6 +121,9 @@ const getContentFields = () => ({
 		type: graphql.GraphQLString
 	},
 	url: {
+		type: graphql.GraphQLString
+	},
+	webUrl: {
 		type: graphql.GraphQLString
 	},
 	genre: {
