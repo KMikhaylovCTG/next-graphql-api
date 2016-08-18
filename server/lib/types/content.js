@@ -425,6 +425,10 @@ const Video = new graphql.GraphQLObjectType({
 			type: graphql.GraphQLString,
 			resolve: video => video.name
 		},
+		summary: {
+			type: graphql.GraphQLString,
+			resolve: video => video.shortDescription
+		},
 		description: {
 			type: graphql.GraphQLString,
 			resolve: video => video.longDescription
