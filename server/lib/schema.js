@@ -43,8 +43,13 @@ const queryType = new GraphQLObjectType({
 					type: new GraphQLNonNull(Region)
 				}
 			},
-			resolve: (root, { region }, { rootValue: { flags, backend = backendReal }}) =>
-				backend(flags).capi.list(sources[`${region}TopList`].uuid)
+			resolve: (root, { region }, { rootValue: { flags, backend = backendReal }}) => {
+				const listUuid = flags && flags.useVideoTopStoriesData && region === 'uk' ?
+					sources[`${region}TopListWithVideos`].uuid :
+					sources[`${region}TopList`].uuid
+
+				return backend(flags).capi.list(listUuid)
+			}
 		},
 		fastFT: {
 			type: new GraphQLList(Content),

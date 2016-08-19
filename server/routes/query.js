@@ -15,7 +15,10 @@ export default (req, res) => {
 		return res.status(400).jsonp({ type: 'Bad Request', error: { message } });
 	}
 
-	graphql({ flags: { mockData: req.get('FT-Graphql-Mock-Data') === '1' ? true : false }, req })
+	graphql({ flags: {
+		mockData: req.get('FT-Graphql-Mock-Data') === '1' ? true : false,
+		useVideoTopStoriesData: req.get('FT-Graphql-Video-Top-Stories-Data') === '1' ? true : false
+	}, req })
 		.fetch(query, vars)
 		.then(data => res.jsonp(data))
 		.catch(errs => {
