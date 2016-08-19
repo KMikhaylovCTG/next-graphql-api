@@ -18,7 +18,7 @@ export default (req, res) => {
 	graphql({ flags: {
 		mockData: req.get('FT-Graphql-Mock-Data') === '1' ? true : false,
 		useVideoTopStoriesData: req.get('FT-Graphql-Video-Top-Stories-Data') === '1' ? true : false
-	 }, req })
+	}, req })
 		.fetch(query, vars)
 		.then(data => res.jsonp(data))
 		.catch(errs => {
