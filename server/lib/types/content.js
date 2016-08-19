@@ -238,7 +238,15 @@ const Article = new graphql.GraphQLObjectType({
 		},
 		isPodcast: {
 			type: graphql.GraphQLBoolean,
-			resolve: content => content.metadata.some(propertyEquals('idV1', podcastIdV1))
+			resolve: content => content.provenance.some(item => /acast/.test(item))
+		},
+		isVideo: {
+			type: graphql.GraphQLBoolean,
+			resolve: content => content.provenance.some(item => /brightcove/.test(item))
+		},
+		videoId: {
+			type: graphql.GraphQLString,
+			resolve: content => content.url.includes('video.ft.com') ? content.url.split('/').pop() : ''
 		}
 	})
 });
