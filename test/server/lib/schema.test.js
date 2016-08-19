@@ -125,7 +125,8 @@ describe('Schema', () => {
 
 		it('should be able to fetch', () => {
 			const listStub = sinon.stub();
-			listStub.returns({ title: 'Top Stories List', layoutHint: 'bigstory' });
+			listStub.withArgs('520ddb76-e43d-11e4-9e89-00144feab7de').returns({ title: 'Top Stories List', layoutHint: 'bigstory' });
+			listStub.withArgs('81f74b34-cbf9-11e5-be0b-b7ece4e953a0').returns({ title: 'Top Stories List with Videos', layoutHint: 'standalonevideo' });
 			const backend = () => ({
 				capi: {
 					list: listStub
@@ -167,6 +168,31 @@ describe('Schema', () => {
 				.then(({ data }) => {
 					expect(data).to.have.property('topStoriesList');
 					expect(data.topStoriesList).to.be.null;
+				})
+		});
+
+		it('should be able to fetch from test list if flag is set', () => {
+			const listStub = sinon.stub();
+			listStub.withArgs('520ddb76-e43d-11e4-9e89-00144feab7de').returns({ title: 'Top Stories List', layoutHint: 'bigstory' });
+			listStub.withArgs('81f74b34-cbf9-11e5-be0b-b7ece4e953a0').returns({ title: 'Top Stories List with Videos', layoutHint: 'standalonevideo' });
+			const backend = () => ({
+				capi: {
+					list: listStub
+				}
+			});
+			const query = `
+				query TopStoriesList {
+					topStoriesList(region: UK) {
+						title
+						layoutHint
+					}
+				}
+			`;
+
+			return graphql(schema, query, { flags: {useVideoTopStoriesData: true}, backend })
+				.then(({ data }) => {
+					data.topStoriesList.title.should.equal('Top Stories List with Videos');
+					data.topStoriesList.layoutHint.should.equal('standalonevideo');
 				})
 		});
 
