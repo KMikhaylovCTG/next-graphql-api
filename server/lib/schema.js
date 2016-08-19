@@ -44,7 +44,7 @@ const queryType = new GraphQLObjectType({
 				}
 			},
 			resolve: (root, { region }, { rootValue: { flags, backend = backendReal }}) => {
-				const listUuid = flags.useVideoTopStoriesData && region === 'uk' ?
+				const listUuid = flags && flags.useVideoTopStoriesData && region === 'uk' ?
 					sources[`${region}TopListWithVideos`].uuid :
 					sources[`${region}TopList`].uuid
 
