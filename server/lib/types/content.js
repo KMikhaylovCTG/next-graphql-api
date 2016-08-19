@@ -6,8 +6,6 @@ import capifyMetadata from '../helpers/capify-metadata';
 import backendReal from '../backend-adapters/index';
 import { LiveBlogStatus, ContentType } from './basic';
 
-const podcastIdV1 = 'NjI2MWZlMTEtMTE2NS00ZmI0LWFkMzMtNDhiYjA3YjcxYzIy-U2VjdGlvbnM=';
-
 const propertyEquals = (property, value) => (item) => item[property] === value;
 
 // TODO: rather hacky way of getting the headshot url from ft-n-article-branding
