@@ -24,7 +24,7 @@ describe('Content', () => {
 		it('should be able to get primaryTheme', () => {
 			const schema = testSchema({
 				metadata: [
-					{ idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', primary: 'theme' }
+					{ url: 'https://www.ft.com/stream/themeId/Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', primary: 'theme' }
 				]
 			});
 			const query = `
@@ -92,8 +92,8 @@ describe('Content', () => {
 			it('should be able to get authors', () => {
 				const schema = testSchema({
 					metadata: [
-						{ taxonomy: 'authors', idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', prefLabel: 'Edward Luce' },
-						{ taxonomy: 'authors', idV1: 'Q0ItMDA2NTUxOA==-QXV0aG9ycw==', prefLabel: 'Philip Augar' }
+						{ url: 'https://www.ft.com/stream/authorsId/Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', taxonomy: 'authors', idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', prefLabel: 'Edward Luce' },
+						{ url: 'https://www.ft.com/stream/authorsId/Q0ItMDA2NTUxOA==-QXV0aG9ycw==', taxonomy: 'authors', idV1: 'Q0ItMDA2NTUxOA==-QXV0aG9ycw==', prefLabel: 'Philip Augar' }
 					]
 				});
 				const query = `
@@ -119,7 +119,7 @@ describe('Content', () => {
 			it('should be able to get author\'s headshot', () => {
 				const schema = testSchema({
 					metadata: [
-						{ taxonomy: 'authors', idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', prefLabel: 'Edward Luce' }
+						{ url: 'https://www.ft.com/stream/authorsId/Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', taxonomy: 'authors', idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', prefLabel: 'Edward Luce' }
 					]
 				});
 				const query = `
@@ -143,7 +143,7 @@ describe('Content', () => {
 			it('should be able to get author\'s headshot if author\'s name contains an apostrophe', () => {
 				const schema = testSchema({
 					metadata: [
-						{ taxonomy: 'authors', idV1: 'Q0ItMDAwMTA1NQ==-QXV0aG9ycw==', prefLabel: 'Sarah O\'Connor' }
+						{ url: 'https://www.ft.com/stream/authorsId/Q0ItMDAwMTA1NQ==-QXV0aG9y==', taxonomy: 'authors', idV1: 'Q0ItMDAwMTA1NQ==-QXV0aG9ycw==', prefLabel: 'Sarah O\'Connor' }
 					]
 				});
 				const query = `
@@ -167,7 +167,7 @@ describe('Content', () => {
 			it('should flag if author is a brand', () => {
 				const schema = testSchema({
 					metadata: [
-						{ taxonomy: 'authors', primary: 'brand' }
+						{ url: 'https://www.ft.com/stream/authorsId/', taxonomy: 'authors', primary: 'brand' }
 					]
 				});
 				const query = `
@@ -189,7 +189,7 @@ describe('Content', () => {
 			it('should be able to get author\'s url ', () => {
 				const schema = testSchema({
 					metadata: [
-						{ taxonomy: 'authors', idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', prefLabel: 'Edward Luce' }
+						{ url: 'https://www.ft.com/stream/authorsId/Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', taxonomy: 'authors', idV1: 'Q0ItMDAwMDgwNQ==-QXV0aG9ycw==', prefLabel: 'Edward Luce' }
 					]
 				});
 				const query = `

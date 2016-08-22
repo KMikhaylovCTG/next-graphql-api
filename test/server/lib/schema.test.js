@@ -67,8 +67,8 @@ describe('Schema', () => {
 		it('should be able to fetch topics', () => {
 			const topicsStub = sinon.stub();
 			topicsStub.returns([
-				{ id: 'abc', taxonomy: 'foo', name: 'One' },
-				{ id: 'def', taxonomy: 'bar', name: 'Two' }
+				{ url: 'https://www.ft.com/stream/fooId/abc', id: 'abc', taxonomy: 'foo', name: 'One' },
+				{ url: 'https://www.ft.com/stream/barId/def', id: 'def', taxonomy: 'bar', name: 'Two' }
 			]);
 			const backend = () => ({
 				popularApi: {
@@ -229,8 +229,8 @@ describe('Schema', () => {
 			const thingsStub = sinon.stub();
 			thingsStub.returns(Promise.resolve(
 				[
-					{id: 'abc', taxonomy: 'foo', name: 'One'},
-					{id: 'def', taxonomy: 'bar', name: 'Two'}
+					{url: 'https://www.ft.com/stream/fooId/abc', id: 'abc', taxonomy: 'foo', name: 'One'},
+					{url: 'https://www.ft.com/stream/barId/def', id: 'def', taxonomy: 'bar', name: 'Two'}
 				]
 			));
 			const backend = () => ({
