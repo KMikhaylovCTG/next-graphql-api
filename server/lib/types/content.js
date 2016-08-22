@@ -6,8 +6,6 @@ import capifyMetadata from '../helpers/capify-metadata';
 import backendReal from '../backend-adapters/index';
 import { LiveBlogStatus, ContentType } from './basic';
 
-const podcastIdV1 = 'NjI2MWZlMTEtMTE2NS00ZmI0LWFkMzMtNDhiYjA3YjcxYzIy-U2VjdGlvbnM=';
-
 const propertyEquals = (property, value) => (item) => item[property] === value;
 
 // TODO: rather hacky way of getting the headshot url from ft-n-article-branding
@@ -238,7 +236,15 @@ const Article = new graphql.GraphQLObjectType({
 		},
 		isPodcast: {
 			type: graphql.GraphQLBoolean,
-			resolve: content => content.metadata.some(propertyEquals('idV1', podcastIdV1))
+			resolve: content => content.provenance.some(item => /acast/.test(item))
+		},
+		isVideo: {
+			type: graphql.GraphQLBoolean,
+			resolve: content => content.provenance.some(item => /brightcove/.test(item))
+		},
+		videoId: {
+			type: graphql.GraphQLString,
+			resolve: content => content.url.includes('video.ft.com') ? content.url.split('/').pop() : ''
 		}
 	})
 });
