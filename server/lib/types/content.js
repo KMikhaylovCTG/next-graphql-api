@@ -207,7 +207,7 @@ const getContentFields = () => ({
 					name: author.prefLabel,
 					headshot: getAuthorHeadshot(author.idV1, author.prefLabel),
 					isBrand: author.primary === 'brand',
-					url: author.url.replace('https://www.ft.com', '')
+					url: (author.url && author.url.replace('https://www.ft.com', '')) || `/stream/${author.taxonomy}Id/${author.idV1}`
 				}))
 	},
 	isEditorsChoice: {
@@ -300,7 +300,7 @@ const Concept = new graphql.GraphQLObjectType({
 		url: {
 			type: graphql.GraphQLString,
 			description: 'Stream URL for the concept',
-			resolve: concept => concept.url.replace('https://www.ft.com', '')
+			resolve: concept => (concept.url && concept.url.replace('https://www.ft.com', '')) || `/stream/${concept.taxonomy}Id/${concept.idV1}`
 		},
 		attributes: {
 			type: new graphql.GraphQLList(ConceptAttributes)
