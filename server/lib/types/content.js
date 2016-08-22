@@ -300,7 +300,7 @@ const Concept = new graphql.GraphQLObjectType({
 		url: {
 			type: graphql.GraphQLString,
 			description: 'Stream URL for the concept',
-			resolve: concept => (concept.url && concept.url.replace('https://www.ft.com', '')) || `/stream/${concept.taxonomy}Id/${concept.idV1}`
+			resolve: concept => (concept.url && concept.url.replace('https://www.ft.com', '')) || `/stream/${concept.taxonomy}Id/${concept.id || concept.idV1 || concept.uuid}`
 		},
 		attributes: {
 			type: new graphql.GraphQLList(ConceptAttributes)
