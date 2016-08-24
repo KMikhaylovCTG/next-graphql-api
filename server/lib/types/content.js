@@ -452,6 +452,12 @@ const Video = new graphql.GraphQLObjectType({
 		},
 		renditions: {
 			type: new graphql.GraphQLList(Rendition)
+		},
+		tags: {
+			type: new graphql.GraphQLList(graphql.GraphQLString)
+		},
+		duration: {
+			type: graphql.GraphQLInt
 		}
 	})
 });
