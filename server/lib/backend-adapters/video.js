@@ -7,7 +7,15 @@ export default class {
 		this.type = 'video';
 		this.cache = cache;
 		this.videoFields = [
-			'id', 'name', 'renditions', 'shortDescription', 'longDescription', 'publishedDate', 'videoStillURL'
+			'id', 
+			'name', 
+			'renditions', 
+			'shortDescription', 
+			'longDescription', 
+			'publishedDate', 
+			'videoStillURL',
+			'tags',
+			'length'
 		];
 	}
 
