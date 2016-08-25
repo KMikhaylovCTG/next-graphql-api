@@ -240,7 +240,7 @@ const Article = new graphql.GraphQLObjectType({
 		},
 		isVideo: {
 			type: graphql.GraphQLBoolean,
-			resolve: content => content.provenance.some(item => /brightcove/.test(item))
+			resolve: content => content.provenance.some(item => /brightcove/.test(item)) && content.url.includes('video.ft.com')
 		},
 		videoId: {
 			type: graphql.GraphQLString,
