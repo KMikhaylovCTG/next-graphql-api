@@ -27,7 +27,7 @@ const sources = {
 		uuid: 'e900741c-f7e8-11df-8d91-00144feab49a'
 	},
 	lifestyle: {
-		uuid: 'e9a67094-2995-11e6-8ba3-cdd781d02d89'
+		uuid: '2584310e-6ab0-11e6-ae5b-a7cc5dd5a28c'
 	},
 	management: {
 		uuid: 'fcdae4e8-cd25-11de-a748-00144feabdc0'
