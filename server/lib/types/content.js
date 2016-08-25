@@ -381,7 +381,7 @@ const Image = new graphql.GraphQLObjectType({
 				}
 			},
 			resolve: (image, { width }) =>
-				`//next-geebee.ft.com/image/v1/images/raw/${image.url}?source=next&fit=scale-down&width=${width}`
+				`//next-geebee.ft.com/image/v1/images/raw/${image.url}?fit=scale-down&width=${width}&source=next`
 		},
 		rawSrc: {
 			type: graphql.GraphQLString,
