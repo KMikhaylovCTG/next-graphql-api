@@ -452,6 +452,34 @@ const Video = new graphql.GraphQLObjectType({
 		},
 		renditions: {
 			type: new graphql.GraphQLList(Rendition)
+		},
+		brand: {
+			type: graphql.GraphQLString,
+			resolve: video => {
+				let tags = video.tags || [];
+				let brandRegex = /brand:/i;
+				for(let tag of tags){
+					if(brandRegex.test(tag)){
+						return tag.replace(brandRegex, '');
+					}
+				}
+
+				return '';
+			}
+		},
+		duration: {
+			type: graphql.GraphQLString,
+			resolve: video => {
+				let lengthInSeconds = Math.round(video.length / 1000);
+				let minutes = Math.round(lengthInSeconds / 60);
+				let seconds = (lengthInSeconds - (minutes * 60));
+				if(seconds < 0){
+					seconds = 0;
+				}
+				seconds = seconds.toString();
+				let paddedSeconds = seconds.length === 2 ? seconds : '0'+seconds;
+				return `${minutes}:${paddedSeconds}`;
+			}
 		}
 	})
 });
