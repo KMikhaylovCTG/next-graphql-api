@@ -2,7 +2,8 @@ import { GraphQLInt, GraphQLList, GraphQLNonNull,GraphQLObjectType, GraphQLSchem
 
 import { Region } from './types/basic';
 import { Page, List, Collection } from './types/collections';
-import { Content, Video, Concept } from './types/content';
+import { Content, Concept } from './types/content';
+import Video from './types/media/video';
 import { ContentType } from './types/basic';
 import User from './types/user';
 import sources from '../config/sources';

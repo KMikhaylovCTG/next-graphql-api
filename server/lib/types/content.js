@@ -5,6 +5,7 @@ import articleBranding from 'ft-n-article-branding';
 import capifyMetadata from '../helpers/capify-metadata';
 import backendReal from '../backend-adapters/index';
 import { LiveBlogStatus, ContentType } from './basic';
+import Image from './media/image';
 
 const propertyEquals = (property, value) => (item) => item[property] === value;
 
@@ -368,34 +369,6 @@ const ConceptAttributes = new graphql.GraphQLObjectType({
 	})
 });
 
-const Image = new graphql.GraphQLObjectType({
-	name: 'Image',
-	description: 'An image',
-	fields: () => ({
-		src: {
-			type: graphql.GraphQLString,
-			description: 'Source URL of the image',
-			args: {
-				width: {
-					type: new graphql.GraphQLNonNull(graphql.GraphQLInt)
-				}
-			},
-			resolve: (image, { width }) =>
-				`//next-geebee.ft.com/image/v1/images/raw/${image.url}?source=next&fit=scale-down&width=${width}`
-		},
-		rawSrc: {
-			type: graphql.GraphQLString,
-			description: 'Original source URL of the image',
-			resolve: image => image.url
-		},
-		alt: {
-			type: graphql.GraphQLString,
-			description: 'Alternative text',
-			resolve: image => image.description
-		}
-	})
-});
-
 const LiveBlogUpdate = new graphql.GraphQLObjectType({
 	name: 'LiveBlogUpdate',
 	description: 'Update of a live blog',
@@ -415,92 +388,6 @@ const LiveBlogUpdate = new graphql.GraphQLObjectType({
 			type: graphql.GraphQLString
 		},
 		html: {
-			type: graphql.GraphQLString
-		}
-	})
-});
-
-const Video = new graphql.GraphQLObjectType({
-	name: 'Video',
-	description: 'A Video',
-	fields: () => ({
-		id: {
-			type: graphql.GraphQLID
-		},
-		title: {
-			type: graphql.GraphQLString,
-			resolve: video => video.name
-		},
-		summary: {
-			type: graphql.GraphQLString,
-			resolve: video => video.shortDescription
-		},
-		description: {
-			type: graphql.GraphQLString,
-			resolve: video => video.longDescription
-		},
-		lastPublished: {
-			type: graphql.GraphQLString,
-			resolve: video => video.publishedDate
-		},
-		image: {
-			type: Image,
-			resolve: video => ({
-				url: video.videoStillURL,
-				alt: video.name
-			})
-		},
-		renditions: {
-			type: new graphql.GraphQLList(Rendition)
-		},
-		brand: {
-			type: graphql.GraphQLString,
-			resolve: video => {
-				let tags = video.tags || [];
-				let brandRegex = /brand:/i;
-				for(let tag of tags){
-					if(brandRegex.test(tag)){
-						return tag.replace(brandRegex, '');
-					}
-				}
-
-				return '';
-			}
-		},
-		duration: {
-			type: graphql.GraphQLString,
-			resolve: video => {
-				let lengthInSeconds = Math.round(video.length / 1000);
-				let minutes = Math.round(lengthInSeconds / 60);
-				let seconds = (lengthInSeconds - (minutes * 60));
-				if(seconds < 0){
-					seconds = 0;
-				}
-				seconds = seconds.toString();
-				let paddedSeconds = seconds.length === 2 ? seconds : '0'+seconds;
-				return `${minutes}:${paddedSeconds}`;
-			}
-		}
-	})
-});
-
-const Rendition = new graphql.GraphQLObjectType({
-	name: 'Rendition',
-	description: 'A Video\'s rendition',
-	fields: () => ({
-		id: {
-			type: graphql.GraphQLID
-		},
-		url: {
-			type: graphql.GraphQLString
-		},
-		frameWidth: {
-			type: graphql.GraphQLInt
-		},
-		frameHeight: {
-			type: graphql.GraphQLInt
-		},
-		videoCodec: {
 			type: graphql.GraphQLString
 		}
 	})
@@ -527,4 +414,4 @@ const Author = new graphql.GraphQLObjectType({
 	})
 });
 
-export { Content, Concept, Video };
+export { Content, Concept };

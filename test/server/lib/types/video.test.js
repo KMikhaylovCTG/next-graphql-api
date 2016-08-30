@@ -1,7 +1,7 @@
 import { graphql, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import {expect} from 'chai';
 
-import { Video } from '../../../../server/lib/types/content';
+import Video from '../../../../server/lib/types/media/video';
 
 const videoFixture = require('../../../fixtures/videoFixture.json');
 
@@ -22,7 +22,7 @@ describe('Video Content', () => {
 
 		context('General fields', () => {
 
-			function setup(){
+			function setup () {
 				const schema = testSchema(videoFixture);
 				const query = `
 					query Video {
