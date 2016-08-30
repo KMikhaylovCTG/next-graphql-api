@@ -99,7 +99,6 @@ describe('Video Content', () => {
 			it('Can get the duration', () => {
 				return setup()
 					.then(video => {
-						console.log(video);
 						expect(video.duration).to.equal('3:04');
 					})
 			})
