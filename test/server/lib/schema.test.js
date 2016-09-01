@@ -5,7 +5,7 @@ chai.should();
 const expect = chai.expect;
 
 import schema from '../../../server/lib/schema';
-import listOfTypeFixture from '../../fixtures/listOfTypeFixture.json';
+import listOfTypeFixture from '../../fixtures/list-of-type-fixture.json';
 import listWithVideoContent from '../../fixtures/list-including-video-content.json';
 import mixedContentFetch from '../../fixtures/mixed-content-fetch.json'
 

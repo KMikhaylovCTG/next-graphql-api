@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 
 import CAPI from '../../../../server/lib/backend-adapters/capi';
 
-const listOfTypeFixture = require('../../../fixtures/listOfTypeFixture.json');
+const listOfTypeFixture = require('../../../fixtures/list-of-type-fixture.json');
 const cachedSpy = () => sinon.spy((cacheKey, cacheTTL, value) => value());
 
 describe('CAPI', () => {

@@ -3,7 +3,7 @@ import {expect} from 'chai';
 
 import Video from '../../../../server/lib/types/media/video';
 
-const videoFixture = require('../../../fixtures/videoFixture.json');
+const videoFixture = require('../../../fixtures/video-fixture.json');
 
 describe('Video Content', () => {
 
