@@ -1,0 +1,14 @@
+{
+  "id": "http://api.ft.com/things/81f74b34-cbf9-11e5-be0b-b7ece4e953a0",
+  "title": "Test List",
+  "apiUrl": "http://api.ft.com/lists/81f74b34-cbf9-11e5-be0b-b7ece4e953a0",
+  "listType": "TopStories",
+  "items": [{
+    "id": "http://api.ft.com/things/5cebe746-655a-11e6-8310-ecf0bddad227",
+    "apiUrl": "http://api.ft.com/content/5cebe746-655a-11e6-8310-ecf0bddad227"
+  }, {
+    "id": "http://api.ft.com/things/57e57cb3-a52f-3723-986a-fba78ba2177d",
+    "apiUrl": "http://api.ft.com/content/57e57cb3-a52f-3723-986a-fba78ba2177d"
+  }],
+  "layoutHint": "standaloneimage"
+}
