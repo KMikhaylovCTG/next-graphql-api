@@ -26,6 +26,10 @@ const ContentType = new GraphQLEnumType({
 		LiveBlog: {
 			value: 'liveblog',
 			description: 'LiveBlog with updates'
+		},
+		Video: {
+			value: 'video',
+			description: 'Video content'
 		}
 	}
 });

@@ -29,7 +29,15 @@ const getAuthorHeadshot = (id, name) => {
 const Content = new graphql.GraphQLInterfaceType({
 	name: 'Content',
 	description: 'A piece of FT content',
-	resolveType: content => /liveblog|marketslive|liveqa/i.test(content.webUrl) ? LiveBlog : Article,
+	resolveType: content => {
+		if (/liveblog|marketslive|liveqa/i.test(content.webUrl)) {
+			return LiveBlog;
+		} else if (/video/.test(content.webUrl)) {
+			return Video;
+		} else {
+			return Article;
+		}
+	},
 	fields: () => ({
 		id: {
 			type: graphql.GraphQLID
@@ -278,6 +286,32 @@ const LiveBlog = new graphql.GraphQLObjectType({
 					.then(extras => extras.updates)
 		}
 	})
+});
+
+const Video = new graphql.GraphQLObjectType({
+	name: 'VideoContent',
+	description: 'A piece of video content',
+	interfaces: [Content],
+	fields: () => Object.assign(getContentFields(), {
+		contentType: {
+			type: ContentType,
+			description: 'Type of content',
+			resolve: () => 'video'
+		},
+		isPodcast: {
+			type: graphql.GraphQLBoolean,
+			resolve: content => content.provenance.some(item => /acast/.test(item))
+		},
+		isVideo: {
+			type: graphql.GraphQLBoolean,
+			resolve: content => content.provenance.some(item => /brightcove/.test(item))
+		},
+		videoId: {
+			type: graphql.GraphQLString,
+			resolve: content => content.url.includes('video.ft.com') ? content.url.split('/').pop() : ''
+		}
+	})
+
 });
 
 const Concept = new graphql.GraphQLObjectType({
