@@ -292,7 +292,7 @@ const Video = new graphql.GraphQLObjectType({
 			description: 'Type of content',
 			resolve: () => 'video'
 		},
-		brightcoveId: {
+		videoId: {
 			type: graphql.GraphQLString,
 			resolve: content => content.url.includes('video.ft.com') ? content.url.split('/').pop() : ''
 		}

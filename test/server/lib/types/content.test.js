@@ -256,7 +256,7 @@ describe('Content', () => {
 		});
 
 		describe('Video Content', () => {
-			it('should be able to get the brightcoveId', () => {
+			it('should be able to get the videoId', () => {
 				const schema = testSchema({
 					webUrl: 'http://video.ft.com/123456789',
 					url: 'http://video.ft.com/123456789'
@@ -265,7 +265,7 @@ describe('Content', () => {
 						query Content {
 							content {
 								... on VideoContent {
-									brightcoveId
+									videoId
 								}
 							}
 						}
@@ -273,7 +273,7 @@ describe('Content', () => {
 
 				return graphql(schema, query)
 					.then(({ data }) => {
-						expect(data.content.brightcoveId).to.eql('123456789');
+						expect(data.content.videoId).to.eql('123456789');
 					});
 
 			});
