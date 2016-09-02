@@ -6,6 +6,7 @@ import capifyMetadata from '../helpers/capify-metadata';
 import backendReal from '../backend-adapters/index';
 import { LiveBlogStatus, ContentType } from './basic';
 import Image from './media/image';
+import resolveContentType from '../helpers/resolve-content-type';
 
 const propertyEquals = (property, value) => (item) => item[property] === value;
 
@@ -30,9 +31,10 @@ const Content = new graphql.GraphQLInterfaceType({
 	name: 'Content',
 	description: 'A piece of FT content',
 	resolveType: content => {
-		if (/liveblog|marketslive|liveqa/i.test(content.webUrl)) {
+		const type = resolveContentType(content);
+		if (type === 'liveblog') {
 			return LiveBlog;
-		} else if (/video/.test(content.webUrl)) {
+		} else if (type === 'video') {
 			return Video;
 		} else {
 			return Article;
