@@ -298,15 +298,7 @@ const Video = new graphql.GraphQLObjectType({
 			description: 'Type of content',
 			resolve: () => 'video'
 		},
-		isPodcast: {
-			type: graphql.GraphQLBoolean,
-			resolve: content => content.provenance.some(item => /acast/.test(item))
-		},
-		isVideo: {
-			type: graphql.GraphQLBoolean,
-			resolve: content => content.provenance.some(item => /brightcove/.test(item))
-		},
-		videoId: {
+		brightcoveId: {
 			type: graphql.GraphQLString,
 			resolve: content => content.url.includes('video.ft.com') ? content.url.split('/').pop() : ''
 		}

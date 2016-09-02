@@ -210,6 +210,30 @@ describe('Content', () => {
 
 		});
 
+		describe('Video', () => {
+			it('should be able to get the brightcoveId', () => {
+				const schema = testSchema({
+					webUrl: 'http://video.ft.com/123456789',
+					url: 'http://video.ft.com/123456789'
+				});
+				const query = `
+						query Content {
+							content {
+								... on VideoContent {
+									brightcoveId
+								}
+							}
+						}
+					`;
+
+				return graphql(schema, query)
+					.then(({ data }) => {
+						expect(data.content.brightcoveId).to.eql('123456789');
+					});
+
+			});
+		});
+
 	});
 
 });
