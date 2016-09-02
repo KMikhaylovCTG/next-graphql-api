@@ -1,9 +1,9 @@
 import { graphql, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import {expect} from 'chai';
 
-import Video from '../../../../server/lib/types/media/video';
+import Video from '../../../../../server/lib/types/media/video';
 
-const videoFixture = require('../../../fixtures/video-fixture.json');
+const videoFixture = require('../../../../fixtures/video-fixture.json');
 
 describe('Video', () => {
 
