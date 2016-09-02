@@ -5,7 +5,7 @@ import Video from '../../../../server/lib/types/media/video';
 
 const videoFixture = require('../../../fixtures/video-fixture.json');
 
-describe('Video Content', () => {
+describe('Video', () => {
 
 
 		const testSchema = source => new GraphQLSchema({

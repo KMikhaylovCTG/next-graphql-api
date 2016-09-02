@@ -87,6 +87,51 @@ describe('Content', () => {
 				});
 		});
 
+		describe('assigns correct content type', () => {
+
+			const query = `
+			query Content {
+				content {
+					contentType
+				}
+			}
+			`;
+
+			it('should correctly return Article type', () => {
+				const schema = testSchema({
+					webUrl: 'http://www.ft.com/cms/s/0/5cebe746-655a-11e6-8310-ecf0bddad227.html',
+				});
+
+				return graphql(schema, query)
+				.then(({ data }) => {
+					expect(data.content.contentType).to.eql('Article');
+				});
+			});
+
+			it('should correctly return LiveBlog type', () => {
+				const schema = testSchema({
+					webUrl: 'http://liveblog.ft.com/mba-blog/2016/08/29/application-essays-question-told-me-chicago-booth-was-the-right-choice/',
+				});
+
+				return graphql(schema, query)
+				.then(({ data }) => {
+					expect(data.content.contentType).to.eql('LiveBlog');
+				});
+			});
+
+			it('should correctly return Video type', () => {
+				const schema = testSchema({
+					webUrl: 'http://video.ft.com/123456789',
+				});
+
+				return graphql(schema, query)
+				.then(({ data }) => {
+					expect(data.content.contentType).to.eql('Video');
+				});
+			});
+		});
+
+
 		describe('Authors', () => {
 
 			it('should be able to get authors', () => {
@@ -210,7 +255,7 @@ describe('Content', () => {
 
 		});
 
-		describe('Video', () => {
+		describe('Video Content', () => {
 			it('should be able to get the brightcoveId', () => {
 				const schema = testSchema({
 					webUrl: 'http://video.ft.com/123456789',
