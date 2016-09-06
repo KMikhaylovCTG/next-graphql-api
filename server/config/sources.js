@@ -46,7 +46,10 @@ const sources = {
 	},
 	brexitSecondary: {
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
-	}
+	},
+	usElectionMidriff: {
+		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173' // TODO: change this to the correct list when available
+	},
 };
 
 export default sources;
