@@ -2,7 +2,8 @@ import { GraphQLInt, GraphQLList, GraphQLNonNull,GraphQLObjectType, GraphQLSchem
 
 import { Region } from './types/basic';
 import { Page, List, Collection } from './types/collections';
-import { Content, Video, Concept } from './types/content';
+import { Content, Concept } from './types/content';
+import VideoMedia from './types/media/video';
 import { ContentType } from './types/basic';
 import User from './types/user';
 import sources from '../config/sources';
@@ -97,7 +98,7 @@ const queryType = new GraphQLObjectType({
 				backend(flags).capi.page(sources.technology.uuid)
 		},
 		videos: {
-			type: new GraphQLList(Video),
+			type: new GraphQLList(VideoMedia),
 			args: {
 				from: {
 					type: GraphQLInt

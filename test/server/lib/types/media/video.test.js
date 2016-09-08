@@ -1,11 +1,11 @@
 import { graphql, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import {expect} from 'chai';
 
-import { Video } from '../../../../server/lib/types/content';
+import Video from '../../../../../server/lib/types/media/video';
 
-const videoFixture = require('../../../fixtures/videoFixture.json');
+const videoFixture = require('../../../../fixtures/video-fixture.json');
 
-describe('Video Content', () => {
+describe('Video', () => {
 
 
 		const testSchema = source => new GraphQLSchema({
@@ -22,7 +22,7 @@ describe('Video Content', () => {
 
 		context('General fields', () => {
 
-			function setup(){
+			function setup () {
 				const schema = testSchema(videoFixture);
 				const query = `
 					query Video {
@@ -99,7 +99,6 @@ describe('Video Content', () => {
 			it('Can get the duration', () => {
 				return setup()
 					.then(video => {
-						console.log(video);
 						expect(video.duration).to.equal('3:04');
 					})
 			})

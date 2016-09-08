@@ -5,6 +5,8 @@ import articleBranding from 'ft-n-article-branding';
 import capifyMetadata from '../helpers/capify-metadata';
 import backendReal from '../backend-adapters/index';
 import { LiveBlogStatus, ContentType } from './basic';
+import Image from './media/image';
+import resolveContentType from '../helpers/resolve-content-type';
 
 const propertyEquals = (property, value) => (item) => item[property] === value;
 
@@ -28,7 +30,16 @@ const getAuthorHeadshot = (id, name) => {
 const Content = new graphql.GraphQLInterfaceType({
 	name: 'Content',
 	description: 'A piece of FT content',
-	resolveType: content => /liveblog|marketslive|liveqa/i.test(content.webUrl) ? LiveBlog : Article,
+	resolveType: content => {
+		const type = resolveContentType(content);
+		if (type === 'liveblog') {
+			return LiveBlog;
+		} else if (type === 'video') {
+			return Video;
+		} else {
+			return Article;
+		}
+	},
 	fields: () => ({
 		id: {
 			type: graphql.GraphQLID
@@ -237,14 +248,6 @@ const Article = new graphql.GraphQLObjectType({
 		isPodcast: {
 			type: graphql.GraphQLBoolean,
 			resolve: content => content.provenance.some(item => /acast/.test(item))
-		},
-		isVideo: {
-			type: graphql.GraphQLBoolean,
-			resolve: content => content.provenance.some(item => /brightcove/.test(item)) && content.url.includes('video.ft.com')
-		},
-		videoId: {
-			type: graphql.GraphQLString,
-			resolve: content => content.url && content.url.includes('video.ft.com') ? content.url.split('/').pop() : ''
 		}
 	})
 });
@@ -277,6 +280,24 @@ const LiveBlog = new graphql.GraphQLObjectType({
 					.then(extras => extras.updates)
 		}
 	})
+});
+
+const Video = new graphql.GraphQLObjectType({
+	name: 'Video',
+	description: 'A piece of video content',
+	interfaces: [Content],
+	fields: () => Object.assign(getContentFields(), {
+		contentType: {
+			type: ContentType,
+			description: 'Type of content',
+			resolve: () => 'video'
+		},
+		videoId: {
+			type: graphql.GraphQLString,
+			resolve: content => content.url.split('/').pop()
+		},
+	})
+
 });
 
 const Concept = new graphql.GraphQLObjectType({
@@ -368,34 +389,6 @@ const ConceptAttributes = new graphql.GraphQLObjectType({
 	})
 });
 
-const Image = new graphql.GraphQLObjectType({
-	name: 'Image',
-	description: 'An image',
-	fields: () => ({
-		src: {
-			type: graphql.GraphQLString,
-			description: 'Source URL of the image',
-			args: {
-				width: {
-					type: new graphql.GraphQLNonNull(graphql.GraphQLInt)
-				}
-			},
-			resolve: (image, { width }) =>
-				`//next-geebee.ft.com/image/v1/images/raw/${image.url}?fit=scale-down&width=${width}&source=next`
-		},
-		rawSrc: {
-			type: graphql.GraphQLString,
-			description: 'Original source URL of the image',
-			resolve: image => image.url
-		},
-		alt: {
-			type: graphql.GraphQLString,
-			description: 'Alternative text',
-			resolve: image => image.description
-		}
-	})
-});
-
 const LiveBlogUpdate = new graphql.GraphQLObjectType({
 	name: 'LiveBlogUpdate',
 	description: 'Update of a live blog',
@@ -415,92 +408,6 @@ const LiveBlogUpdate = new graphql.GraphQLObjectType({
 			type: graphql.GraphQLString
 		},
 		html: {
-			type: graphql.GraphQLString
-		}
-	})
-});
-
-const Video = new graphql.GraphQLObjectType({
-	name: 'Video',
-	description: 'A Video',
-	fields: () => ({
-		id: {
-			type: graphql.GraphQLID
-		},
-		title: {
-			type: graphql.GraphQLString,
-			resolve: video => video.name
-		},
-		summary: {
-			type: graphql.GraphQLString,
-			resolve: video => video.shortDescription
-		},
-		description: {
-			type: graphql.GraphQLString,
-			resolve: video => video.longDescription
-		},
-		lastPublished: {
-			type: graphql.GraphQLString,
-			resolve: video => video.publishedDate
-		},
-		image: {
-			type: Image,
-			resolve: video => ({
-				url: video.videoStillURL,
-				alt: video.name
-			})
-		},
-		renditions: {
-			type: new graphql.GraphQLList(Rendition)
-		},
-		brand: {
-			type: graphql.GraphQLString,
-			resolve: video => {
-				let tags = video.tags || [];
-				let brandRegex = /brand:/i;
-				for(let tag of tags){
-					if(brandRegex.test(tag)){
-						return tag.replace(brandRegex, '');
-					}
-				}
-
-				return '';
-			}
-		},
-		duration: {
-			type: graphql.GraphQLString,
-			resolve: video => {
-				let lengthInSeconds = Math.round(video.length / 1000);
-				let minutes = Math.round(lengthInSeconds / 60);
-				let seconds = (lengthInSeconds - (minutes * 60));
-				if(seconds < 0){
-					seconds = 0;
-				}
-				seconds = seconds.toString();
-				let paddedSeconds = seconds.length === 2 ? seconds : '0'+seconds;
-				return `${minutes}:${paddedSeconds}`;
-			}
-		}
-	})
-});
-
-const Rendition = new graphql.GraphQLObjectType({
-	name: 'Rendition',
-	description: 'A Video\'s rendition',
-	fields: () => ({
-		id: {
-			type: graphql.GraphQLID
-		},
-		url: {
-			type: graphql.GraphQLString
-		},
-		frameWidth: {
-			type: graphql.GraphQLInt
-		},
-		frameHeight: {
-			type: graphql.GraphQLInt
-		},
-		videoCodec: {
 			type: graphql.GraphQLString
 		}
 	})
@@ -527,4 +434,4 @@ const Author = new graphql.GraphQLObjectType({
 	})
 });
 
-export { Content, Concept, Video };
+export { Content, Concept };

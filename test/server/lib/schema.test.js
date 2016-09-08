@@ -5,7 +5,10 @@ chai.should();
 const expect = chai.expect;
 
 import schema from '../../../server/lib/schema';
-import listOfTypeFixture from '../../fixtures/listOfTypeFixture.json';
+import listOfTypeFixture from '../../fixtures/list-of-type-fixture.json';
+import listWithVideoContent from '../../fixtures/list-including-video-content.json';
+import mixedContentFetch from '../../fixtures/mixed-content-fetch.json'
+
 
 describe('Schema', () => {
 
@@ -196,6 +199,47 @@ describe('Schema', () => {
 				})
 		});
 
+		it('should be able to have mixed content types e.g. Articles & Videos', () => {
+			const listStub = sinon.stub();
+			const contentStub = sinon.stub();
+			listStub.returns(listWithVideoContent);
+			contentStub.returns(mixedContentFetch)
+
+			const backend = () => ({
+				capi: {
+					list: listStub,
+					content: contentStub
+				}
+			});
+			const query = `
+				query TopStoriesList {
+					topStoriesList(region: UK) {
+						items {
+							id
+							contentType
+						}
+					}
+				}
+			`;
+
+			const expected = [
+				{
+					'id': '5cebe746-655a-11e6-8310-ecf0bddad227',
+					'contentType': 'Article'
+				},
+				{
+					'id': '57e57cb3-a52f-3723-986a-fba78ba2177d',
+					'contentType': 'Video'
+				}
+			]
+
+			return graphql(schema, query, { backend })
+				.then(({ data }) => {
+					expect(data.topStoriesList.items.length).to.equal(2);
+					expect(data.topStoriesList.items).to.deep.equal(expected);
+				})
+
+		});
 	});
 
 	describe('User', () => {

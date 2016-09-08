@@ -1,0 +1,87 @@
+[{
+  "id": "5cebe746-655a-11e6-8310-ecf0bddad227",
+  "title": "UK financial sector targets Swiss-style deal for EU market access",
+  "titles": ["UK financial sector targets Swiss-style deal for EU market access", "City to argue for ‘Swiss plus’ UK deal with EU", "City to argue for ‘Swiss plus’ deal with EU"],
+  "bodyXML": "<p>Some body XML </p>",
+  "summaries": ["Finance grandees admit that universal access to the single market is politically impossible", "Universal access to single market impossible, admit grandees"],
+  "initialPublishedDate": "2016-08-18T21:18:23Z",
+  "publishedDate": "2016-08-18T21:18:23Z",
+  "webUrl": "http://www.ft.com/cms/s/0/5cebe746-655a-11e6-8310-ecf0bddad227.html",
+  "provenance": ["http://api.ft.com/content/items/v1/5cebe746-655a-11e6-8310-ecf0bddad227?cb=1472412076161", "http://api.ft.com/enrichedcontent/5cebe746-655a-11e6-8310-ecf0bddad227", "http://api.brightcove.com/services/library?command=find_video_by_id&video_id=5021373916001"],
+  "storyPackage": [],
+  "byline": "Martin Arnold and Caroline Binham",
+  "comments": {
+    "enabled": true
+  },
+  "standout": {
+    "editorsChoice": false,
+    "exclusive": false,
+    "scoop": false
+  },
+  "metadata": [{
+    "idV1": "NDdiMzAyNzctMTRlMy00Zjk1LWEyZjYtYmYwZWIwYWU2NzAy-VG9waWNz",
+    "prefLabel": "Brexit",
+    "taxonomy": "topics",
+    "primary": "theme",
+    "attributes": [],
+    "url": "https://www.ft.com/brexit"
+  }],
+  "annotations": [{
+    "idV2": "05bfed9c-e2aa-314d-99c0-d864f1c91428",
+    "prefLabel": "UK's EU referendum",
+    "directType": "http://www.ft.com/ontology/Topic",
+    "attributes": []
+  }],
+  "_lastUpdatedDateTime": "2016-08-28T19:21:21.866Z",
+  "url": "https://www.ft.com/content/5cebe746-655a-11e6-8310-ecf0bddad227",
+  "mainImage": {
+    "title": "",
+    "description": "",
+    "url": "http://com.ft.imagepublish.prod.s3.amazonaws.com/096d2044-5fdd-11e6-b38c-7b39cbb1138a",
+    "width": 2048,
+    "height": 1152
+  },
+  "bodyHTML": "<p> Some body HTML </p>"
+}, {
+  "id": "57e57cb3-a52f-3723-986a-fba78ba2177d",
+  "title": "Money Spinners: Stocks and shares Isas",
+  "publishedDate": "2016-08-26T05:00:08.620Z",
+  "provenance": ["http://api.ft.com/enrichedcontent/57e57cb3-a52f-3723-986a-fba78ba2177d", "http://api.brightcove.com/services/library?command=find_video_by_id&video_id=5098504351001"],
+  "comments": {},
+  "webUrl": "http://video.ft.com/5098504351001",
+  "bodyXML": "<p>FT Money's Claer Barrett and Naomi Rovnick discuss the tax-free way of investing your savings in the stock market, and why take-up of the investment  vehicle is much lower than for cash Isas.</p>",
+  "standout": {},
+  "summaries": ["FT Money on why take-up of tax-free UK investment vehicle is low", "FT Money's Claer Barrett and Naomi Rovnick discuss the tax-free way of investing your savings in the stock market, and why take-up of the investment  vehicle is much lower than for cash Isas."],
+  "byline": "Filmed and edited by Nicola Stansfield.",
+  "attachments": [{
+    "mediaType": "video/mp4",
+    "url": "http://brightcove04.brightcove.com/34/47628783001/201608/3658/47628783001_5098508266001_5098504351001.mp4",
+    "width": 640,
+    "height": 360
+  }, {
+    "mediaType": "video/mp4",
+    "url": "http://brightcove04.brightcove.com/34/47628783001/201608/3658/47628783001_5098511007001_5098504351001.mp4",
+    "width": 960,
+    "height": 540
+  }, {
+    "mediaType": "video/mp4",
+    "url": "http://brightcove04.brightcove.com/34/47628783001/201608/3658/47628783001_5098508752001_5098504351001.mp4",
+    "width": 480,
+    "height": 270
+  }],
+  "mainImage": {
+    "title": "Video still for Money Spinners: Stocks and shares Isas",
+    "description": "",
+    "url": "https://bcsecure01-a.akamaihd.net/13/47628783001/201608/3658/47628783001_5098515634001_5098504351001-vs.jpg?pubId=47628783001",
+    "width": 640,
+    "height": 360
+  },
+  "_lastUpdatedDateTime": "2016-08-28T18:28:20.210Z",
+  "metadata": [{
+    "idV1": "MTY3-U2VjdGlvbnM=",
+    "prefLabel": "Video",
+    "taxonomy": "sections",
+    "url": "https://www.ft.com/stream/sectionsId/MTY3-U2VjdGlvbnM="
+  }],
+  "url": "http://video.ft.com/5098504351001"
+}]
