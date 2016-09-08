@@ -283,7 +283,7 @@ const LiveBlog = new graphql.GraphQLObjectType({
 });
 
 const Video = new graphql.GraphQLObjectType({
-	name: 'VideoContent',
+	name: 'Video',
 	description: 'A piece of video content',
 	interfaces: [Content],
 	fields: () => Object.assign(getContentFields(), {

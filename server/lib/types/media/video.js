@@ -2,7 +2,7 @@ import * as graphql from 'graphql';
 import Image from './image';
 
 const Video = new graphql.GraphQLObjectType({
-	name: 'Video',
+	name: 'VideoMedia',
 	description: 'A Video',
 	fields: () => ({
 		id: {
