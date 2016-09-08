@@ -294,7 +294,7 @@ const Video = new graphql.GraphQLObjectType({
 		},
 		videoId: {
 			type: graphql.GraphQLString,
-			resolve: content => content.url && content.url.includes('video.ft.com') ? content.url.split('/').pop() : ''
+			resolve: content => content.url.split('/').pop()
 		},
 	})
 
