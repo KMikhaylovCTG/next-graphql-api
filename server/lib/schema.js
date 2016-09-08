@@ -27,6 +27,11 @@ const queryType = new GraphQLObjectType({
 			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).capi.list(sources.brexitSecondary.uuid)
 		},
+		usElectionMidriff: {
+			type: List,
+			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) =>
+				backend(flags).capi.list(sources.usElectionMidriff.uuid)
+		},
 		top: {
 			type: Page,
 			args: {
