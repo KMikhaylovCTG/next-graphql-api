@@ -31,10 +31,14 @@ pull out specific content components from an article body.
 
 ## Setup
 
-We cache responses in Redis, therefore for development you will need to install and run an instance of it
+We cache responses in Redis, therefore for development you will need to install and run an instance of it in the background
 
     brew install redis
     redis-server
+
+## To run
+
+	make build run
 
 ## Using Next GraphQL API
 
