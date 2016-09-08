@@ -264,7 +264,7 @@ describe('Content', () => {
 				const query = `
 						query Content {
 							content {
-								... on VideoContent {
+								... on Video {
 									videoId
 								}
 							}
