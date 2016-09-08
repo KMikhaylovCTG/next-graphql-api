@@ -17,14 +17,14 @@ const searchOpts = {
 
 export default {
 	name: 'CAPI',
-	description : 'CAPI service health checks',
+	description : 'CAPI / Elastic Search service health checks',
 	checks : [
 		{
-			name: 'Article (v2)',
+			name: 'Article (v3_api_v2)',
 			severity: 1,
 			businessImpact: 'API may not be able to serve articles',
-			technicalSummary: 'Tries to fetch a CAPI v2 article',
-			panicGuide: 'Don\'t Panic',
+			technicalSummary: 'Tries to fetch an article from the Elastic Search cluster',
+			panicGuide: 'Don\'t Panic. Check the underlying next-es-interface healthchecks EU https://ft-next-es-interface-eu.herokuapp.com/__health, US https://ft-next-es-interface-us.herokuapp.com/__health',
 			type: 'capi',
 			capiMethod: 'content',
 			capiOptions: {
@@ -36,7 +36,7 @@ export default {
 			name: 'By Concept',
 			severity: 2,
 			businessImpact: 'API may not be able to serve related articles',
-			technicalSummary: 'Tries to fetch articles by a concept',
+			technicalSummary: 'Tries to fetch articles by a concept from API',
 			panicGuide: 'Don\'t Panic',
 			type: 'capi',
 			capiMethod: 'contentAnnotatedBy',
@@ -48,8 +48,8 @@ export default {
 			name: 'List',
 			severity: 2,
 			businessImpact: 'API may not be able to serve lists',
-			technicalSummary: 'Tries to fetch a list',
-			panicGuide: 'Don\'t Panic',
+			technicalSummary: 'Tries to fetch a list from CAPI v2',
+			panicGuide: 'Don\'t Panic. Check http://dashing.internal.ft.com/APIGateway-endpoints - Lists tile',
 			type: 'capi',
 			capiMethod: 'lists',
 			capiOptions: {
@@ -60,8 +60,8 @@ export default {
 			name: 'Page',
 			severity: 2,
 			businessImpact: 'API may not be able to serve pages',
-			technicalSummary: 'Tries to fetch a page',
-			panicGuide: 'Don\'t Panic',
+			technicalSummary: 'Tries to fetch a page from CAPI v1',
+			panicGuide: 'Don\'t Panic. Check http://dashing.internal.ft.com/APIGateway-endpoints - Site V1 tile',
 			type: 'capi',
 			capiMethod: 'pages',
 			capiOptions: {
@@ -72,8 +72,8 @@ export default {
 			name: 'Search',
 			severity: 2,
 			businessImpact: 'API may not be able to perform searches',
-			technicalSummary: 'Tries to do a search for a concept',
-			panicGuide: 'Don\'t Panic',
+			technicalSummary: 'Tries to do a search for a concept from the Elastic Search cluster',
+			panicGuide: 'Don\'t Panic. Check the underlying next-es-interface healthchecks EU https://ft-next-es-interface-eu.herokuapp.com/__health, US https://ft-next-es-interface-us.herokuapp.com/__health',
 			type: 'capi',
 			capiMethod: 'search',
 			capiOptions: {
@@ -84,8 +84,8 @@ export default {
 			name: 'Hui',
 			severity: 3,
 			businessImpact: 'API may not be able to serve Most Popular by Industry',
-			technicalSummary: 'Tries to fetch most popular content by an industry',
-			panicGuide: 'Don\'t Panic',
+			technicalSummary: 'Tries to fetch most popular content by an industry from CAPI v2',
+			panicGuide: 'Don\'t Panic. Check http://dashing.internal.ft.com/APIGateway-endpoints - HUI Api tile',
 			type: 'capi',
 			capiMethod: 'hui',
 			capiOptions: {
