@@ -15,13 +15,7 @@ export default ({from, limit, genres, type}, resolveType) => {
 		}
 
 		if (type) {
-			if (type === 'liveblog') {
-				items = items.filter(it => resolveType(it) === 'liveblog');
-			} else if (type === 'video') {
-				items = items.filter(it => resolveType(it) === 'video');
-			} else if (type === 'article'){
-				items = items.filter(it => resolveType(it) === 'article');
-			}
+			items = items.filter(it => resolveType(it) === type);
 		}
 		return sliceList(items, {from, limit});
 	};
