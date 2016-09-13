@@ -34,6 +34,6 @@ export default (req, res) => {
 			});
 
 			// send error to sentry
-			captureError(error, {query:query, vars:vars});
+			captureError(error, {extra:{query:query, vars:vars}});
 		});
 };
