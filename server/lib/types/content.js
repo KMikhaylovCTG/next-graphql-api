@@ -110,6 +110,9 @@ const Content = new graphql.GraphQLInterfaceType({
 		authors: {
 			type: new graphql.GraphQLList(Author)
 		},
+		isPremium: {
+			type: graphql.GraphQLBoolean
+		},
 		isEditorsChoice: {
 			type: graphql.GraphQLBoolean
 		},
@@ -220,6 +223,10 @@ const getContentFields = () => ({
 					isBrand: author.primary === 'brand',
 					url: (author.url && author.url.replace('https://www.ft.com', '')) || `/stream/${author.taxonomy}Id/${author.idV1}`
 				}))
+	},
+	isPremium: {
+		type: graphql.GraphQLBoolean,
+		resolve: content => content.webUrl && /\/cms\/s\/3\//.test(content.webUrl)
 	},
 	isEditorsChoice: {
 		type: graphql.GraphQLBoolean,
