@@ -1,6 +1,7 @@
 import logger from '@financial-times/n-logger';
 import httpStatus from 'http-status-codes';
 import { GraphQLError } from 'graphql/error'
+import { captureError} from '@financial-times/n-raven';
 
 import graphql from '../lib/graphql';
 import { HttpError } from '../lib/errors';
@@ -27,9 +28,12 @@ export default (req, res) => {
 			const status = error instanceof HttpError ? error.status : 500;
 			logger.error(error);
 
-			return res.status(status).jsonp({
+			res.status(status).jsonp({
 				type: httpStatus.getStatusText(status),
 				error: { message: error.message }
 			});
+
+			// send error to sentry
+			captureError(error, {query:query, vars:vars});
 		});
 };
