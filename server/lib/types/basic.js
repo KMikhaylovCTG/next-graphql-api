@@ -11,6 +11,14 @@ const Region = new GraphQLEnumType({
 		US: {
 			value: 'us',
 			description: 'United States of America'
+		},
+		EU: {
+			value: 'eu',
+			description: 'Europe'
+		},
+		AS: {
+			value: 'as',
+			description: 'Asia Pacific'
 		}
 	}
 });

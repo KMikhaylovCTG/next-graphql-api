@@ -50,6 +50,18 @@ const sources = {
 	usElectionMidriff: {
 		uuid: '721e37c6-7442-11e6-bf48-b372cdb1043a'
 	},
+	ukRegionalNews: {
+		uuid: '01469f60-7515-11e6-b60a-de4532d5ea35'
+	},
+	usRegionalNews: {
+		uuid: 'c8f9bfac-7514-11e6-b60a-de4532d5ea35'
+	},
+	euRegionalNews: {
+		uuid: 'acc073ee-7500-11e6-b60a-de4532d5ea35'
+	},
+	asRegionalNews: {
+		uuid: 'ac6a223c-7500-11e6-b60a-de4532d5ea35'
+	},
 };
 
 export default sources;
