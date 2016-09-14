@@ -360,6 +360,16 @@ const queryType = new GraphQLObjectType({
 			},
 			resolve: (root, { termName, termValue, limit }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).capi.search(termName, termValue, { limit })
+		},
+		regionalNews: {
+			type: List,
+			args: {
+				region: {
+					type: new GraphQLNonNull(Region)
+				}
+			},
+			resolve: (root, { region }, { rootValue: { flags, backend = backendReal }}) =>
+				backend(flags).capi.list(sources[`${region}RegionalNews`].uuid)
 		}
 	}
 });
