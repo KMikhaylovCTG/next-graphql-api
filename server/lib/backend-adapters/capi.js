@@ -187,7 +187,7 @@ export default class {
 				}))
 				.catch(err => {
 					logger.error('Failed getting a CAPI list', err, { uuid });
-					return {};
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
@@ -210,7 +210,7 @@ export default class {
 				})
 				.catch(err => {
 					logger.error('Failed getting a CAPI list-of-type', err, { type, concept });
-					return null;
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
@@ -227,7 +227,7 @@ export default class {
 				.then(results => results.items || [])
 				.catch(err => {
 					logger.error('Failed getting things from CAPI', err, { uuids });
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);

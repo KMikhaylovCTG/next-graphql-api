@@ -21,11 +21,11 @@ export default class {
 				.hui({ model: 'content', industry, position, sector, country, period })
 				.catch(err => {
 					logger.error('Failed getting hui content', err);
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then(articles => sliceList(articles, { from, limit }));
+			.then((articles = []) => sliceList(articles, { from, limit }));
 	}
 
 	topics ({ industry, position, sector, country, period = 'last-1-week', ttl = 60 * 60 * 60 }) {
@@ -35,7 +35,7 @@ export default class {
 				.hui({ model: 'annotations', industry, position, sector, country, period })
 				.catch(err => {
 					logger.error('Failed getting hui topics', err);
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);

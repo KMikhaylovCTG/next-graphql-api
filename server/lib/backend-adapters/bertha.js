@@ -29,7 +29,7 @@ export default class {
 				})
 				.catch(err => {
 					logger.error('Failed getting a bertha sheet', err);
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);

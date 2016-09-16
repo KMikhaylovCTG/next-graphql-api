@@ -36,10 +36,10 @@ export default class {
 				.then(({ items: videos }) => videos.filter(video => video.renditions.length > 0))
 				.catch(err => {
 					logger.error('Failed fetching video playlist', err, { playlist: id });
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then(videos => sliceList(videos, { from, limit }));
+			.then((videos = []) => sliceList(videos, { from, limit }));
 	}
 }

@@ -26,7 +26,7 @@ export default class {
 				.then(results => results.slice())
 				.catch(err => {
 					logger.error('Failed getting fastFT content', err);
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
