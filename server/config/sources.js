@@ -62,6 +62,15 @@ const sources = {
 	asRegionalNews: {
 		uuid: 'ac6a223c-7500-11e6-b60a-de4532d5ea35'
 	},
+	popularPremiumArticles: {
+		concepts: [
+			'YzhlNzZkYTctMDJiNy00NTViLTk3NmYtNmJjYTE5NDEyM2Yw-QnJhbmRz',
+			'N2Y2ZjFlMDgtNjY3OS00NTU5LThjNWMtNWNiYzcwNTQyNmFj-QnJhbmRz',
+			'YmQ4Y2VlMjQtOGY0OS00NmZjLWE1NWItYjgxNzJiMjhlMTRh-QnJhbmRz',
+			'MDVlM2Q2OGMtOWRkZi00NzI5LWJlNjctNzhlYmE1MGE3YzJk-QnJhbmRz',
+			'NjlmOTA1NjEtMGJiMC00MzdmLTlkN2YtNjMwYWVlYTkxYjA2-U2VjdGlvbnM='
+		]
+	}
 };
 
 export default sources;

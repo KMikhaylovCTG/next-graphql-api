@@ -411,4 +411,44 @@ describe('Schema', () => {
 		});
 
 	});
+
+	describe('Popular Premium Articles', () => {
+
+		const stubs = {
+			content: sinon.stub(),
+			articles: sinon.stub()
+		};
+
+		afterEach(() => {
+			stubs.content.reset();
+			stubs.articles.reset();
+		});
+
+		it('should return an array of 5 articles', () => {
+			const query = `
+				query GetPopularPremiumArticles {
+					popularPremiumArticles {
+						id
+					}
+				}
+			`;
+			const backend = () => ({
+				capi: { content: stubs.content },
+				popularApi: { articles: stubs.articles }
+			});
+			stubs.content.returnsArg(0);
+			stubs.articles.returns([{id: '1234'}]);
+			return graphql(schema, query, { backend })
+			.then(({ data }) => {
+				expect(stubs.articles.callCount).to.equal(5);
+				expect(stubs.content.callCount).to.equal(1);
+				expect(data.popularPremiumArticles.length).to.equal(5);
+				data.popularPremiumArticles.map(article => {
+					expect(article.id).to.equal('1234');
+				});
+			});
+		});
+
+	});
+
 });

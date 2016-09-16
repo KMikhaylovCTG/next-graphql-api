@@ -195,6 +195,19 @@ const queryType = new GraphQLObjectType({
 					.then(articles => be.capi.content(articles, args));
 			}
 		},
+		popularPremiumArticles: {
+			type: new GraphQLList(Content),
+			resolve: (root, _, { rootValue: { flags, backend = backendReal }}) => {
+				const be = backend(flags);
+				const popularArticlesPromises = [];
+				sources.popularPremiumArticles.concepts.map(concept => {
+					popularArticlesPromises.push(be.popularApi.articles({limit: 1, concept}));
+				});
+				return Promise.all(popularArticlesPromises)
+					.then(articleArrays => articleArrays.reduce((a, b) => a.concat(b)))
+					.then(articles => be.capi.content(articles));
+			}
+		},
 		popularFromHui: {
 			type: new GraphQLList(Content),
 			args: {
