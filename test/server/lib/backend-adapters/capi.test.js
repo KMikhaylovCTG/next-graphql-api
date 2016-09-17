@@ -1,6 +1,6 @@
 import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
-import chai, { expect } from 'chai';
+import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 
@@ -149,7 +149,7 @@ describe('CAPI', () => {
 			before(() => {
 				fetchMock.mock(
 					new RegExp('https://[^\.]*.ft.com/lists'),
-					404
+					{ status: 404, body: 'Not Found'}
 				);
 			});
 
@@ -162,12 +162,7 @@ describe('CAPI', () => {
 				const cache = { cached };
 				const capi = new CAPI(cache);
 
-				return capi.listOfType(listType, concept)
-					.then(list => {
-						expect(list).to.be.null;
-						// make sure mock was called
-						fetchMock.called().should.be.true;
-					});
+				return capi.listOfType(listType, concept).should.be.rejectedWith('COCO list-of-type responded with "Not Found" (404)')
 			});
 
 		});
