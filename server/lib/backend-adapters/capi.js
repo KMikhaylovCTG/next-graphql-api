@@ -102,7 +102,7 @@ export default class {
 				}))
 				.catch(err => {
 					logger.error('Failed getting a CAPI page', err, { uuid });
-					return {}
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
@@ -115,7 +115,7 @@ export default class {
 				.then(results => results.slice())
 				.catch(err => {
 					logger.error('Failed making a CAPI search', err, { term_name: termName, term_value: termValue });
-					return []
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
@@ -133,7 +133,7 @@ export default class {
 				.then(results => results.total || 0)
 				.catch(err => {
 					logger.error('Failed making a CAPI search count', err, { term_name: termName, term_value: termValue });
-					return 0;
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher);
@@ -148,7 +148,7 @@ export default class {
 			})
 				.catch(err => {
 					logger.error('Failed getting CAPI content', err, { uuids });
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
