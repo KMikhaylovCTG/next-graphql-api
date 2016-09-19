@@ -42,11 +42,11 @@ export default class {
 				.then(liveblog => this.parse(liveblog))
 				.catch(err => {
 					logger.error('Failed fetching a liveblog', err);
-					return { updates: [] };
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then(liveBlogInfo => ({
+			.then((liveBlogInfo = { updates: [] }) => ({
 				status: liveBlogInfo.status,
 				updates: limit ? liveBlogInfo.updates.slice(0, limit) : liveBlogInfo.updates
 			}));

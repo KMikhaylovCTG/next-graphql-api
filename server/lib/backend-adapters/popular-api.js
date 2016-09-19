@@ -26,11 +26,11 @@ export default class {
 				})
 				.catch(err => {
 					logger.error('Failed getting popular api topics', err);
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then(topics => sliceList(topics, { from, limit }));
+			.then((topics = []) => sliceList(topics, { from, limit }));
 	}
 
 	articles ({ from, limit, concept, ttl = 60 * 10 } = {}) {
@@ -51,10 +51,10 @@ export default class {
 					.then(json => (json.articles || []).map(article => article.uuid))
 					.catch(err => {
 						logger.error('Failed getting popular api articles', err);
-						return [];
+						throw err;
 					});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then(articles => sliceList(articles, { from, limit }));
+			.then((articles = []) => sliceList(articles, { from, limit }));
 	}
 }

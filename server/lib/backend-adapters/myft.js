@@ -19,11 +19,17 @@ export default class {
 					if (err.message !== 'No user data exists') {
 						logger.error('Failed getting all relationships from myFT', err, { uuid, relationship, model });
 					}
-					return [];
+					throw err;
 				});
 
 		// NOTE: emulate a 0 sec cache, as setex doesn't allow a zero value
-		return ttl === 0 ? fetcher() : this.cache.cached(cacheKey, ttl, fetcher);
+		if (ttl === 0) {
+			return fetcher()
+				.catch(() => [])
+		} else {
+			return this.cache.cached(cacheKey, ttl, fetcher)
+				.then((relationships = []) => relationships)
+		}
 	}
 
 	getViewed (uuid, { limit = 10, ttl = 60 }) {
@@ -33,10 +39,11 @@ export default class {
 				.then(results => results.viewed.filter(nonEmpty))
 				.catch(err => {
 					logger.error('Failed getting viewed from myFT', err, { uuid });
-					return [];
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((viewed = []) => viewed);
 	}
 
 	getRecommendedTopics (uuid, { limit = 10, ttl = 60 }) {
@@ -49,10 +56,11 @@ export default class {
 					if (err.message !== 'No user data exists') {
 						logger.error('Failed getting recommended topics from myFT', err, { uuid });
 					}
-					return [];
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((topics = []) => topics)
 	}
 
 	getMostReadTopics ({ limit = 10, ttl = 60 }) {
@@ -62,11 +70,12 @@ export default class {
 				.then(results => results.items.filter(nonEmpty))
 				.catch(err => {
 					logger.error('Failed getting most read topics from myFT', err);
-					return [];
+					throw err;
 				});
 		};
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((topics = []) => topics);
 	}
 
 	getMostFollowedTopics ({ limit = 10, ttl = 60 }) {
@@ -76,9 +85,10 @@ export default class {
 				.then(results => results.items.filter(nonEmpty))
 				.catch(err => {
 					logger.error('Failed getting most followed topics from myFT', err);
-					return [];
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+		.then((topics = []) => topics);
 	}
 }

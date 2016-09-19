@@ -102,10 +102,11 @@ export default class {
 				}))
 				.catch(err => {
 					logger.error('Failed getting a CAPI page', err, { uuid });
-					return {}
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((page = {}) => page);
 	}
 
 	search (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {
@@ -115,10 +116,11 @@ export default class {
 				.then(results => results.slice())
 				.catch(err => {
 					logger.error('Failed making a CAPI search', err, { term_name: termName, term_value: termValue });
-					return []
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((search = []) => search);
 	}
 
 	// searchCount is separate from search so that we can look a long way back just for the sake of counting articles
@@ -133,10 +135,11 @@ export default class {
 				.then(results => results.total || 0)
 				.catch(err => {
 					logger.error('Failed making a CAPI search count', err, { term_name: termName, term_value: termValue });
-					return 0;
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((searchCount = 0) => searchCount);
 	}
 
 	content (uuids, { from, limit, genres, type, ttl = 60 } = { }) {
@@ -148,10 +151,11 @@ export default class {
 			})
 				.catch(err => {
 					logger.error('Failed getting CAPI content', err, { uuids });
-					return [];
+					throw err;
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((content = []) => content)
 			.then(filterContent({ from, limit, genres, type }, resolveContentType));
 	}
 
@@ -187,10 +191,11 @@ export default class {
 				}))
 				.catch(err => {
 					logger.error('Failed getting a CAPI list', err, { uuid });
-					return {};
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((list = {}) => list);
 	}
 
 	listOfType (type, concept, { ttl = 60 } = { }) {
@@ -210,10 +215,11 @@ export default class {
 				})
 				.catch(err => {
 					logger.error('Failed getting a CAPI list-of-type', err, { type, concept });
-					return null;
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((listOfType = null) => listOfType);
 	}
 
 	things (uuids, { type = 'idV1', ttl = 60 * 10 } = { }) {
@@ -227,9 +233,10 @@ export default class {
 				.then(results => results.items || [])
 				.catch(err => {
 					logger.error('Failed getting things from CAPI', err, { uuids });
-					return [];
+					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((things = []) => things);
 	}
 }
