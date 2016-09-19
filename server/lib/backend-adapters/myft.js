@@ -52,7 +52,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((topics = []) => topics;
 	}
 
 	getMostReadTopics ({ limit = 10, ttl = 60 }) {
@@ -66,7 +67,8 @@ export default class {
 				});
 		};
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((topics = []) => topics);
 	}
 
 	getMostFollowedTopics ({ limit = 10, ttl = 60 }) {
@@ -79,6 +81,7 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+		.then((topics = []) => topics);
 	}
 }

@@ -105,7 +105,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((page = {}) => page);
 	}
 
 	search (termName, termValue, { from, limit, since, genres, type, ttl = 60 * 10 } = {}) {
@@ -118,7 +119,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((search = []) => search);
 	}
 
 	// searchCount is separate from search so that we can look a long way back just for the sake of counting articles
@@ -136,7 +138,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((searchCount = 0) => searchCount);
 	}
 
 	content (uuids, { from, limit, genres, type, ttl = 60 } = { }) {
@@ -152,6 +155,7 @@ export default class {
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((content = []) => content)
 			.then(filterContent({ from, limit, genres, type }, resolveContentType));
 	}
 
@@ -190,7 +194,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((list = {}) => list);
 	}
 
 	listOfType (type, concept, { ttl = 60 } = { }) {
@@ -213,7 +218,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((listOfType = null) => listOfType);
 	}
 
 	things (uuids, { type = 'idV1', ttl = 60 * 10 } = { }) {
@@ -230,6 +236,7 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((things = []) => things);
 	}
 }

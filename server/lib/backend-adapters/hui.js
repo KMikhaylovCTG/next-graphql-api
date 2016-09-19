@@ -38,7 +38,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((topics = []) => topics);
 	}
 
 }
