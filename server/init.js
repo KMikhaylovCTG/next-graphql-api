@@ -16,6 +16,7 @@ import additionalHealthChecks from './lib/health-checks/index';
 
 const healthChecks = nHealth(path.resolve(__dirname, './config/health-checks'), additionalHealthChecks);
 const app = express({
+	systemCode: 'next-graphql-api',
 	layoutsDir: 'views/layouts',
 	withRequestTracing: true,
 	healthChecks: healthChecks.asArray(),
