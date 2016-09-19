@@ -23,7 +23,13 @@ export default class {
 				});
 
 		// NOTE: emulate a 0 sec cache, as setex doesn't allow a zero value
-		return ttl === 0 ? fetcher() : this.cache.cached(cacheKey, ttl, fetcher);
+		if (ttl === 0) {
+			return fetcher()
+				.catch(() => [])
+		} else {
+			return this.cache.cached(cacheKey, ttl, fetcher)
+				.then((relationships = []) => relationships)
+		}
 	}
 
 	getViewed (uuid, { limit = 10, ttl = 60 }) {
@@ -36,7 +42,8 @@ export default class {
 					throw err;
 				});
 
-		return this.cache.cached(cacheKey, ttl, fetcher);
+		return this.cache.cached(cacheKey, ttl, fetcher)
+			.then((viewed = []) => viewed);
 	}
 
 	getRecommendedTopics (uuid, { limit = 10, ttl = 60 }) {
@@ -53,7 +60,7 @@ export default class {
 				});
 
 		return this.cache.cached(cacheKey, ttl, fetcher)
-			.then((topics = []) => topics;
+			.then((topics = []) => topics)
 	}
 
 	getMostReadTopics ({ limit = 10, ttl = 60 }) {
