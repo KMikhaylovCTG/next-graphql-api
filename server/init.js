@@ -12,9 +12,8 @@ import index from './routes/index';
 import schema from './routes/schema';
 import playground from './routes/playground';
 import cors from './middleware/cors';
-import additionalHealthChecks from './lib/health-checks/index';
 
-const healthChecks = nHealth(path.resolve(__dirname, './config/health-checks'), additionalHealthChecks);
+const healthChecks = nHealth(path.resolve(__dirname, './config/health-checks'));
 const app = express({
 	systemCode: 'next-graphql-api',
 	layoutsDir: 'views/layouts',
