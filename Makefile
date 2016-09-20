@@ -4,12 +4,12 @@ TEST_APP := "ft-next-graphql-api-${CIRCLE_BUILD_NUM}"
 
 unit-test:
 	@echo "Testing…"
-	@export CONSOLE_LOG_LEVEL="error"; export MYFT_API_URL="http://my.ft.com/"; export GRAPHQL_API_KEY=123; \
+	@export CONSOLE_LOG_LEVEL="error"; export MYFT_API_URL="http://my.ft.com/"; export GRAPHQL_API_KEY=123; export AWS_SIGNED_FETCH_DISABLE_DNS_RESOLUTION=true; \
 		mocha --require test/server/setup --recursive --reporter spec test/server/
 
 unit-test-watch:
 	@echo "Watching tests…"
-	@export CONSOLE_LOG_LEVEL="error"; export MYFT_API_URL="http://my.ft.com/"; export GRAPHQL_API_KEY=123; \
+	@export CONSOLE_LOG_LEVEL="error"; export MYFT_API_URL="http://my.ft.com/"; export GRAPHQL_API_KEY=123; export AWS_SIGNED_FETCH_DISABLE_DNS_RESOLUTION=true; \
 		mocha --require test/server/setup --recursive --reporter spec --watch test/server/
 
 test: verify unit-test
