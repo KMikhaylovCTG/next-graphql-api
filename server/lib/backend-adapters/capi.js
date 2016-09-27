@@ -159,7 +159,7 @@ export default class {
 			.then(filterContent({ from, limit, genres, type }, resolveContentType));
 	}
 
-	list (uuid, { ttl = 60 } = { }) {
+	list (uuid, { ttl = 30 } = { }) {
 		const cacheKey = `${this.type}.list.${uuid}`;
 		const headers = { Authorization: this.listApiAuthorization };
 		const fetcher = () =>

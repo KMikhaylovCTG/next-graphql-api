@@ -102,7 +102,7 @@ describe('CAPI', () => {
 				.then(list => {
 					list.items.should.have.length(2);
 					list.items.should.deep.equal([{ id: 'content-one' }, { id: 'content-two' }]);
-					cached.should.always.have.been.calledWith('capi.list.73667f46-1a55-11e5-a130-2e7db721f996', 60);
+					cached.should.always.have.been.calledWith('capi.list.73667f46-1a55-11e5-a130-2e7db721f996', 30);
 					// make sure mock was called
 					fetchMock.called().should.be.true;
 				});
