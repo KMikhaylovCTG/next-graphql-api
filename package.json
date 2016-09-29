@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@financial-times/n-heroku-tools": "^6.1.6",
+    "@financial-times/n-webpack": "^1.11.0",
     "autoprefixer": "^6.3.6",
     "babel-core": "^6.8.0",
     "babel-loader": "^6.2.4",

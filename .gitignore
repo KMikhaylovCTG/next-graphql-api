@@ -3,7 +3,6 @@
 .eslintrc.js
 .scss-lint.yml
 dump.rdb
-webpack.config.js
 
 /.editorconfig
 /.env
@@ -18,4 +17,11 @@ webpack.config.js
 /.sass-cache/
 /bower_components/
 /node*/
-/public/
+/node-linux-x64
+
+/public/__about.json
+/public/asset-hashes.json
+/public/main.css
+/public/main.css.map
+/public/main.js
+/public/main.js.map
