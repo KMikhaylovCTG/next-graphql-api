@@ -5,7 +5,6 @@ import GraphiQL from 'graphiql';
 
 const fetcher = (apiKey, { query, variables }) => {
 	const body = { query, variables: JSON.parse(variables || '{}') };
-	console.log('GraphiQL submitted', body);
 
 	return fetch(`/data?apiKey=${apiKey}`, {
 			method: 'post',
