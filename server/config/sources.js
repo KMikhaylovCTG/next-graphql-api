@@ -47,6 +47,9 @@ const sources = {
 	brexitSecondary: {
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
 	},
+	usElectionHeadpiece: {
+		uuid: '721e37c6-7442-11e6-bf48-b372cdb1043a'
+	},
 	usElectionMidriff: {
 		uuid: '721e37c6-7442-11e6-bf48-b372cdb1043a'
 	},
