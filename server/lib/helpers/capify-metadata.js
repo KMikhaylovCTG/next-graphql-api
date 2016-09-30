@@ -3,8 +3,8 @@ const convertMetadata = (metadata, taxonomy) => metadata
 	.map(metadata => ({ term: { id: metadata.idV1 }}));
 
 /**
-	* Take ESv3 style metadata and convert it back to CAPI style
-	*/
+ * Take ESv3 style metadata and convert it back to CAPI style
+ */
 const capifyMetadata = metadata => {
 	return {
 	genre: convertMetadata(metadata, 'genre'),
