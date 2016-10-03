@@ -49,7 +49,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend }, 'foo')
 				.then(({ data }) => {
 					data.editorsPicks.title.should.equal('Editor\'s Picks');
 					data.editorsPicks.items.length.should.equal(1);
@@ -87,7 +87,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					data.popularTopics.length.should.eq(2);
 					expect(data.popularTopics[0]).to.deep.equal({ name: 'One', url: '/stream/fooId/abc' });
@@ -115,7 +115,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					data.top.title.should.equal('Top Stories');
 					data.top.url.should.equal('1234');
@@ -144,7 +144,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					data.topStoriesList.title.should.equal('Top Stories List');
 					data.topStoriesList.layoutHint.should.equal('bigstory');
@@ -167,7 +167,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					expect(data).to.have.property('topStoriesList');
 					expect(data.topStoriesList).to.be.null;
@@ -192,7 +192,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { flags: {useVideoTopStoriesData: true}, backend })
+			return graphql(schema, query, null, { flags: {useVideoTopStoriesData: true}, backend })
 				.then(({ data }) => {
 					data.topStoriesList.title.should.equal('Top Stories List with Videos');
 					data.topStoriesList.layoutHint.should.equal('standalonevideo');
@@ -233,7 +233,7 @@ describe('Schema', () => {
 				}
 			]
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					expect(data.topStoriesList.items.length).to.equal(2);
 					expect(data.topStoriesList.items).to.deep.equal(expected);
@@ -258,7 +258,7 @@ describe('Schema', () => {
 				}
 			};
 
-			return graphql(schema, query, { req })
+			return graphql(schema, query, null, { req })
 				.then(({ data }) => {
 					data.user.uuid.should.equal('1234');
 				})
@@ -291,7 +291,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					data.concepts.length.should.eq(2);
 					expect(data.concepts[0]).to.deep.equal({ name: 'One', url: '/stream/fooId/abc' });
@@ -338,7 +338,7 @@ describe('Schema', () => {
 				}
 			]));
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({data}) => {
 					expect(data.listOfType.length).to.equal(2);
 					expect(data.listOfType[0].id).to.exist;
@@ -361,7 +361,7 @@ describe('Schema', () => {
 				}
 			]));
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({data}) => {
 					expect(data.listOfType.length).to.equal(2);
 					expect(data.listOfType[0].id).to.exist;
@@ -375,7 +375,7 @@ describe('Schema', () => {
 
 			listOfTypeStub.returns(Promise.resolve(undefined));
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({data}) => {
 					expect(data.listOfType).to.eql([]);
 					expect(listOfTypeStub.calledOnce).to.be.true;
@@ -403,7 +403,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					data.page.title.should.equal('UK Stories');
 					data.page.url.should.equal('1234');
@@ -438,7 +438,7 @@ describe('Schema', () => {
 			});
 			stubs.content.returnsArg(0);
 			stubs.articles.returns([{id: '1234'}]);
-			return graphql(schema, query, { backend })
+			return graphql(schema, query, null, { backend })
 			.then(({ data }) => {
 				expect(stubs.articles.callCount).to.equal(5);
 				expect(stubs.content.callCount).to.equal(1);
