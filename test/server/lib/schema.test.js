@@ -49,7 +49,7 @@ describe('Schema', () => {
 				}
 			`;
 
-			return graphql(schema, query, null, { backend }, 'foo')
+			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
 					data.editorsPicks.title.should.equal('Editor\'s Picks');
 					data.editorsPicks.items.length.should.equal(1);
