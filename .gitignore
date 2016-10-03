@@ -5,7 +5,7 @@
 dump.rdb
 
 /.editorconfig
-/.env
+*.env*
 /.scss-lint.yml
 /npm-debug.log*
 
