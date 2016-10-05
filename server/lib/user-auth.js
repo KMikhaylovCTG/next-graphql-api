@@ -1,9 +1,12 @@
-import { json as fetchresJson } from 'fetchres';
-import logger from '@financial-times/n-logger';
-import { HttpError } from './errors';
+const logger = require('@financial-times/n-logger').default;
+const HttpError = require('./errors').HttpError;
+const Decoder = require('@financial-times/session-decoder-js');
 
-export default (req, uuid) => {
+const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
+
+module.exports = (req, uuid) => {
 	const apiKey = (req.headers && req.headers['x-api-key']) || (req.query && req.query.apiKey);
+
 	if (apiKey) {
 		if (apiKey === process.env.GRAPHQL_API_KEY) {
 			return Promise.resolve(uuid)
@@ -11,16 +14,13 @@ export default (req, uuid) => {
 			return Promise.reject(new HttpError('Bad apiKey supplied', 401));
 		}
 	}
-	if (req.cookies.FTSession) {
-		const headers = req.headers;
-		delete headers.host;
-		delete headers['content-length']; //API urls send this and it breaks session fetch
-		return fetch('https://session-next.ft.com/uuid', {
-			timeout: 3000,
-			headers: headers
-		})
-			.then(fetchresJson)
-			.then(response => {
+
+	const sessionToken = req.cookies['FTSession'];
+
+	if (sessionToken) {
+		return Promise.resolve()
+			.then(() => ({ uuid: decoder.decode(sessionToken) }))
+			.then((response) => {
 				if (!response.uuid) {
 					throw new HttpError('No uuid returned from session endpoint', 500);
 				}
