@@ -34,7 +34,7 @@ const Page = new GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (page, { from, limit, genres, type }, { flags, backend = backendReal }) =>
+			resolve: (page, { from, limit, genres, type }, { rootValue: { flags, backend = backendReal }}) =>
 				(page.items && page.items.length) ?
 					backend(flags).capi.content(page.items, { from, limit, genres, type }) : []
 		}
@@ -71,7 +71,7 @@ const List = new GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (result, args, { flags, backend = backendReal }) =>
+			resolve: (result, args, { rootValue: { flags, backend = backendReal }}) =>
 				(result.items && result.items.length) ?
 					backend(flags).capi.content(result.items.map(contentToUiid), args) : []
 		}
@@ -105,7 +105,7 @@ const Collection = new GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (collection, { since, genres, type }, { flags, backend = backendReal }) =>
+			resolve: (collection, { since, genres, type }, { rootValue: { flags, backend = backendReal }}) =>
 				backend(flags).capi.searchCount('metadata.idV1', collection.concepts.map(c => c.id), { since, genres, type })
 		}
 	}
