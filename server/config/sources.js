@@ -48,7 +48,7 @@ const sources = {
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
 	},
 	usElectionHeadpiece: {
-		uuid: '721e37c6-7442-11e6-bf48-b372cdb1043a'
+		uuid: 'dbd61736-8af1-11e6-8aa5-f79f5696c731'
 	},
 	usElectionMidriff: {
 		uuid: '721e37c6-7442-11e6-bf48-b372cdb1043a'
