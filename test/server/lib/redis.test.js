@@ -47,7 +47,8 @@ describe('Redis', () => {
 		redisMock.createClient.should.have.been.calledWith({
 			host: 'localhost',
 			port: '6379',
-			enable_offline_queue: false
+			enable_offline_queue: false,
+			socket_keepalive: true
 		});
 	});
 
@@ -58,7 +59,8 @@ describe('Redis', () => {
 		redisMock.createClient.should.have.been.calledWith({
 			host: 'www.foo.com',
 			port: '6666',
-			enable_offline_queue: false
+			enable_offline_queue: false,
+			socket_keepalive: true
 		});
 	});
 
