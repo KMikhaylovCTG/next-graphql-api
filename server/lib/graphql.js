@@ -8,7 +8,7 @@ const fetch = ({ flags, req }) => {
 	return (query, vars) => {
 		const then = new Date().getTime();
 
-		return graphql(schema, query, { flags, req }, vars)
+		return graphql(schema, query, null, { flags, req }, vars)
 			.then(it => {
 				const now = new Date().getTime();
 				logger.info(`Graphql responded in ${now - then} ms`);

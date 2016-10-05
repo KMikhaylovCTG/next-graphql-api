@@ -3,7 +3,7 @@ import chai from 'chai';
 chai.should();
 const expect = chai.expect;
 
-import { Content } from '../../../../server/lib/types/content';
+import { Content, Article, LiveBlog, Video } from '../../../../server/lib/types/content';
 
 describe('Content', () => {
 
@@ -18,8 +18,9 @@ describe('Content', () => {
 						resolve: () => source
 					}
 				})
-			})
-		});
+			}),
+			types: [ Article, LiveBlog, Video ]}
+		)
 
 		it('should be able to get primaryTheme', () => {
 			const schema = testSchema({

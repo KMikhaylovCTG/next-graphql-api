@@ -206,7 +206,7 @@ const getContentFields = () => ({
 				type: graphql.GraphQLInt
 			}
 		},
-		resolve: (content, { from, limit }, { rootValue: { flags, backend = backendReal }}) => {
+		resolve: (content, { from, limit }, { flags, backend = backendReal }) => {
 			const storyPackageIds = (content.storyPackage || []).map(story => story.id);
 			return storyPackageIds.length ? backend(flags).capi.content(storyPackageIds, { from, limit }) : [];
 		}
@@ -271,7 +271,7 @@ const LiveBlog = new graphql.GraphQLObjectType({
 		},
 		status: {
 			type: LiveBlogStatus,
-			resolve: (content, _, { rootValue: { flags, backend = backendReal }}) =>
+			resolve: (content, _, { flags, backend = backendReal }) =>
 				backend(flags).liveblog.fetch(content.webUrl)
 					.then(extras => extras.status)
 		},
@@ -282,7 +282,7 @@ const LiveBlog = new graphql.GraphQLObjectType({
 					type: graphql.GraphQLInt
 				}
 			},
-			resolve: (content, { limit }, { rootValue: { flags, backend = backendReal }}) =>
+			resolve: (content, { limit }, { flags, backend = backendReal }) =>
 				backend(flags).liveblog.fetch(content.webUrl, { limit })
 					.then(extras => extras.updates)
 		}
@@ -350,7 +350,7 @@ const Concept = new graphql.GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (concept, { since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { since, genres, type }, { flags, backend = backendReal }) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
 				return backend(flags).capi.searchCount('metadata.idV1', id, { since, genres, type });
 			}
@@ -375,7 +375,7 @@ const Concept = new graphql.GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (concept, { from, limit, since, genres, type }, { rootValue: { flags, backend = backendReal }}) => {
+			resolve: (concept, { from, limit, since, genres, type }, { flags, backend = backendReal }) => {
 				const id = concept.id || concept.idV1 || concept.uuid;
 				return backend(flags).capi.search('metadata.idV1', id, { from, limit, since, genres, type });
 			}
@@ -441,4 +441,4 @@ const Author = new graphql.GraphQLObjectType({
 	})
 });
 
-export { Content, Concept };
+export { Content, Concept, Article, LiveBlog, Video };
