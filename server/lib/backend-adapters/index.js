@@ -9,27 +9,26 @@ import PopularAPI from './popular-api';
 import Myft from './myft';
 import TodaysTopics from './todays-topics';
 import Bertha from './bertha';
-import RedisCache from '../caches/redis-cache';
+import MemCache from '../caches/mem-cache';
 
 const adapters = {};
 
 export default (flags = {}) => {
 	if (!Object.keys(adapters).length) {
-		const redisUrl = process.env.REGION === 'US' ? process.env.REDIS_URL_US : process.env.REDIS_URL_EU;
-		const redisCache = new RedisCache({ redisUrl });
-		const capi = new CAPI(redisCache);
-		const liveblog = new Liveblog(redisCache);
+		const memCache = new MemCache(12 * 60 * 60, 30 * 60);
+		const capi = new CAPI(memCache);
+		const liveblog = new Liveblog(memCache);
 
 		Object.assign(adapters, {
 			capi,
 			liveblog,
-			hui: new Hui(redisCache),
-			myft: new Myft(redisCache),
-			popularApi: new PopularAPI(redisCache),
-			video: new Video(redisCache),
-			todaysTopics: new TodaysTopics(redisCache),
-			bertha: new Bertha(redisCache),
-			fastFT: new FastFtFeed(redisCache),
+			hui: new Hui(memCache),
+			myft: new Myft(memCache),
+			popularApi: new PopularAPI(memCache),
+			video: new Video(memCache),
+			todaysTopics: new TodaysTopics(memCache),
+			bertha: new Bertha(memCache),
+			fastFT: new FastFtFeed(memCache),
 			mockCapi: new MockCapi(capi),
 			mockLiveblog: new MockLiveblog(liveblog)
 		});
