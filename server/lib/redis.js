@@ -9,6 +9,7 @@ export default class {
 		const redisClient = (opts.redis || redis).createClient({
 			host: redisUrlObject.hostname,
 			port: redisUrlObject.port,
+			socket_keepalive: true,
 			enable_offline_queue: false // fail fast when redis is down
 		});
 		if (redisUrlObject.auth) {
