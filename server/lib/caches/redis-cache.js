@@ -2,12 +2,26 @@ import logger from '@financial-times/n-logger';
 import { metrics } from '@financial-times/n-express';
 import Redis from '../redis';
 
+const redisClientPool = [];
+
+function initPool (redisUrl) {
+	let n = 30;
+	while (n--) {
+		redisClientPool.push(new Redis({ redisUrl }))
+	}
+}
+
 export default class {
 	constructor ({ redisUrl, redis } = { }) {
-		this.redis = redis || new Redis({ redisUrl });
+		if (redisClientPool.length === 0) {
+			initPool(redisUrl);
+		}
+		this._redis = redis; // only needed for tests
 		this.currentRequests = {};
 	}
-
+	get redis () {
+		return this._redis || redisClientPool[Math.floor(Math.random() * 30)]
+	}
 	cached (key, ttl, fetcher) {
 		const metricsKey = key.split('.')[0];
 		const start = Date.now();
