@@ -1,5 +1,5 @@
 import { json as fetchresJson } from 'fetchres';
-
+import logger from '@financial-times/n-logger';
 import { HttpError } from './errors';
 
 export default (req, uuid) => {
@@ -31,6 +31,9 @@ export default (req, uuid) => {
 				return response.uuid;
 			})
 			.catch(err => {
+				logger.error('event=GRAPHQL_FAILED_USER_AUTH', typeof err === 'string' ? {
+					err: err
+				} : err);
 				throw new HttpError(`Session endpoint responded with error server_error_name=${err.name} server_error_message=${err.message} ft_session=${req.cookies.FTSession}`, 500);
 			});
 	} else {
