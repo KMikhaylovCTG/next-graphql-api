@@ -69,6 +69,7 @@ export default class {
 		this.currentRequests[key] = fetcher()
 		.then((it) => {
 			if(!it) {
+				delete this.currentRequests[key];
 				return;
 			}
 			let expireTime = now + ttl;

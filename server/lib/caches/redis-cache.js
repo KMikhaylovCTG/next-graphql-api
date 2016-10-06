@@ -57,6 +57,7 @@ export default class {
 		return this.currentRequests[key] = fetcher()
 			.then(res => {
 				if (res === undefined) {
+					delete this.currentRequests[key];
 					return;
 				}
 				metrics.histogram(`cache.${metricsKey}.fresh.time`, Date.now() - start)
