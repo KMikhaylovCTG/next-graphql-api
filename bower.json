@@ -1,7 +1,6 @@
 {
   "name": "next-graphql-api",
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1",
-    "next-js-setup": "^8.5.2"
+    "isomorphic-fetch": "^2.2.1"
   }
 }
