@@ -20,6 +20,12 @@ const sources = {
 	opinion: {
 		uuid: 'bc81b5bc-1995-11e5-a130-2e7db721f996'
 	},
+	ukOpinion: {
+		uuid: ''
+	},
+	usOpinion: {
+		uuid: ''
+	},
 	markets: {
 		uuid: '011debcc-cd26-11de-a748-00144feabdc0'
 	},

@@ -87,6 +87,11 @@ const queryType = new GraphQLObjectType({
 			resolve: (root, _, { flags, backend = backendReal }) =>
 				backend(flags).capi.list(sources.opinion.uuid)
 		},
+		oldOpinion: {
+			type: List,
+			resolve: (root, _, { flags, backend = backendReal }) =>
+				backend(flags).capi.list(sources.opinion.uuid)
+		},
 		newOpinion: {
 			type: List,
 			args: {
