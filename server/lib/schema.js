@@ -87,15 +87,15 @@ const queryType = new GraphQLObjectType({
 			resolve: (root, _, { flags, backend = backendReal }) =>
 				backend(flags).capi.list(sources.opinion.uuid)
 		},
-		ukOpinion: {
+		newOpinion: {
 			type: List,
-			resolve: (root, _, { flags, backend = backendReal }) =>
-				backend(flags).capi.list(sources.ukOpinion.uuid)
-		},
-		intOpinion: {
-			type: List,
-			resolve: (root, _, { flags, backend = backendReal }) =>
-				backend(flags).capi.list(sources.intOpinion.uuid)
+			args: {
+				region: {
+					type: new GraphQLNonNull(Region)
+				}
+			},
+			resolve: (root, { region }, { flags, backend = backendReal }) =>
+				backend(flags).capi.page(sources[`${region}Opinion`].uuid)
 		},
 		lifestyle: {
 			type: List,
