@@ -79,24 +79,21 @@ const queryType = new GraphQLObjectType({
 		},
 		editorsPicks: {
 			type: List,
-			resolve: (root, _, { flags, backend = backendReal }) =>
-				backend(flags).capi.list(sources.editorsPicks.uuid)
+			args: {
+				region: {
+					type: new GraphQLNonNull(Region),
+					defaultValue: 'uk'
+				}
+			},
+			resolve: (root, { region }, { flags, backend = backendReal }) =>
+			backend(flags).capi.page(sources[`${region}EditorsPicks`].uuid)
 		},
 		opinion: {
 			type: List,
-			resolve: (root, _, { flags, backend = backendReal }) =>
-				backend(flags).capi.list(sources.opinion.uuid)
-		},
-		oldOpinion: {
-			type: List,
-			resolve: (root, _, { flags, backend = backendReal }) =>
-				backend(flags).capi.list(sources.opinion.uuid)
-		},
-		newOpinion: {
-			type: List,
 			args: {
 				region: {
-					type: new GraphQLNonNull(Region)
+					type: new GraphQLNonNull(Region),
+					defaultValue: 'uk'
 				}
 			},
 			resolve: (root, { region }, { flags, backend = backendReal }) =>

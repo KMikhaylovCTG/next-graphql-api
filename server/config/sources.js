@@ -17,14 +17,11 @@ const sources = {
 	fastFt: {
 		idV1: 'NTlhNzEyMzMtZjBjZi00Y2U1LTg0ODUtZWVjNmEyYmU1NzQ2-QnJhbmRz'
 	},
-	opinion: {
+	ukOpinion: {
 		uuid: 'bc81b5bc-1995-11e5-a130-2e7db721f996'
 	},
-	ukOpinion: {
-		uuid: ''
-	},
 	usOpinion: {
-		uuid: ''
+		uuid: 'cd4a2e0a-91f9-11e6-a72e-b428cb934b78'
 	},
 	markets: {
 		uuid: '011debcc-cd26-11de-a748-00144feabdc0'
@@ -44,8 +41,11 @@ const sources = {
 	videos: {
 		id: '69917354001' // BrightCove ID
 	},
-	editorsPicks: {
+	ukEditorsPicks: {
 		uuid: '73667f46-1a55-11e5-a130-2e7db721f996'
+	},
+	usEditorsPicks: {
+		uuid: 'cd36f40c-91f9-11e6-a72e-b428cb934b78'
 	},
 	brexitPrimary: {
 		uuid: 'b2f7f28c-1114-11e6-91da-096d89bd2173'
