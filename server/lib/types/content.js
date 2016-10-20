@@ -173,7 +173,8 @@ const getContentFields = () => ({
 		resolve: content => {
 			const primaryTheme = content.metadata.find(propertyEquals('primary', 'theme'));
 			const primarySection = content.metadata.find(propertyEquals('primary', 'section'));
-			return primaryTheme || primarySection;
+			const primaryBrand = content.metadata.find(propertyEquals('primary', 'brand'));
+			return primaryTheme || primarySection || primaryBrand;
 		}
 	},
 	primaryTheme: {
