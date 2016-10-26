@@ -32,10 +32,10 @@ export default class {
 				be.capi.page(sources[`${region}Top`].uuid)
 					.then(page => page.items ? be.capi.content(page.items, args) : [])
 					.then(items => items.map(item => getPrimaryTag(item.metadata))),
-				be.capi.list(sources.opinion.uuid)
+				be.capi.list(sources[`${region}Opinion`].uuid)
 					.then(list => list.items ? be.capi.content(list.items.map(extractUuid), args) : [])
 					.then(items => items.map(item => getPrimaryTag(item.metadata))),
-				be.capi.list(sources.editorsPicks.uuid)
+				be.capi.list(sources[`${region}EditorsPicks`].uuid)
 					.then(list => list.items ? be.capi.content(list.items.map(extractUuid), args) : [])
 					.then(items => items.map(item => getPrimaryTag(item.metadata)))
 			])
