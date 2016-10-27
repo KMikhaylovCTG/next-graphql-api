@@ -1,5 +1,20 @@
 import { GraphQLEnumType } from 'graphql';
 
+const Edition = new GraphQLEnumType({
+	name: 'Edition',
+	description: 'Edition with specific content',
+	values: {
+		UK: {
+			value: 'uk',
+			description: 'United Kingdom'
+		},
+		INTL: {
+			value: 'intl',
+			description: 'International'
+		}
+	}
+});
+
 const Region = new GraphQLEnumType({
 	name: 'Region',
 	description: 'Region with specific content',
@@ -61,4 +76,4 @@ const LiveBlogStatus = new GraphQLEnumType({
 	}
 });
 
-export { Region, ContentType, LiveBlogStatus };
+export { Edition, Region, ContentType, LiveBlogStatus };

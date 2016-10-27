@@ -1,6 +1,6 @@
 import { GraphQLInt, GraphQLList, GraphQLNonNull,GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
 
-import { Region } from './types/basic';
+import { Edition, Region } from './types/basic';
 import { Page, List, Collection } from './types/collections';
 import { Content, Concept, Article, LiveBlog, Video } from './types/content';
 import VideoMedia from './types/media/video';
@@ -42,22 +42,31 @@ const queryType = new GraphQLObjectType({
 			args: {
 				region: {
 					type: new GraphQLNonNull(Region)
+				},
+				edition: {
+					type: Edition
 				}
 			},
-			resolve: (root, { region }, { flags, backend = backendReal }) =>
-				backend(flags).capi.page(sources[`${region}Top`].uuid)
+			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
+				const editionVal = edition || region;
+				return backend(flags).capi.page(sources[`${editionVal}Top`].uuid)
+			}
 		},
 		topStoriesList: {
 			type: List,
 			args: {
 				region: {
 					type: new GraphQLNonNull(Region)
+				},
+				edition: {
+					type: Edition
 				}
 			},
-			resolve: (root, { region }, { flags, backend = backendReal }) => {
-				const listUuid = flags && flags.useVideoTopStoriesData && region === 'uk' ?
-					sources[`${region}TopListWithVideos`].uuid :
-					sources[`${region}TopList`].uuid
+			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
+				const editionVal = edition || region;
+				const listUuid = flags && flags.useVideoTopStoriesData && editionVal === 'uk' ?
+					sources[`${editionVal}TopListWithVideos`].uuid :
+					sources[`${editionVal}TopList`].uuid
 
 				return backend(flags).capi.list(listUuid)
 			}
@@ -83,10 +92,16 @@ const queryType = new GraphQLObjectType({
 				region: {
 					type: Region,
 					defaultValue: 'uk'
+				},
+				edition: {
+					type: Edition,
+					defaultValue: 'uk'
 				}
 			},
-			resolve: (root, { region }, { flags, backend = backendReal }) =>
-				backend(flags).capi.list(sources[`${region}EditorsPicks`].uuid)
+			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
+				const editionVal = edition || region;
+				return backend(flags).capi.list(sources[`${editionVal}EditorsPicks`].uuid)
+			}
 		},
 		opinion: {
 			type: List,
@@ -94,10 +109,16 @@ const queryType = new GraphQLObjectType({
 				region: {
 					type: Region,
 					defaultValue: 'uk'
+				},
+				edition: {
+					type: Edition,
+					defaultValue: 'uk'
 				}
 			},
-			resolve: (root, { region }, { flags, backend = backendReal }) =>
-				backend(flags).capi.list(sources[`${region}Opinion`].uuid)
+			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
+				const editionVal = edition || region;
+				return backend(flags).capi.list(sources[`${editionVal}Opinion`].uuid)
+			}
 		},
 		lifestyle: {
 			type: List,
@@ -133,6 +154,9 @@ const queryType = new GraphQLObjectType({
 				region: {
 					type: new GraphQLNonNull(Region)
 				},
+				edition: {
+					type: Edition
+				},
 				from: {
 					type: GraphQLInt
 				},
@@ -146,10 +170,10 @@ const queryType = new GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (root, { region, from, limit, genres, type }, { flags, backend = backendReal }) =>
+			resolve: (root, { region, edition, from, limit, genres, type }, { flags, backend = backendReal }) =>
 				backend(flags)
 					.todaysTopics
-					.getTopics({region, from, limit, genres, type, flags})
+					.getTopics({region, edition, from, limit, genres, type, flags})
 					.then(topics => topics.slice(0, limit))
 		},
 		popularTopics: {

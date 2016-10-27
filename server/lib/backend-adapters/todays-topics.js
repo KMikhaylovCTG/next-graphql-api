@@ -23,19 +23,20 @@ export default class {
 		this.cache = cache;
 	}
 
-	getTopics ({ region, from, limit, genres, type, flags = {}, ttl = 60 * 10 } = { }) {
-		const cacheKey = `${this.type}.get-topics:${createCacheKeyOpts({ region, from, limit, genres, type })}`;
+	getTopics ({ region, edition, from, limit, genres, type, flags = {}, ttl = 60 * 10 } = { }) {
+		const editionVal = edition || region;
+		const cacheKey = `${this.type}.get-topics:${createCacheKeyOpts({ editionVal, from, limit, genres, type })}`;
 		const fetcher = () => {
 			const be = backend(flags);
 			const args = { from, limit, genres, type };
 			return Promise.all([
-				be.capi.page(sources[`${region}Top`].uuid)
+				be.capi.page(sources[`${editionVal}Top`].uuid)
 					.then(page => page.items ? be.capi.content(page.items, args) : [])
 					.then(items => items.map(item => getPrimaryTag(item.metadata))),
-				be.capi.list(sources[`${region}Opinion`].uuid)
+				be.capi.list(sources[`${editionVal}Opinion`].uuid)
 					.then(list => list.items ? be.capi.content(list.items.map(extractUuid), args) : [])
 					.then(items => items.map(item => getPrimaryTag(item.metadata))),
-				be.capi.list(sources[`${region}EditorsPicks`].uuid)
+				be.capi.list(sources[`${editionVal}EditorsPicks`].uuid)
 					.then(list => list.items ? be.capi.content(list.items.map(extractUuid), args) : [])
 					.then(items => items.map(item => getPrimaryTag(item.metadata)))
 			])
