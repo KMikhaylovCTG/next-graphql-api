@@ -41,7 +41,7 @@ const queryType = new GraphQLObjectType({
 			type: Page,
 			args: {
 				region: {
-					type: new GraphQLNonNull(Region)
+					type: Region
 				},
 				edition: {
 					type: Edition
@@ -56,7 +56,7 @@ const queryType = new GraphQLObjectType({
 			type: List,
 			args: {
 				region: {
-					type: new GraphQLNonNull(Region)
+					type: Region
 				},
 				edition: {
 					type: Edition
@@ -152,7 +152,7 @@ const queryType = new GraphQLObjectType({
 			type: new GraphQLList(Concept),
 			args: {
 				region: {
-					type: new GraphQLNonNull(Region)
+					type: Region
 				},
 				edition: {
 					type: Edition
