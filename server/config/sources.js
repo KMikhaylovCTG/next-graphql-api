@@ -14,6 +14,9 @@ const sources = {
 	ukTopListWithVideos: {
 		uuid: '81f74b34-cbf9-11e5-be0b-b7ece4e953a0'
 	},
+	intlTopList: {
+		uuid: 'b0d8e4fe-10ff-11e5-8413-00144feabdc0'
+	},
 	usTopList: {
 		uuid: 'b0d8e4fe-10ff-11e5-8413-00144feabdc0'
 	},
