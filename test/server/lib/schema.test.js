@@ -108,7 +108,7 @@ describe('Schema', () => {
 			});
 			const query = `
 				query Top {
-					top(region: UK) {
+					top(edition: UK) {
 						url
 						title
 					}
@@ -137,7 +137,7 @@ describe('Schema', () => {
 			});
 			const query = `
 				query TopStoriesList {
-					topStoriesList(region: UK) {
+					topStoriesList(edition: UK) {
 						title
 						layoutHint
 					}
@@ -161,7 +161,7 @@ describe('Schema', () => {
 			});
 			const query = `
 				query TopStoriesList {
-					topStoriesList(region: UK) {
+					topStoriesList(edition: UK) {
 						title
 					}
 				}
@@ -185,7 +185,7 @@ describe('Schema', () => {
 			});
 			const query = `
 				query TopStoriesList {
-					topStoriesList(region: UK) {
+					topStoriesList(edition: UK) {
 						title
 						layoutHint
 					}
@@ -213,7 +213,7 @@ describe('Schema', () => {
 			});
 			const query = `
 				query TopStoriesList {
-					topStoriesList(region: UK) {
+					topStoriesList(edition: UK) {
 						items {
 							id
 							contentType

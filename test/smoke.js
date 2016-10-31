@@ -1,6 +1,6 @@
 const query = `
 	query GraphQLSmoke {
-		top(region: UK) {
+		top(edition: UK) {
 			lead: items(limit: 1, type: Article) {
 				title
 				url
@@ -14,7 +14,7 @@ const query = `
 				url
 			}
 		}
-		topStoriesList(region: UK) {
+		topStoriesList(edition: UK) {
 			layoutHint
 			items(limit: 10) {
 				title

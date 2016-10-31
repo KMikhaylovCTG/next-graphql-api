@@ -5,9 +5,6 @@ const sources = {
 	intlTop: {
 		uuid: 'b0ed86f4-4e94-11de-8d4c-00144feabdc0'
 	},
-	usTop: {
-		uuid: 'b0ed86f4-4e94-11de-8d4c-00144feabdc0'
-	},
 	ukTopList: {
 		uuid: '520ddb76-e43d-11e4-9e89-00144feab7de'
 	},
@@ -17,9 +14,6 @@ const sources = {
 	intlTopList: {
 		uuid: 'b0d8e4fe-10ff-11e5-8413-00144feabdc0'
 	},
-	usTopList: {
-		uuid: 'b0d8e4fe-10ff-11e5-8413-00144feabdc0'
-	},
 	fastFt: {
 		idV1: 'NTlhNzEyMzMtZjBjZi00Y2U1LTg0ODUtZWVjNmEyYmU1NzQ2-QnJhbmRz'
 	},
@@ -27,9 +21,6 @@ const sources = {
 		uuid: 'bc81b5bc-1995-11e5-a130-2e7db721f996'
 	},
 	intlOpinion: {
-		uuid: 'cd4a2e0a-91f9-11e6-a72e-b428cb934b78'
-	},
-	usOpinion: {
 		uuid: 'cd4a2e0a-91f9-11e6-a72e-b428cb934b78'
 	},
 	markets: {
@@ -54,9 +45,6 @@ const sources = {
 		uuid: '73667f46-1a55-11e5-a130-2e7db721f996'
 	},
 	intlEditorsPicks: {
-		uuid: 'cd36f40c-91f9-11e6-a72e-b428cb934b78'
-	},
-	usEditorsPicks: {
 		uuid: 'cd36f40c-91f9-11e6-a72e-b428cb934b78'
 	},
 	brexitPrimary: {

@@ -40,33 +40,24 @@ const queryType = new GraphQLObjectType({
 		top: {
 			type: Page,
 			args: {
-				region: {
-					type: Region
-				},
 				edition: {
-					type: Edition
+					type: new GraphQLNonNull(Edition)
 				}
 			},
-			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
-				const editionVal = edition || region;
-				return backend(flags).capi.page(sources[`${editionVal}Top`].uuid)
-			}
+			resolve: (root, { edition }, { flags, backend = backendReal }) =>
+				backend(flags).capi.page(sources[`${edition}Top`].uuid)
 		},
 		topStoriesList: {
 			type: List,
 			args: {
-				region: {
-					type: Region
-				},
 				edition: {
-					type: Edition
+					type: new GraphQLNonNull(Edition)
 				}
 			},
-			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
-				const editionVal = edition || region;
-				const listUuid = flags && flags.useVideoTopStoriesData && editionVal === 'uk' ?
-					sources[`${editionVal}TopListWithVideos`].uuid :
-					sources[`${editionVal}TopList`].uuid
+			resolve: (root, { edition }, { flags, backend = backendReal }) => {
+				const listUuid = flags && flags.useVideoTopStoriesData && edition === 'uk' ?
+					sources[`${edition}TopListWithVideos`].uuid :
+					sources[`${edition}TopList`].uuid
 
 				return backend(flags).capi.list(listUuid)
 			}
@@ -89,36 +80,24 @@ const queryType = new GraphQLObjectType({
 		editorsPicks: {
 			type: List,
 			args: {
-				region: {
-					type: Region,
-					defaultValue: 'uk'
-				},
 				edition: {
 					type: Edition,
 					defaultValue: 'uk'
 				}
 			},
-			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
-				const editionVal = edition || region;
-				return backend(flags).capi.list(sources[`${editionVal}EditorsPicks`].uuid)
-			}
+			resolve: (root, { edition }, { flags, backend = backendReal }) =>
+				backend(flags).capi.list(sources[`${edition}EditorsPicks`].uuid)
 		},
 		opinion: {
 			type: List,
 			args: {
-				region: {
-					type: Region,
-					defaultValue: 'uk'
-				},
 				edition: {
 					type: Edition,
 					defaultValue: 'uk'
 				}
 			},
-			resolve: (root, { region, edition }, { flags, backend = backendReal }) => {
-				const editionVal = edition || region;
-				return backend(flags).capi.list(sources[`${editionVal}Opinion`].uuid)
-			}
+			resolve: (root, { edition }, { flags, backend = backendReal }) =>
+				backend(flags).capi.list(sources[`${edition}Opinion`].uuid)
 		},
 		lifestyle: {
 			type: List,
@@ -151,9 +130,6 @@ const queryType = new GraphQLObjectType({
 		todaysTopics: {
 			type: new GraphQLList(Concept),
 			args: {
-				region: {
-					type: Region
-				},
 				edition: {
 					type: Edition
 				},
@@ -170,10 +146,10 @@ const queryType = new GraphQLObjectType({
 					type: ContentType
 				}
 			},
-			resolve: (root, { region, edition, from, limit, genres, type }, { flags, backend = backendReal }) =>
+			resolve: (root, { edition, from, limit, genres, type }, { flags, backend = backendReal }) =>
 				backend(flags)
 					.todaysTopics
-					.getTopics({region, edition, from, limit, genres, type, flags})
+					.getTopics({ edition, from, limit, genres, type, flags })
 					.then(topics => topics.slice(0, limit))
 		},
 		popularTopics: {
