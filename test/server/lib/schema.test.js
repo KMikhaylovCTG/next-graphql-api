@@ -124,11 +124,11 @@ describe('Schema', () => {
 
 	});
 
-	describe('Top Stories List', () => {
+	describe('Top Stories', () => {
 
 		it('should be able to fetch', () => {
 			const listStub = sinon.stub();
-			listStub.withArgs('520ddb76-e43d-11e4-9e89-00144feab7de').returns({ title: 'Top Stories List', layoutHint: 'bigstory' });
+			listStub.withArgs('520ddb76-e43d-11e4-9e89-00144feab7de').returns({ title: 'Top Stories', layoutHint: 'bigstory' });
 			listStub.withArgs('81f74b34-cbf9-11e5-be0b-b7ece4e953a0').returns({ title: 'Top Stories List with Videos', layoutHint: 'standalonevideo' });
 			const backend = () => ({
 				capi: {
@@ -136,8 +136,8 @@ describe('Schema', () => {
 				}
 			});
 			const query = `
-				query TopStoriesList {
-					topStoriesList(edition: UK) {
+				query TopStories {
+					topStories(edition: UK) {
 						title
 						layoutHint
 					}
@@ -146,8 +146,8 @@ describe('Schema', () => {
 
 			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
-					data.topStoriesList.title.should.equal('Top Stories List');
-					data.topStoriesList.layoutHint.should.equal('bigstory');
+					data.topStories.title.should.equal('Top Stories');
+					data.topStories.layoutHint.should.equal('bigstory');
 				})
 		});
 
@@ -160,8 +160,8 @@ describe('Schema', () => {
 				}
 			});
 			const query = `
-				query TopStoriesList {
-					topStoriesList(edition: UK) {
+				query TopStories {
+					topStories(edition: UK) {
 						title
 					}
 				}
@@ -169,8 +169,8 @@ describe('Schema', () => {
 
 			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
-					expect(data).to.have.property('topStoriesList');
-					expect(data.topStoriesList).to.be.null;
+					expect(data).to.have.property('topStories');
+					expect(data.topStories).to.be.null;
 				})
 		});
 
@@ -184,8 +184,8 @@ describe('Schema', () => {
 				}
 			});
 			const query = `
-				query TopStoriesList {
-					topStoriesList(edition: UK) {
+				query TopStories {
+					topStories(edition: UK) {
 						title
 						layoutHint
 					}
@@ -194,8 +194,8 @@ describe('Schema', () => {
 
 			return graphql(schema, query, null, { flags: {useVideoTopStoriesData: true}, backend })
 				.then(({ data }) => {
-					data.topStoriesList.title.should.equal('Top Stories List with Videos');
-					data.topStoriesList.layoutHint.should.equal('standalonevideo');
+					data.topStories.title.should.equal('Top Stories List with Videos');
+					data.topStories.layoutHint.should.equal('standalonevideo');
 				})
 		});
 
@@ -212,8 +212,8 @@ describe('Schema', () => {
 				}
 			});
 			const query = `
-				query TopStoriesList {
-					topStoriesList(edition: UK) {
+				query TopStories {
+					topStories(edition: UK) {
 						items {
 							id
 							contentType
@@ -235,8 +235,8 @@ describe('Schema', () => {
 
 			return graphql(schema, query, null, { backend })
 				.then(({ data }) => {
-					expect(data.topStoriesList.items.length).to.equal(2);
-					expect(data.topStoriesList.items).to.deep.equal(expected);
+					expect(data.topStories.items.length).to.equal(2);
+					expect(data.topStories.items).to.deep.equal(expected);
 				})
 
 		});

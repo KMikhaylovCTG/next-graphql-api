@@ -47,7 +47,7 @@ const queryType = new GraphQLObjectType({
 			resolve: (root, { edition }, { flags, backend = backendReal }) =>
 				backend(flags).capi.page(sources[`${edition}Top`].uuid)
 		},
-		topStoriesList: {
+		topStories: {
 			type: List,
 			args: {
 				edition: {

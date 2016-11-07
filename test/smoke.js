@@ -14,7 +14,7 @@ const query = `
 				url
 			}
 		}
-		topStoriesList(edition: UK) {
+		topStories(edition: UK) {
 			layoutHint
 			items(limit: 10) {
 				title
