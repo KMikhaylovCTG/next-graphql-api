@@ -13,7 +13,7 @@ const Image = new graphql.GraphQLObjectType({
 				}
 			},
 			resolve: (image, { width }) =>
-				`//next-geebee.ft.com/image/v1/images/raw/${encodeURIComponent(image.url)}?source=next&fit=scale-down&width=${width}`
+				`https:////www.ft.com/__origami/service/image/v2/images/raw/${encodeURIComponent(image.url)}?source=next&fit=scale-down&width=${width}`
 		},
 		rawSrc: {
 			type: graphql.GraphQLString,
